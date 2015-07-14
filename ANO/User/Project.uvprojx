@@ -537,6 +537,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\DataScope.c</FilePath>
             </File>
+            <File>
+              <FileName>wave.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\wave.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

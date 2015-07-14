@@ -20,6 +20,7 @@
 "..\output\imu.o"
 "..\output\mpu6050.o"
 "..\output\datascope.o"
+"..\output\wave.o"
 --library_type=microlib --strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

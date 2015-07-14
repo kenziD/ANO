@@ -1,11 +1,12 @@
 #include "config.h"
-#include "DataScope.h"
+#include "wave.h"
+
 extern unsigned char ID;
 int main(void)
 {
 	float q[4];
 	float ypr[3]; // yaw pitch roll
-	unsigned char i;          //计数变量
+	int i;          //计数变量
 	unsigned char Send_Count; //串口需要发送的数据个数
 	RCC_HSE_Configuration();
 	SysTick_Init();
@@ -20,15 +21,13 @@ int main(void)
 		Read_Mpu6050();
 		IMU_getQ(q);
 		IMU_getYawPitchRoll(ypr);
-		DataScope_Get_Channel_Data( ypr[0], 1 );  
-		DataScope_Get_Channel_Data( ypr[1], 2 );  
-		DataScope_Get_Channel_Data( ypr[2], 3 );  
-		Send_Count = DataScope_Data_Generate(3); 
-		for ( i = 0 ; i < Send_Count; i++) 
-		{
-			while ((USART1->SR & 0X40) == 0);
-			USART1->DR = DataScope_OutPut_Buffer[i]; 
-		}
-		delay_ms(50);
-  }
+		//for(i=0;i<2*3.14;i=i+0.5)
+		//{
+		Uart1_send_custom(40.8);
+		
+		send_wave(8);
+		//}
+		
+	}
+		
 }

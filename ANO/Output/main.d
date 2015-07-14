@@ -40,4 +40,4 @@
 ..\output\main.o: ..\Hardware\HSEconf.h
 ..\output\main.o: ..\Hardware\config.h
 ..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-..\output\main.o: ..\Hardware\DataScope.h
+..\output\main.o: ..\Hardware\wave.h
