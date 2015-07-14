@@ -1,6 +1,6 @@
 Dependencies for Project 'Project', Target 'STM32_Project': (DO NOT MODIFY !)
 F (..\CMSIS\Startup\startup_stm32f10x_md.s)(0x4D783CD2)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include--pd "__UVISION_VERSION SETA 515" --pd "_RTE_ SETA 1" --pd "STM32F10X_MD SETA 1"--list ..\listing\startup_stm32f10x_md.lst --xref -o ..\output\startup_stm32f10x_md.o --depend ..\output\startup_stm32f10x_md.d)
-F (.\main.c)(0x55A4DD9B)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-D__UVISION_VERSION="515" -D_RTE_ -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\main.o --omf_browse ..\output\main.crf --depend ..\output\main.d)
+F (.\main.c)(0x55A4E914)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-D__UVISION_VERSION="515" -D_RTE_ -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\main.o --omf_browse ..\output\main.crf --depend ..\output\main.d)
 I (..\Hardware\config.h)(0x552C1454)
 I (..\CMSIS\stm32f10x.h)(0x552C151A)
 I (..\CMSIS\core_cm3.h)(0x4D523B58)
@@ -40,7 +40,7 @@ I (..\Hardware\MPU6050.h)(0x5527CCCC)
 I (..\Hardware\IMU.h)(0x5510C9C6)
 I (..\Hardware\HSEconf.h)(0x552C131C)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x54C245B8)
-I (..\Hardware\wave.h)(0x55A4DD9B)
+I (..\Hardware\wave.h)(0x55A4E867)
 F (.\stm32f10x_it.c)(0x4D99A59E)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-D__UVISION_VERSION="515" -D_RTE_ -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\stm32f10x_it.o --omf_browse ..\output\stm32f10x_it.crf --depend ..\output\stm32f10x_it.d)
 I (stm32f10x_it.h)(0x4D99A59E)
 I (..\CMSIS\stm32f10x.h)(0x552C151A)
@@ -610,8 +610,8 @@ I (..\Hardware\HSEconf.h)(0x552C131C)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x54C245B8)
 F (..\Hardware\DataScope.c)(0x552C17E8)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-D__UVISION_VERSION="515" -D_RTE_ -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\datascope.o --omf_browse ..\output\datascope.crf --depend ..\output\datascope.d)
 I (..\Hardware\DataScope.h)(0x52F6614C)
-F (..\Hardware\wave.c)(0x55A4DD9B)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-D__UVISION_VERSION="515" -D_RTE_ -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\wave.o --omf_browse ..\output\wave.crf --depend ..\output\wave.d)
-I (..\Hardware\wave.h)(0x55A4DD9B)
+F (..\Hardware\wave.c)(0x55A4E867)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware-I "D:\future\科研\Program for Dragon2\ANO\User\RTE"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-D__UVISION_VERSION="515" -D_RTE_ -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\wave.o --omf_browse ..\output\wave.crf --depend ..\output\wave.d)
+I (..\Hardware\wave.h)(0x55A4E867)
 I (..\Hardware\usart.h)(0x55274312)
 I (..\CMSIS\stm32f10x.h)(0x552C151A)
 I (..\CMSIS\core_cm3.h)(0x4D523B58)

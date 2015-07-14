@@ -23,9 +23,9 @@ int main(void)
 		IMU_getYawPitchRoll(ypr);
 		//for(i=0;i<2*3.14;i=i+0.5)
 		//{
-		Uart1_send_custom(40.8);
-		
-		send_wave(8);
+		Uart1_send_custom(0xA1,ypr[1],ypr[2],ypr[0]);
+		send_wave(16);
+	
 		//}
 		
 	}

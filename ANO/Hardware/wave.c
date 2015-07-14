@@ -3,7 +3,7 @@
 
 //#define tx_num	32
 
-unsigned char TxBuffer[8];//一共发送的字节数 记得改
+unsigned char TxBuffer[16];//一共发送的字节数 记得改
 unsigned char count=0; 
 
 #define BYTE0(dwTemp)       (*(char *)(&dwTemp))
@@ -67,17 +67,19 @@ unsigned char Uart1_Put_float(float DataToSend)
 //}
 /****************给第一帧 第一位 发送float数据*************/
 
-void Uart1_send_custom(float data)
+void Uart1_send_custom(unsigned char fun,float aa,float bb,float cc)
 {
 	unsigned char sum = 0;
 	count=0;
 
 	sum +=Uart1_Put_Char(0x88);
-	sum +=Uart1_Put_Char(0xA1);
+	sum +=Uart1_Put_Char(fun);
 	
-	sum +=Uart1_Put_Char(0x04);//float占四个字节
+	sum +=Uart1_Put_Char(0x0c);//3个float占12个字节
 	
-	sum +=Uart1_Put_float(data);//发送16位数据 
+	sum +=Uart1_Put_float(aa);//发送16位数据 
+	sum +=Uart1_Put_float(bb);
+	sum +=Uart1_Put_float(cc);
 
 	Uart1_Put_Char(sum);
 }

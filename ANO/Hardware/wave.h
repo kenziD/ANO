@@ -12,7 +12,7 @@
 void Uart1_Send_AF(signed int aa,signed int bb,signed int cc,signed int dd,signed int ee,signed int ff,signed int gg,signed int hh);
 //void Uart1_send_custom(uint16_t data);
 unsigned char Uart1_Put_float(float DataToSend);
-void Uart1_send_custom(float data);
+void Uart1_send_custom(unsigned char fun,float aa,float bb,float cc);
 unsigned char UART_Putc(unsigned char data);
 void send_wave(int tx_num);
 
