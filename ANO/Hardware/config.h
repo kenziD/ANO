@@ -9,8 +9,12 @@
 #include "MPU6050.h"
 #include "IMU.h"
 #include "HSEconf.h"
+#include "MOTOR.h"
+#include "spi.h"
+#include "24l01.h"
 #include <math.h>
 #include "stm32f10x_tim.h"
+#include "stdint.h"
 #endif /* __CONFIG_H_ */
 
 

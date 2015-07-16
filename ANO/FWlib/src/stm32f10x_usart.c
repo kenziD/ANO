@@ -59,7 +59,7 @@
 #define CR2_LINEN_Reset            ((uint16_t)0xBFFF)  /*!< USART LIN Disable Mask */
 
 #define CR2_LBDL_Mask             ((uint16_t)0xFFDF)  /*!< USART LIN Break detection Mask */
-#define CR2_STOP_CLEAR_Mask       ((uint16_t)0xCFFF)  /*!< USART CR2 STOP Bits Mask */
+#define CR2_STOP_CLEAR_Mask       ((uint16_t)0xCFFF)  /*!< USART CR2 STOP Bits Mask 12、13位置零*/
 #define CR2_CLOCK_CLEAR_Mask      ((uint16_t)0xF0FF)  /*!< USART CR2 Clock Mask */
 
 #define CR3_SCEN_Set              ((uint16_t)0x0020)  /*!< USART SC Enable Mask */
@@ -198,7 +198,7 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 
 /*---------------------------- USART CR2 Configuration -----------------------*/
   tmpreg = USARTx->CR2;
-  /* Clear STOP[13:12] bits */
+  /* Clear STOP[13:12] bits 清空停止位的个数（n）*/
   tmpreg &= CR2_STOP_CLEAR_Mask;
   /* Configure the USART Stop Bits, Clock, CPOL, CPHA and LastBit ------------*/
   /* Set STOP[13:12] bits according to USART_StopBits value */

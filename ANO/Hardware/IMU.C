@@ -13,7 +13,7 @@ void Initial_Timer3(void)
 {
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 | RCC_APB1Periph_TIM3, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4 | RCC_APB1Periph_TIM3, ENABLE);
 	/* TIM2 configuration*/
 	/* Time Base configuration »ù±¾ÅäÖÃ ÅäÖÃ¶¨Ê±Æ÷µÄÊ±»ùµ¥Ôª*/
 	TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
@@ -21,19 +21,19 @@ void Initial_Timer3(void)
 	TIM_TimeBaseStructure.TIM_Prescaler = 0x0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+	TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 
-	TIM_PrescalerConfig(TIM2, 0, TIM_PSCReloadMode_Update);
+	TIM_PrescalerConfig(TIM4, 0, TIM_PSCReloadMode_Update);
 	/* Disable the TIM2 Update event */
-	TIM_UpdateDisableConfig(TIM2, ENABLE);
+	TIM_UpdateDisableConfig(TIM4, ENABLE);
 	/* ----------------------TIM2 Configuration as slave for the TIM3 ----------*/
 	/* Select the TIM2 Input Trigger: TIM3 TRGO used as Input Trigger for TIM2*/
-	TIM_SelectInputTrigger(TIM2, TIM_TS_ITR2);
+	TIM_SelectInputTrigger(TIM4, TIM_TS_ITR2);
 	/* Use the External Clock as TIM2 Slave Mode */
-	TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_External1);
+	TIM_SelectSlaveMode(TIM4, TIM_SlaveMode_External1);
 	/* Enable the TIM2 Master Slave Mode */
-	TIM_SelectMasterSlaveMode(TIM2, TIM_MasterSlaveMode_Enable);
-	TIM_ARRPreloadConfig(TIM2, ENABLE);
+	TIM_SelectMasterSlaveMode(TIM4, TIM_MasterSlaveMode_Enable);
+	TIM_ARRPreloadConfig(TIM4, ENABLE);
 	/* ¶¨Ê±Æ÷ÅäÖÃ:
 	1.ÉèÖÃ¶¨Ê±Æ÷×î´ó¼ÆÊýÖµ 50000
 	2.ÉèÖÃÊ±ÖÓ·ÖÆµÏµÊý£ºTIM_CKD_DIV1
@@ -59,12 +59,12 @@ void Initial_Timer3(void)
 
 	//Æô¶¯¶¨Ê±Æ÷
 	TIM_Cmd(TIM3, ENABLE);
-	TIM_Cmd(TIM2, ENABLE);
+	TIM_Cmd(TIM4, ENABLE);
 }
 uint32_t micros(void)
 {
 	uint32_t temp = 0 ;
-	temp = TIM2->CNT; //¶Á¸ß16Î»Ê±¼ä
+	temp = TIM4->CNT; //¶Á¸ß16Î»Ê±¼ä
 	temp = temp << 16;
 	temp += TIM3->CNT; //¶ÁµÍ16Î»Ê±¼ä
 	return temp;

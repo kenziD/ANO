@@ -39,5 +39,8 @@
 ..\output\main.o: ..\Hardware\IMU.h
 ..\output\main.o: ..\Hardware\HSEconf.h
 ..\output\main.o: ..\Hardware\config.h
+..\output\main.o: ..\Hardware\MOTOR.h
+..\output\main.o: ..\Hardware\spi.h
+..\output\main.o: ..\Hardware\24l01.h
 ..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\main.o: ..\Hardware\wave.h

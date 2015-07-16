@@ -39,4 +39,7 @@
 ..\output\mpu6050.o: ..\Hardware\IMU.h
 ..\output\mpu6050.o: ..\Hardware\HSEconf.h
 ..\output\mpu6050.o: ..\Hardware\config.h
+..\output\mpu6050.o: ..\Hardware\MOTOR.h
+..\output\mpu6050.o: ..\Hardware\spi.h
+..\output\mpu6050.o: ..\Hardware\24l01.h
 ..\output\mpu6050.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

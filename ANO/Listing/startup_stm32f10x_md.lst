@@ -465,12 +465,11 @@ ARM Macro Assembler    Page 8
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=..\output\startup_stm32f10x_md.d -o..\output\startup_stm32f10x_md.
-o -I"D:\future\科研\Program for Dragon2\ANO\User\RTE" -IC:\Keil_v5\ARM\PACK\ARM
-\CMSIS\4.3.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Devic
-e\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefi
-ne="__UVISION_VERSION SETA 515" --predefine="_RTE_ SETA 1" --predefine="STM32F1
-0X_MD SETA 1" --list=..\listing\startup_stm32f10x_md.lst ..\CMSIS\Startup\start
-up_stm32f10x_md.s
+o -I"D:\future\科研\Program for Dragon2\Wireless\User\RTE" -IC:\Keil_v5\ARM\PAC
+K\Keil\STM32F1xx_DFP\1.1.0\Device\Include -IC:\Keil_v5\ARM\CMSIS\Include --pred
+efine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VE
+RSION SETA 515" --predefine="STM32F10X_MD SETA 1" --list=..\listing\startup_stm
+32f10x_md.lst ..\CMSIS\Startup\startup_stm32f10x_md.s
 
 
 
@@ -1177,4 +1176,4 @@ Symbol: __main
       At line 135 in file ..\CMSIS\Startup\startup_stm32f10x_md.s
 Comment: __main used once
 2 symbols
-407 symbols in table
+406 symbols in table

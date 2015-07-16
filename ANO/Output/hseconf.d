@@ -39,4 +39,8 @@
 ..\output\hseconf.o: ..\Hardware\MPU6050.h
 ..\output\hseconf.o: ..\Hardware\IMU.h
 ..\output\hseconf.o: ..\Hardware\HSEconf.h
+..\output\hseconf.o: ..\Hardware\MOTOR.h
+..\output\hseconf.o: ..\Hardware\config.h
+..\output\hseconf.o: ..\Hardware\spi.h
+..\output\hseconf.o: ..\Hardware\24l01.h
 ..\output\hseconf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

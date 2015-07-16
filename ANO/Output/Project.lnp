@@ -8,6 +8,7 @@
 "..\output\stm32f10x_usart.o"
 "..\output\stm32f10x_i2c.o"
 "..\output\stm32f10x_tim.o"
+"..\output\stm32f10x_spi.o"
 "..\output\core_cm3.o"
 "..\output\system_stm32f10x.o"
 "..\output\config.o"
@@ -19,7 +20,9 @@
 "..\output\iic.o"
 "..\output\imu.o"
 "..\output\mpu6050.o"
-"..\output\datascope.o"
+"..\output\motor.o"
+"..\output\24l01.o"
+"..\output\spi.o"
 "..\output\wave.o"
 --library_type=microlib --strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols

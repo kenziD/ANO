@@ -527,9 +527,9 @@
               <FilePath>..\Hardware\MPU6050.c</FilePath>
             </File>
             <File>
-              <FileName>DataScope.c</FileName>
+              <FileName>MOTOR.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Hardware\DataScope.c</FilePath>
+              <FilePath>..\Hardware\MOTOR.c</FilePath>
             </File>
           </Files>
         </Group>

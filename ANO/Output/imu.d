@@ -39,4 +39,7 @@
 ..\output\imu.o: ..\Hardware\IMU.h
 ..\output\imu.o: ..\Hardware\HSEconf.h
 ..\output\imu.o: ..\Hardware\config.h
+..\output\imu.o: ..\Hardware\MOTOR.h
+..\output\imu.o: ..\Hardware\spi.h
+..\output\imu.o: ..\Hardware\24l01.h
 ..\output\imu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

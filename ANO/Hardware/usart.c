@@ -37,7 +37,7 @@ int fputc(int ch, FILE *f)
 		USART_SendData(USART1, (uint8_t) ch);
 		/* 等待发送完毕 */
 		while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);		
-	
+	  
 		return (ch);
 }
 ///重定向c库函数scanf到USART1
