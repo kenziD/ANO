@@ -1,0 +1,72 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.15
+Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: RE SGF, FGF, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.15.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.05 update 2 (build 169)
+Assembler:       Armasm.exe V5.05 update 2 (build 169)
+Linker/Locator:  ArmLink.exe V5.05 update 2 (build 169)
+Library Manager: ArmAr.exe V5.05 update 2 (build 169)
+Hex Converter:   FromElf.exe V5.05 update 2 (build 169)
+CPU DLL:         SARMCM3.DLL V5.15.0
+Dialog DLL:      DARMSTM.DLL V1.65.0.0
+Target DLL:      Segger\JL2CM3.dll V2.99.15.0
+Dialog DLL:      TARMSTM.DLL V1.64.0.0
+ 
+<h2>Project:</h2>
+D:\future\科研\Program for Dragon2\FLY\WirelessControl\2015-07-16 MPU6050+IIC+USART+16M TIM34软实时+TIM2 PWM+NRF2401\User\Project.uvprojx
+Project File Date:  07/15/2015
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'STM32_Project'
+compiling main.c...
+..\Hardware\MOTOR.h(6): warning:  #1295-D: Deprecated declaration MOT0_GPIO_init - give arg types
+  void MOT0_GPIO_init();
+..\Hardware\MOTOR.h(7): warning:  #1295-D: Deprecated declaration MOT0_PWM_init - give arg types
+  void MOT0_PWM_init();
+..\Hardware\MOTOR.h(8): warning:  #1295-D: Deprecated declaration MOT1_GPIO_init - give arg types
+  void MOT1_GPIO_init();
+..\Hardware\MOTOR.h(9): warning:  #1295-D: Deprecated declaration MOT1_PWM_init - give arg types
+  void MOT1_PWM_init();
+..\Hardware\MOTOR.h(10): warning:  #1295-D: Deprecated declaration MOT2_GPIO_init - give arg types
+  void MOT2_GPIO_init();
+..\Hardware\MOTOR.h(11): warning:  #1295-D: Deprecated declaration MOT2_PWM_init - give arg types
+  void MOT2_PWM_init();
+..\Hardware\MOTOR.h(12): warning:  #1295-D: Deprecated declaration MOT3_GPIO_init - give arg types
+  void MOT3_GPIO_init();
+..\Hardware\MOTOR.h(13): warning:  #1295-D: Deprecated declaration MOT3_PWM_init - give arg types
+  void MOT3_PWM_init();
+..\Hardware\MOTOR.h(14): warning:  #1295-D: Deprecated declaration MOT_GPIO_init - give arg types
+  void MOT_GPIO_init();
+..\Hardware\MOTOR.h(15): warning:  #1295-D: Deprecated declaration MOT_PWM_init - give arg types
+  void MOT_PWM_init();
+..\Hardware\24l01.h(29): warning:  #47-D: incompatible redefinition of macro "CONFIG" (declared at line 7 of "..\Hardware\MPU6050.h")
+  #define CONFIG          0x00  //???眉拇??鞯?址;bit0:1????模式,0发??模式;bit1:??选??;bit2:CRC模式;bit3:CRC使??;
+main.c(7): warning:  #177-D: variable "q" was declared but never referenced
+        float q[4];
+main.c(8): warning:  #177-D: variable "ypr" was declared but never referenced
+        float ypr[3]; // yaw pitch roll
+main.c(10): warning:  #177-D: variable "status" was declared but never referenced
+        char status[5]="start";
+main.c: 14 warnings, 0 errors
+linking...
+Program Size: Code=18052 RO-data=524 RW-data=208 ZI-data=1040  
+FromELF: creating hex file...
+"..\Output\Project.axf" - 0 Error(s), 14 Warning(s).
+
+<h2>Collection of Component include folders:</h2>
+  D:\future\科研\Program for Dragon2\FLY\WirelessControl\2015-07-16 MPU6050+IIC+USART+16M TIM34软实时+TIM2 PWM+NRF2401\User\RTE
+  C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+</pre>
+</body>
+</html>
