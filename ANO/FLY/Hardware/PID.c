@@ -1,8 +1,8 @@
 #include "config.h"
 #include <string.h>
 
-uint8_t expRoll = 0;
-uint8_t expPitch = 0;
+float expRoll = 0;
+float expPitch = 0;
 extern float fGYRO_X, fGYRO_Y, fGYRO_Z;
 
 
@@ -55,6 +55,7 @@ void PID_Set(void)
 
     roll_Out = PID_ROLL.KP * diffRoll + roll_i - PID_ROLL.KD * fGYRO_X;
 		
+		
 		/*Pitch*****************************************************/
     diffPitch = expPitch - surPitch;
     if(surPitch > -0.1 && surPitch < 0.1)
@@ -77,6 +78,7 @@ void PID_Set(void)
     if(pitch_i > PID_PITCH.Imax) pitch_i = -PID_PITCH.Imax;
 
     pitch_Out = PID_PITCH.KP * diffPitch + pitch_i - PID_PITCH.KD * fGYRO_Y;
+		//printf("%f,%f,Pitch_out:%f\r\n",surPitch,diffPitch,pitch_Out);
 
     /***************************/
     motor0 = (int16_t)(expThro - roll_Out + pitch_Out );

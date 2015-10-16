@@ -1,7 +1,7 @@
 #include "config.h"
 #include "stdint.h"
 
-u8 tmp_buf[5] = "";
+u8 tmp_buf[32] = "";
 u8 status = 0;
 u8 key = 0;
 int main(void)

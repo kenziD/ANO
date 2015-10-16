@@ -147,7 +147,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 }
-extern u8 tmp_buf[5];
+extern u8 tmp_buf[32];
 extern u8 key;
 void TIM3_IRQHandler(void)    //0.5ms中断一次
 {
@@ -156,6 +156,8 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
   static float percent = 0;
 
   uint16_t per_1000;
+	static u16 Roll = 0;
+	static u16 Pitch = 0;
   if (TIM3->SR & TIM_IT_Update)   //if ( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET )
   {
     TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
@@ -182,12 +184,18 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
       ms10 = 0;       //每二十次中断执行一次,10ms
       percent = (float)voltage1() / 4093.0;
       per_1000 = (uint16_t)(percent * 1000);
+			Roll = voltage3();
+			Pitch = voltage4();
       tmp_buf[0] = BYTE0( per_1000);
       tmp_buf[1] = BYTE1( per_1000);
+			tmp_buf[2] = BYTE0(Roll);
+      tmp_buf[3] = BYTE1(Roll);
+			tmp_buf[4] = BYTE0(Pitch);
+			tmp_buf[5] = BYTE1(Pitch);
 			if(key == MODE_KEY_DOWN)
-				tmp_buf[2] = 'a';//接收端判断如果为a，则判为start
+				tmp_buf[6] = 'a';//接收端判断如果为a，则判为start
 			if(key == FUN_KEY_DOWN)
-				tmp_buf[2] = 'b';//接收端判断如果为b,则判为stop
+				tmp_buf[6] = 'b';//接收端判断如果为b,则判为stop
     }
   }
 }

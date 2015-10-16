@@ -8,16 +8,18 @@ extern int expThro;
 extern PID_ PID_ROLL,PID_PITCH;
 extern uint8_t Res[32];
 extern int p;
-
+extern float expRoll;
+extern float expPitch;
 int main(void)
 {
 	float q[4];
 	float ypr[3]; // yaw pitch roll
-	u8 tmp_buf[5] ={0};
+	u8 tmp_buf[32] ={0};
 	float Receive_Data = 0;
 	int throttle = 0;
 	char status[] = "stop";
-
+float RC_get_Roll = 0;
+	float RC_get_Pitch = 0;
 	RCC_HSE_Configuration();
 	SysTick_Init();
 	USART1_Config(115200);
@@ -51,12 +53,14 @@ int main(void)
 		{
 			Receive_Data = (float)(tmp_buf[1] << 8 | tmp_buf[0]) / 1000.0;//
 			throttle = (int)(Receive_Data * 999.0);
-			printf("%d\n", throttle);
-			if(tmp_buf[2]=='a')
+			//printf("%d\n", throttle);
+			RC_get_Roll =((tmp_buf[3] << 8 | tmp_buf[2])-1970)/70.0;//????1970  ??????????????30°,????70
+			RC_get_Pitch= ((tmp_buf[5] << 8 | tmp_buf[4])-2120)/70.0;;
+			if(tmp_buf[6]=='a')
 				strcpy(status,"start");
-			if(tmp_buf[2]=='b')
+			if(tmp_buf[6]=='b')
 				strcpy(status,"stop");
-			printf("%s",status);			
+			//printf("%s",status);			
 		}
 
 			if(!strcmp(status,"stop"))
@@ -65,6 +69,8 @@ int main(void)
 			}
 			else if(!strcmp(status,"start"))
 			{
+			expRoll = RC_get_Roll;
+			expPitch = RC_get_Pitch;		
       expThro=throttle;
 		  surRoll = ypr[2];
 		  surPitch = ypr[1];
