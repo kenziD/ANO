@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CMSIS;..\FWlib\inc;..\FWlib\src;..\User;..\Hardware</IncludePath>
+              <IncludePath>..\CMSIS;..\FWlib\inc;..\FWlib\src;..\User;..\Hardware;..\Hardware\sys</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -561,6 +561,11 @@
               <FileName>PID.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\PID.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\timer.c</FilePath>
             </File>
           </Files>
         </Group>

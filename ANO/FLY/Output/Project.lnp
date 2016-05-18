@@ -25,6 +25,7 @@
 "..\output\spi.o"
 "..\output\wave.o"
 "..\output\pid.o"
+"..\output\timer.o"
 --library_type=microlib --strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

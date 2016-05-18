@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c 
+  * @file    Project/STM32F10x_StdPeriph_Template/stm32f10x_it.c
   * @author  MCD Application Team
   * @version V3.5.0
   * @date    08-April-2011
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -135,7 +135,28 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 }
+#include "LED.h"
+#include "usart.h"
+u8 FLAG_ATT = 0;
+void TIM3_IRQHandler(void)    //0.5ms中断一次
+{
+  static u8 ms1_cnt = 0;
+  static u16 s1_cnt = 0;
 
+  if (TIM3->SR & TIM_IT_Update)   //if ( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET )
+  {
+    TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
+    ms1_cnt++;
+    s1_cnt++;
+    if (ms1_cnt == 1) //1ms
+    {
+      ms1_cnt = 0;
+      FLAG_ATT = 1;
+    }
+
+    // Data_Exchange(); //0.5ms
+  }
+}
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
@@ -154,7 +175,7 @@ void SysTick_Handler(void)
 
 /**
   * @}
-  */ 
+  */
 
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

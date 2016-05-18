@@ -13,7 +13,7 @@ void Uart1_Send_AF(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_
 void Uart1_send_custom_uint16(uint16_t aa);
 void Uart1_send_custom_int16(int16_t aa);
 void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc);
-void Uart1_Send_AE(uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee);
+void Uart1_Send_AE(uint16_t throttle,uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee);
 void Uart1_Send_PID(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,uint16_t pit_i,uint16_t pit_d);
 void Uart1_send_custom_PID(uint8_t aa);
 unsigned char UART_Putc(unsigned char data);

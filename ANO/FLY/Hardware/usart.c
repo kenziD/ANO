@@ -34,8 +34,8 @@ void USART1_Config(uint32_t bound)
 		
 	//#ifdef EN_USART1_RX
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3 ; //抢占优先级 3
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3; //子优先级 3
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1 ; //抢占优先级 3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1; //子优先级 3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ 通道使能
 	NVIC_Init(&NVIC_InitStructure);  //中断优先级初始化
 //⑤开启中断

@@ -181,7 +181,7 @@ void Uart1_Send_AF(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_
 	Uart1_Put_Char(0);
 	Uart1_Put_Char(sum);
 }
-void Uart1_Send_AE(uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee)
+void Uart1_Send_AE(uint16_t throttle,uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee)
 {
 	unsigned char sum = 0;
 	count=0;
@@ -189,8 +189,8 @@ void Uart1_Send_AE(uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee)
 	sum += Uart1_Put_Char(0xAE);
 	sum += Uart1_Put_Char(0x1C);
 	
-	Uart1_Put_Char(0);
-	Uart1_Put_Char(0);//throttle
+	sum += Uart1_Put_Char(BYTE1(throttle));//throttle
+	sum += Uart1_Put_Char(BYTE0(throttle));
 	Uart1_Put_Char(0);
 	Uart1_Put_Char(0);//yaw
 	Uart1_Put_Char(0);
