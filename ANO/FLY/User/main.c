@@ -10,8 +10,9 @@ extern uint8_t Res[32];
 extern int p;
 extern float expRoll;
 extern float expPitch;
-
-//1msflag from TIM3_IRQ
+extern float Angle_accX, Angle_accY, Angle_accZ; 
+extern float fGYRO_X, fGYRO_Y, fGYRO_Z;//量化的陀螺仪数据 g(9.8m/s^2)
+//1ms flag from TIM3_IRQ
 extern u8 FLAG_ATT;
 
 int main(void)
@@ -66,15 +67,21 @@ int main(void)
 				IMU_getYawPitchRoll(ypr);
 				cnt = 0;
 			}
-			if (send_cnt == 10)//10ms
-			{
+			// if (send_cnt == 10)//10ms
+			// {
 				//this code need 43ms
-				Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
-				send_wave(32);
-				Uart1_Send_AE(throttle,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
-				send_wave(32);
-				send_cnt = 0;
-			}
+				// Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+				// send_wave(32);
+				// Uart1_Send_AE(throttle,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
+				// send_wave(32);
+				send_status((signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100),0x00,0x00,0x00,0x01);
+				send_wave(18);
+				// send_senser((signed short int)Angle_accX,(signed short int)Angle_accY,(signed short int)Angle_accZ,(signed short int)fGYRO_X,(signed short int)fGYRO_Y,(signed short int)fGYRO_Z,0x00,0x00,0x00);
+				// send_wave(23);
+				// send_rcdata(throttle,0x00,(signed short int)RC_get_Roll,(signed short int)RC_get_Pitch,0x00,0x00,0x00,0x00,0x00,0x00);
+				// send_wave(25);
+				// send_cnt = 0;
+			// }
 		}
 		//
 		// IMU_getQ(q);
@@ -118,6 +125,5 @@ int main(void)
 			STA = 0;
 			p = 0;
 		}
-
 	}
 }
