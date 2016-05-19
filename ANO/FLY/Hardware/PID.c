@@ -3,14 +3,15 @@
 
 float expRoll = 0;
 float expPitch = 0;
-extern float fGYRO_X, fGYRO_Y, fGYRO_Z;
+int expThro = 0;
+// extern float fGYRO_X, fGYRO_Y, fGYRO_Z;
 
 
 PID_ PID_ROLL,PID_PITCH,PID_YAW;
 float surYaw, surRoll, surPitch;
 float diffYaw, diffRoll, diffPitch;
 int16_t motor0, motor1, motor2, motor3;
-int expThro = 0;
+
 
 void PID_Init(void)
 {

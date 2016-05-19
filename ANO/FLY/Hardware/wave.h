@@ -9,7 +9,10 @@
 
 #include "usart.h"
 
-// void Uart1_Send_AF(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t gg,int16_t hh);
+extern u8 send_status_flag,send_senser_flag,send_rcdata_flag;
+
+void Data_Exchange(void);
+void Uart1_Send_AF(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t gg,int16_t hh);
 void Uart1_send_custom_uint16(uint16_t aa);
 void Uart1_send_custom_int16(int16_t aa);
 void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc);

@@ -2,12 +2,17 @@
 #include "usart.h"
 #include "config.h"
 #include "pid.h"
+#include "MPU6050.h"
 //#define tx_num	32
 unsigned char temp[6];
 unsigned char TxBuffer[32];//一共发送的字节数 记得改
 unsigned char count = 0;
-extern PID_ PID_ROLL, PID_PITCH;
-extern uint8_t Res[32];
+
+extern float ypr[3];
+extern float RC_get_Roll;
+extern float RC_get_Pitch;
+extern int throttle;
+u8 send_status_flag = 0, send_senser_flag = 0, send_rcdata_flag = 0;
 
 #define BYTE0(dwTemp)       (*(char *)(&dwTemp))
 #define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))
@@ -156,44 +161,44 @@ void Uart1_send_custom_float(unsigned char fun, float aa, float bb, float cc)
 
 // 	Uart1_Put_Char(sum);
 // }
-// void Uart1_Send_AF(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t gg,int16_t hh)
-// {
-// 	unsigned char sum = 0;
-// 	count=0;
-// 	sum += Uart1_Put_Char(0x88);
-// 	sum += Uart1_Put_Char(0xAF);
-// 	sum += Uart1_Put_Char(0x1C);
-// 	sum += Uart1_Put_Char(BYTE1(aa));//1
-// 	sum += Uart1_Put_Char(BYTE0(aa));
-// 	sum += Uart1_Put_Char(BYTE1(bb));//2
-// 	sum += Uart1_Put_Char(BYTE0(bb));
-// 	sum += Uart1_Put_Char(BYTE1(cc));//3 ACC DATA
-// 	sum += Uart1_Put_Char(BYTE0(cc));
-// 	sum += Uart1_Put_Char(BYTE1(dd));//4
-// 	sum += Uart1_Put_Char(BYTE0(dd));
-// 	sum += Uart1_Put_Char(BYTE1(ee));//5
-// 	sum += Uart1_Put_Char(BYTE0(ee));
-// 	sum += Uart1_Put_Char(BYTE1(ff));//6 GYRO DATA
-// 	sum += Uart1_Put_Char(BYTE0(ff));
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);//磁力计
-// 	sum += Uart1_Put_Char(BYTE1(gg));//7 ANGLE DATA ROLL
-// 	sum += Uart1_Put_Char(BYTE0(gg));
-// 	sum += Uart1_Put_Char(BYTE1(hh));//8 PITCH
-// 	sum += Uart1_Put_Char(BYTE0(hh));
-// 	Uart1_Put_Char(0);//YAW
-// 	Uart1_Put_Char(0);
+void Uart1_Send_AF(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t gg,int16_t hh)
+{
+	unsigned char sum = 0;
+	count=0;
+	sum += Uart1_Put_Char(0x88);
+	sum += Uart1_Put_Char(0xAF);
+	sum += Uart1_Put_Char(0x1C);
+	sum += Uart1_Put_Char(BYTE1(aa));//1
+	sum += Uart1_Put_Char(BYTE0(aa));
+	sum += Uart1_Put_Char(BYTE1(bb));//2
+	sum += Uart1_Put_Char(BYTE0(bb));
+	sum += Uart1_Put_Char(BYTE1(cc));//3 ACC DATA
+	sum += Uart1_Put_Char(BYTE0(cc));
+	sum += Uart1_Put_Char(BYTE1(dd));//4
+	sum += Uart1_Put_Char(BYTE0(dd));
+	sum += Uart1_Put_Char(BYTE1(ee));//5
+	sum += Uart1_Put_Char(BYTE0(ee));
+	sum += Uart1_Put_Char(BYTE1(ff));//6 GYRO DATA
+	sum += Uart1_Put_Char(BYTE0(ff));
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);//磁力计
+	sum += Uart1_Put_Char(BYTE1(gg));//7 ANGLE DATA ROLL
+	sum += Uart1_Put_Char(BYTE0(gg));
+	sum += Uart1_Put_Char(BYTE1(hh));//8 PITCH
+	sum += Uart1_Put_Char(BYTE0(hh));
+	Uart1_Put_Char(0);//YAW
+	Uart1_Put_Char(0);
 
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(0);
-// 	Uart1_Put_Char(sum);
-// }
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(0);
+	Uart1_Put_Char(sum);
+}
 // void Uart1_Send_AE(uint16_t throttle,uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee)
 // {
 // 	unsigned char sum = 0;
@@ -280,7 +285,23 @@ void Uart1_send_custom_float(unsigned char fun, float aa, float bb, float cc)
 // 	Uart1_Put_Char(sum);
 // }
 
-
+void Data_Exchange() {
+	if (send_status_flag == 1) {
+		send_status_flag = 0;
+		send_status((signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100), 0x00, 0x00, 0x00, 0x01);
+		send_wave(18);
+	}
+	if (send_senser_flag == 1) {
+		 send_senser_flag = 0;
+		send_senser((signed short int)Angle_accX, (signed short int)Angle_accY, (signed short int)Angle_accZ, (signed short int)fGYRO_X, (signed short int)fGYRO_Y, (signed short int)fGYRO_Z, 0x00, 0x00, 0x00);
+	send_wave(23);
+	}
+	if (send_rcdata_flag == 1) {
+		send_rcdata_flag = 0;
+		send_rcdata(throttle, 0x00, (signed short int)RC_get_Roll, (signed short int)RC_get_Pitch, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+	send_wave(25);
+	}
+}
 void send_status(int16_t rol, int16_t pitch, int16_t yaw, int16_t alt_cbs, int32_t alt_prs, u8 armed) {
 	unsigned char sum = 0;
 	count = 0;
@@ -294,7 +315,7 @@ void send_status(int16_t rol, int16_t pitch, int16_t yaw, int16_t alt_cbs, int32
 	sum += Uart1_Put_Int16(yaw);
 	sum += Uart1_Put_Int16(alt_cbs);
 	sum += Uart1_Put_Int32(alt_prs);
-	
+
 	if (armed) {
 		sum += Uart1_Put_Char(0xA0);
 	}

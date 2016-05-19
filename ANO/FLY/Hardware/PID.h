@@ -13,6 +13,11 @@ typedef struct PID
     float KP, KI, KD, Imax;
 }PID_;
 extern PID_ PID;
+extern PID_ PID_ROLL, PID_PITCH;
+extern float expRoll,expPitch;
+extern int expThro;
+extern float surYaw, surRoll, surPitch;
+extern int16_t motor0, motor1, motor2, motor3;
 //void change_PID();
 //void changePIDNum(float* pid_num);
 void PID_Set(void);

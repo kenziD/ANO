@@ -4,6 +4,9 @@
 #include "stm32f10x.h"
 #include <stdio.h>
 
+extern uint8_t Res[32];
+extern int STA;
+extern int p;
 void USART1_Config(uint32_t bound);
 //int fputc(int ch, FILE *f);
 //void USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);

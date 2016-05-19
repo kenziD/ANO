@@ -1,31 +1,23 @@
 #include "config.h"
 #include "wave.h"
 #include <stdio.h>
-extern int STA;//´®¿Ú½ÓÊÕ32×Ö·ûÍê³ÉµÄ×´Ì¬
-extern int16_t motor0, motor1, motor2, motor3;
-extern float surRoll, surPitch;
-extern int expThro;
-extern PID_ PID_ROLL, PID_PITCH;
-extern uint8_t Res[32];
-extern int p;
-extern float expRoll;
-extern float expPitch;
-extern float Angle_accX, Angle_accY, Angle_accZ; 
-extern float fGYRO_X, fGYRO_Y, fGYRO_Z;//量化的陀螺仪数据 g(9.8m/s^2)
-//1ms flag from TIM3_IRQ
-extern u8 FLAG_ATT;
 
+float ypr[3]; // yaw pitch roll
+float RC_get_Roll = 0;
+float RC_get_Pitch = 0;
+extern u8 FLAG_ATT;
+int throttle = 0;
 int main(void)
- {
-	float q[4];
-	float ypr[3]; // yaw pitch roll
+{
+
 	u8 tmp_buf[32] = {0};
 	float Receive_Data = 0;
-	int throttle = 0;
-	char status[] = "stop";
-	float RC_get_Roll = 0;
-	float RC_get_Pitch = 0;
 
+	char status[] = "stop";
+
+	u8	send_status_cnt = 0;
+	u8	send_senser_cnt = 0;
+	u8	send_rcdata_cnt = 0;
 	int cnt = 0;
 	int send_cnt = 0;
 	RCC_HSE_Configuration();
@@ -49,7 +41,7 @@ int main(void)
 	NRF24L01_RX_Mode();
 	PID_Init();
 
-	
+
 	while (1)
 	{
 		if (FLAG_ATT == 1)//1ms
@@ -57,9 +49,12 @@ int main(void)
 			FLAG_ATT = 0;
 			cnt++;//1ms add one
 			send_cnt++;
+			send_status_cnt++;
+			send_senser_cnt++;
+			send_rcdata_cnt++;
 			if (cnt == 1) //2ms
 			{
-				//nedd 30ms 
+				//nedd 30ms
 				Read_Mpu6050();
 			}
 			else
@@ -67,21 +62,35 @@ int main(void)
 				IMU_getYawPitchRoll(ypr);
 				cnt = 0;
 			}
-			// if (send_cnt == 10)//10ms
-			// {
-				//this code need 43ms
-				// Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
-				// send_wave(32);
-				// Uart1_Send_AE(throttle,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
-				// send_wave(32);
-				send_status((signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100),0x00,0x00,0x00,0x01);
-				send_wave(18);
-				// send_senser((signed short int)Angle_accX,(signed short int)Angle_accY,(signed short int)Angle_accZ,(signed short int)fGYRO_X,(signed short int)fGYRO_Y,(signed short int)fGYRO_Z,0x00,0x00,0x00);
-				// send_wave(23);
-				// send_rcdata(throttle,0x00,(signed short int)RC_get_Roll,(signed short int)RC_get_Pitch,0x00,0x00,0x00,0x00,0x00,0x00);
-				// send_wave(25);
-				// send_cnt = 0;
-			// }
+			if (send_status_cnt == 5)//10ms
+			{
+				send_status_flag = 1;
+				send_status_cnt = 0;
+			}
+			if (send_senser_cnt == 5) {
+				send_senser_flag = 1;
+				send_senser_cnt = 0;
+			}
+
+			if (send_rcdata_cnt == 10) {
+				send_rcdata_flag = 1;
+				send_rcdata_cnt = 0;
+			}
+			//this code need 43ms
+			//Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+			//send_wave(32);
+			// Uart1_Send_AE(throttle,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
+			// send_wave(32);
+
+
+			// send_status((signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100), 0x00, 0x00, 0x00, 0x01);
+			// send_wave(18);
+			// send_senser((signed short int)Angle_accX,(signed short int)Angle_accY,(signed short int)Angle_accZ,(signed short int)fGYRO_X,(signed short int)fGYRO_Y,(signed short int)fGYRO_Z,0x00,0x00,0x00);
+			// send_wave(23);
+			// send_rcdata(throttle,0x00,(signed short int)RC_get_Roll,(signed short int)RC_get_Pitch,0x00,0x00,0x00,0x00,0x00,0x00);
+			// send_wave(25);
+			// send_cnt = 0;
+
 		}
 		//
 		// IMU_getQ(q);

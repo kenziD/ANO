@@ -32,3 +32,4 @@
 ..\output\stm32f10x_it.o: ..\Hardware\LED.h
 ..\output\stm32f10x_it.o: ..\Hardware\usart.h
 ..\output\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\stm32f10x_it.o: ..\Hardware\wave.h

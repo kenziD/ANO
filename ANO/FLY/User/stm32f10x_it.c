@@ -137,6 +137,7 @@ void SysTick_Handler(void)
 }
 #include "LED.h"
 #include "usart.h"
+#include "wave.h"
 u8 FLAG_ATT = 0;
 void TIM3_IRQHandler(void)    //0.5ms中断一次
 {
@@ -154,7 +155,7 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
       FLAG_ATT = 1;
     }
 
-    // Data_Exchange(); //0.5ms
+     Data_Exchange(); //0.5ms
   }
 }
 /******************************************************************************/

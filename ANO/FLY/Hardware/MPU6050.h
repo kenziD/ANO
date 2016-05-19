@@ -34,6 +34,9 @@
 #define X_range 176.5
 #define Y_range 178.54
 #define Z_range 179.7
+
+extern float fGYRO_X, fGYRO_Y, fGYRO_Z;		 //量化的陀螺仪数据     g(9.8m/s^2)
+extern float Angle_accX, Angle_accY, Angle_accZ; //存储加速计的角度
 u8 Single_Read_Mpu6050(unsigned char Mpu6050_addr,unsigned char Register_addr);
 void Mpu6050init(void);
 void Mpu6050_Init_offset(void);
