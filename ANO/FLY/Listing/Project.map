@@ -1112,31 +1112,31 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       804         44         10          0          0       3519   24l01.o
-       168          8          0          4          0       1005   delay.o
-       128          6          0          0          0        512   hseconf.o
-       644         14          0          0          0       1772   iic.o
-      1996        110          0         36          0       2888   imu.o
-       100          6          0          0          0        677   led.o
-       772         86          0          0          0     260613   main.o
-       220         22          0          0          0       1721   misc.o
-       440          4          0          0          0       2151   motor.o
-      1508        170          0        116         12       3284   mpu6050.o
-       944        102          0         68         48       1908   pid.o
-       260         10          0          0          0       1077   spi.o
-        36          8        236          0       1024        828   startup_stm32f10x_md.o
-       860         38          0          0          0       5573   stm32f10x_gpio.o
-        26          0          0          0          0       1178   stm32f10x_it.o
-       936         40          0         20          0       8724   stm32f10x_rcc.o
-       780         14          0          0          0       6450   stm32f10x_spi.o
-      3610         88          0          0          0      22056   stm32f10x_tim.o
-      1032         22          0          0          0       8292   stm32f10x_usart.o
-       484         42          0         20          0       1755   system_stm32f10x.o
-       296         22          0          8         32       1722   usart.o
-      2480         68          0          7         32       6523   wave.o
+       804         44         10          0          0       3495   24l01.o
+       168          8          0          4          0        989   delay.o
+       128          6          0          0          0        504   hseconf.o
+       644         14          0          0          0       1764   iic.o
+      1996        110          0         36          0       2864   imu.o
+       100          6          0          0          0        669   led.o
+       772         86          0          0          0     260541   main.o
+       220         22          0          0          0       1705   misc.o
+       440          4          0          0          0       2143   motor.o
+      1508        170          0        116         12       3260   mpu6050.o
+       944        102          0         68         48       1892   pid.o
+       260         10          0          0          0       1069   spi.o
+        36          8        236          0       1024        824   startup_stm32f10x_md.o
+       860         38          0          0          0       5557   stm32f10x_gpio.o
+        26          0          0          0          0       1170   stm32f10x_it.o
+       936         40          0         20          0       8700   stm32f10x_rcc.o
+       780         14          0          0          0       6434   stm32f10x_spi.o
+      3610         88          0          0          0      22040   stm32f10x_tim.o
+      1032         22          0          0          0       8276   stm32f10x_usart.o
+       484         42          0         20          0       1731   system_stm32f10x.o
+       296         22          0          8         32       1698   usart.o
+      2480         68          0          7         32       6483   wave.o
 
     ----------------------------------------------------------------------
-     18528        924        284        280       1148     344228   Object Totals
+     18528        924        284        280       1148     343808   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          4          0          6          1          0          0   (incl. Padding)
 
@@ -1216,8 +1216,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     22868       1112        524        284       1148     344340   Grand Totals
-     22868       1112        524        284       1148     344340   ELF Image Totals
+     22868       1112        524        284       1148     343920   Grand Totals
+     22868       1112        524        284       1148     343920   ELF Image Totals
      22868       1112        524        284          0          0   ROM Totals
 
 ==============================================================================
