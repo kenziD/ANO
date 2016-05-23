@@ -2,9 +2,10 @@
 #define __IMU_H
 #include "stm32f10x.h"
 
-#define Kp 10.0f                        // proportional gain governs rate of convergence to accelerometer/magnetometer
+#define Kp 1.6f                        // proportional gain governs rate of convergence to accelerometer/magnetometer
 #define Ki 0.008f                // integral gain governs rate of convergence of gyroscope biases
 #define M_PI 3.14159
+extern u8 angle_offset_OK;
 void Initial_Timer3(void);
 uint32_t micros(void);
 void prepare_data(void);

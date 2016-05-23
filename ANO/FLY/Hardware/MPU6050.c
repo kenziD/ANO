@@ -120,6 +120,7 @@ void Mpu6050_Init_offset()
 //	Z_range = Az_max - Az_min;
 //	Mpu6050_init_range_OK = 1;
 //}
+
 void Read_Mpu6050(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
@@ -166,4 +167,25 @@ void Read_Mpu6050(void)
 	Angle_accX = (atan(fACCEL_X / sqrt(fACCEL_Z * fACCEL_Z + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Ax_min) / X_range * 180 - 90;
 	Angle_accY = (atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14 - Ay_min) / Y_range * 180 - 90;
 	Angle_accZ = (atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Az_min) / Z_range * 180 - 90;
+}
+void moveFilterAccData(float angle_accX,float angle_accY,float angle_accZ,float *angleOut){
+	static uint8_t 	filter_cnt=0;
+	static float	ACC_X_BUF[FILTER_NUM],ACC_Y_BUF[FILTER_NUM],ACC_Z_BUF[FILTER_NUM];
+	int32_t temp1=0,temp2=0,temp3=0;
+	uint8_t i;
+
+	ACC_X_BUF[filter_cnt] = angle_accX;
+	ACC_Y_BUF[filter_cnt] = angle_accY;
+	ACC_Z_BUF[filter_cnt] = angle_accZ;
+	for(i=0;i<FILTER_NUM;i++)
+	{
+		temp1 += ACC_X_BUF[i];
+		temp2 += ACC_Y_BUF[i];
+		temp3 += ACC_Z_BUF[i];
+	}
+	angleOut[0] = temp1 / FILTER_NUM;
+	angleOut[1] = temp2 / FILTER_NUM;
+	angleOut[2] = temp3 / FILTER_NUM;
+	filter_cnt++;
+	if(filter_cnt==FILTER_NUM)	filter_cnt=0;
 }

@@ -92,6 +92,8 @@ uint32_t micros(void)
 //	Angle_gyroZ_last = Angle_gyroZ;
 //}
 
+
+
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az)
 {
 	float norm;
@@ -140,21 +142,50 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	q2 = q2 / norm;
 	q3 = q3 / norm;
 }
-
+extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	IMU_Quateration_Update(fGYRO_X* M_PI/180, fGYRO_Y* M_PI/180, fGYRO_Z* M_PI/180, Angle_accX, Angle_accY, Angle_accZ);
+	//IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, AngleOut[0], AngleOut[1], AngleOut[2]);
+	IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, Angle_accX, Angle_accY, Angle_accZ);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;
 	q[3] = q3;
 }
+
+u8 angle_offset_cnt = 0;
+u8 angle_offset_OK = 0;
+float pitch_offset = 0;
+float roll_offset = 0;
+float sum_roll = 0;
+float sum_pitch = 0;
 void IMU_getYawPitchRoll(float * angles) {
-  float q[4]; //¡¡ËÄÔªÊý
-  IMU_getQ(q); //¸üÐÂÈ«¾ÖËÄÔªÊý
-  
-  angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2]*q[2] - 2 * q[3] * q[3] + 1)* 180/M_PI; // yaw
-  angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2])* 180/M_PI; // pitch
-  angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1)* 180/M_PI; // roll
-  //if(angles[0]<0)angles[0]+=360.0f;  //½« -+180¶È  ×ª³É0-360¶È
+	float q[4];
+
+	IMU_getQ(q);
+
+	if (angle_offset_OK)
+	{
+		angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
+		angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI - pitch_offset; // pitch
+		angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI - roll_offset; // roll
+	}
+	else {
+		if (angle_offset_cnt < 200)
+		{
+			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
+			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI; // pitch
+			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI; // roll
+			sum_roll += angles[2];
+			sum_pitch += angles[1];
+			angle_offset_cnt++;
+		}
+		else
+		{
+			roll_offset = sum_roll / 200.0;
+			pitch_offset = sum_pitch / 200.0;
+			angle_offset_OK = 1;
+		}
+
+	}
 }

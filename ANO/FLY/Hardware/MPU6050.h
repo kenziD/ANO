@@ -34,11 +34,14 @@
 #define X_range 176.5
 #define Y_range 178.54
 #define Z_range 179.7
+
+#define FILTER_NUM 20
 u8 Single_Read_Mpu6050(unsigned char Mpu6050_addr,unsigned char Register_addr);
 void Mpu6050init(void);
 void Mpu6050_Init_offset(void);
 void Mpu6050_init_range(void);
 //void Read_Mpu6050(float* gx,float* gy,float* gz,float* ax,float* ay,float* az);
 void Read_Mpu6050(void);
+void moveFilterAccData(float angle_accX,float angle_accY,float angle_accZ,float *angleOut);
 #endif
 
