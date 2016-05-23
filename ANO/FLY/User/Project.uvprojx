@@ -562,11 +562,6 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\PID.c</FilePath>
             </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\timer.c</FilePath>
-            </File>
           </Files>
         </Group>
       </Groups>

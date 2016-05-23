@@ -36,6 +36,7 @@
 ..\output\pid.o: ..\Hardware\LED.h
 ..\output\pid.o: ..\Hardware\IIC.h
 ..\output\pid.o: ..\Hardware\MPU6050.h
+..\output\pid.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\pid.o: ..\Hardware\IMU.h
 ..\output\pid.o: ..\Hardware\HSEconf.h
 ..\output\pid.o: ..\Hardware\config.h

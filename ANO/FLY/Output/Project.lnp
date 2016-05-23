@@ -19,12 +19,13 @@
 "..\output\usart.o"
 "..\output\iic.o"
 "..\output\imu.o"
-"..\output\mpu6050.o"
 "..\output\motor.o"
 "..\output\24l01.o"
 "..\output\spi.o"
 "..\output\wave.o"
 "..\output\pid.o"
+"..\Hardware\ANO_TC_STM32F1_I2C.lib"
+"..\output\mpu6050.o"
 --library_type=microlib --strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

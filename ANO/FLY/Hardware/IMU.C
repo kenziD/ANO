@@ -145,8 +145,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	//IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, AngleOut[0], AngleOut[1], AngleOut[2]);
-	IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, Angle_accX, Angle_accY, Angle_accZ);
+	IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, AngleOut[0], AngleOut[1], AngleOut[2]);
+	//IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, Angle_accX, Angle_accY, Angle_accZ);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;

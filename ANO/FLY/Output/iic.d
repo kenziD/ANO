@@ -36,6 +36,7 @@
 ..\output\iic.o: ..\Hardware\LED.h
 ..\output\iic.o: ..\Hardware\IIC.h
 ..\output\iic.o: ..\Hardware\MPU6050.h
+..\output\iic.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\iic.o: ..\Hardware\IMU.h
 ..\output\iic.o: ..\Hardware\HSEconf.h
 ..\output\iic.o: ..\Hardware\config.h

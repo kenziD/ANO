@@ -37,6 +37,7 @@
 ..\output\wave.o: ..\Hardware\LED.h
 ..\output\wave.o: ..\Hardware\IIC.h
 ..\output\wave.o: ..\Hardware\MPU6050.h
+..\output\wave.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\wave.o: ..\Hardware\IMU.h
 ..\output\wave.o: ..\Hardware\HSEconf.h
 ..\output\wave.o: ..\Hardware\config.h

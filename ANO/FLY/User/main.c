@@ -27,7 +27,7 @@ int main(void)
 	SysTick_Init();
 	USART1_Config(115200);
 	LED_Init();
-	IIC_Init();
+	//IIC_Init();
 	Initial_Timer3();
 	TIM2_Init(999, 0);
 	Mpu6050_Init_offset();
@@ -47,8 +47,9 @@ int main(void)
 	while (1)
 	{
 		Read_Mpu6050();
+		Mpu6050_Analyze();
 		IMU_getQ(q);
-		//moveFilterAccData(Angle_accX,Angle_accY,Angle_accZ,AngleOut);
+		moveFilterAccData(Angle_accX,Angle_accY,Angle_accZ,AngleOut);
 		IMU_getYawPitchRoll(ypr);
 //	Uart1_send_custom_float(0xA1,ypr[1],ypr[2],ypr[0]);//·¢ËÍ×ËÌ¬½Ç ÓÃ×Ô¶¨ÒåÖ¡ floatÐÍ
 //	send_wave(16);
@@ -89,9 +90,9 @@ int main(void)
 			STA = 0;
 			p = 0;
 		}
-		//Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
-		//send_wave(32);
-		//Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
-		//send_wave(32);
+		Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+		send_wave(32);
+		Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
+		send_wave(32);
 	}
 }
