@@ -10,7 +10,8 @@ extern uint8_t Res[32];
 extern int p;
 extern float expRoll;
 extern float expPitch;
-extern float Angle_accX, Angle_accY, Angle_accZ; 
+extern float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
+
 float AngleOut[3];
 
 int main(void)
@@ -28,6 +29,7 @@ int main(void)
 	USART1_Config(115200);
 	LED_Init();
 	//IIC_Init();
+	ANO_TC_I2C2_INIT(0xA6,400000,1,1,3,3);
 	Initial_Timer3();
 	TIM2_Init(999, 0);
 	Mpu6050_Init_offset();
@@ -48,8 +50,7 @@ int main(void)
 	{
 		Read_Mpu6050();
 		Mpu6050_Analyze();
-		IMU_getQ(q);
-		moveFilterAccData(Angle_accX,Angle_accY,Angle_accZ,AngleOut);
+		moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,AngleOut);
 		IMU_getYawPitchRoll(ypr);
 //	Uart1_send_custom_float(0xA1,ypr[1],ypr[2],ypr[0]);//·¢ËÍ×ËÌ¬½Ç ÓÃ×Ô¶¨ÒåÖ¡ floatÐÍ
 //	send_wave(16);

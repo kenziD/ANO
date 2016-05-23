@@ -359,7 +359,7 @@
 #define MPU6050_WHO_AM_I_LENGTH     6
 
 #define Gyro_Sen 65.5 //根据GYRO_CONFIG测量范围设置
-#define Acc_Sen 16384.0;
+#define Acc_Sen 16.4;
 
 #define Ax_min -88.045357
 #define Ay_min -89.067940

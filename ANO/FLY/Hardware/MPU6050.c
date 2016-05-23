@@ -20,13 +20,13 @@ double Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
 double Ax_offset = 0, Ay_offset = 0, Az_offset = 0;
 int Mpu6050_init_offset_OK = 0;
 
-uint8_t *id= 0;
+uint8_t *id = 0;
 void Delay_ms_mpu(u16 nms)
-{	
-	uint16_t i,j;
-	for(i=0;i<nms;i++)
-		for(j=0;j<8500;j++);
-} 
+{
+	uint16_t i, j;
+	for (i = 0; i < nms; i++)
+		for (j = 0; j < 8500; j++);
+}
 
 /******************初始化陀螺仪静止偏移*****************/
 void Mpu6050_Init_offset(void)
@@ -44,7 +44,7 @@ void Mpu6050_Init_offset(void)
 
 		Read_Mpu6050();
 		Mpu6050_Analyze();
-		
+
 		sum_gx += fGYRO_X;
 		sum_gy += fGYRO_Y;
 		sum_gz += fGYRO_Z;
@@ -77,13 +77,13 @@ void Mpu6050_Analyze(void)
 	fGYRO_Z = GYRO_Z_last / Gyro_Sen - Gz_offset;
 
 	ACCEL_X_last =	(mpu6050_buffer[0] << 8) | mpu6050_buffer[1];
-	fACCEL_X = ACCEL_X_last / Acc_Sen;
+	fACCEL_X = ACCEL_X_last / Acc_Sen - Ax_offset;
 
 	ACCEL_Y_last =	(mpu6050_buffer[2] << 8) | mpu6050_buffer[3];
-	fACCEL_Y = ACCEL_Y_last / Acc_Sen;
+	fACCEL_Y = ACCEL_Y_last / Acc_Sen - Ay_offset;
 
 	ACCEL_Z_last =	(mpu6050_buffer[4] << 8) | mpu6050_buffer[5];
-	fACCEL_Z = ACCEL_Z_last / Acc_Sen;
+	fACCEL_Z = ACCEL_Z_last / Acc_Sen - Az_offset;
 
 	//if (Mpu6050_init_range_OK)
 	//{
@@ -95,9 +95,9 @@ void Mpu6050_Analyze(void)
 	//Angle_accY = atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14;
 	//Angle_accZ = atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14;
 
-	Angle_accX = (atan(fACCEL_X / sqrt(fACCEL_Z * fACCEL_Z + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Ax_min) / X_range * 180 - 90;
-	Angle_accY = (atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14 - Ay_min) / Y_range * 180 - 90;
-	Angle_accZ = (atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Az_min) / Z_range * 180 - 90;
+	//Angle_accX = (atan(fACCEL_X / sqrt(fACCEL_Z * fACCEL_Z + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Ax_min) / X_range * 180 - 90;
+	//Angle_accY = (atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14 - Ay_min) / Y_range * 180 - 90;
+	//Angle_accZ = (atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Az_min) / Z_range * 180 - 90;
 }
 void moveFilterAccData(float angle_accX, float angle_accY, float angle_accZ, float *angleOut) {
 	static uint8_t 	filter_cnt = 0;
@@ -133,8 +133,8 @@ void moveFilterAccData(float angle_accX, float angle_accY, float angle_accZ, flo
 *******************************************************************************/
 void Read_Mpu6050(void)
 {
-	ANO_TC_I2C2_Read_Int(devAddr,MPU6050_RA_ACCEL_XOUT_H,14,mpu6050_buffer);
-	ANO_TC_I2C2_Read_Int(devAddr,MPU6050_RA_WHO_AM_I,1,id);
+	ANO_TC_I2C2_Read_Int(devAddr, MPU6050_RA_ACCEL_XOUT_H, 14, mpu6050_buffer);
+	ANO_TC_I2C2_Read_Int(devAddr, MPU6050_RA_WHO_AM_I, 1, id);
 }
 /**************************实现函数********************************************
 *函数原型:		u8 IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data)
@@ -143,14 +143,14 @@ void Read_Mpu6050(void)
 reg	   寄存器地址
 bitNum  要修改目标字节的bitNum位
 data  为0 时，目标位将被清0 否则将被置位
-返回   成功 为1 
+返回   成功 为1
 失败为0
-*******************************************************************************/ 
-void IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data){
+*******************************************************************************/
+void IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data) {
 	u8 b;
 	ANO_TC_I2C2_Read_Buf(dev, reg, 1, &b);
 	b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
-	ANO_TC_I2C2_Write_Buf(dev, reg, 1,&b);
+	ANO_TC_I2C2_Write_Buf(dev, reg, 1, &b);
 }
 /**************************实现函数********************************************
 *函数原型:		u8 IICwriteBits(u8 dev,u8 reg,u8 bitStart,u8 length,u8 data)
@@ -160,20 +160,20 @@ reg	   寄存器地址
 bitStart  目标字节的起始位
 length   位长度
 data    存放改变目标字节位的值
-返回   成功 为1 
+返回   成功 为1
 失败为0
-*******************************************************************************/ 
-void IICwriteBits(u8 dev,u8 reg,u8 bitStart,u8 length,u8 data)
+*******************************************************************************/
+void IICwriteBits(u8 dev, u8 reg, u8 bitStart, u8 length, u8 data)
 {
-	
-	u8 b,mask;
+
+	u8 b, mask;
 	ANO_TC_I2C2_Read_Buf(dev, reg, 1, &b);
 	mask = (0xFF << (bitStart + 1)) | 0xFF >> ((8 - bitStart) + length - 1);
 	data <<= (8 - length);
 	data >>= (7 - bitStart);
 	b &= mask;
 	b |= data;
-	ANO_TC_I2C2_Write_Buf(dev, reg, 1,&b);
+	ANO_TC_I2C2_Write_Buf(dev, reg, 1, &b);
 }
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_setClockSource(uint8_t source)
@@ -189,9 +189,9 @@ void IICwriteBits(u8 dev,u8 reg,u8 bitStart,u8 length,u8 data)
 * 6       | Reserved
 * 7       | Stops the clock and keeps the timing generator in reset
 *******************************************************************************/
-void MPU6050_setClockSource(uint8_t source){
+void MPU6050_setClockSource(uint8_t source) {
 	IICwriteBits(devAddr, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, source);
-	
+
 }
 /** Set full-scale gyroscope range.
 * @param range New full-scale gyroscope range value

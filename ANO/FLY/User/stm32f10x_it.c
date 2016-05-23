@@ -135,7 +135,15 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 }
-
+#include "ANO_TC_STM32F1_I2C.h"
+void I2C2_EV_IRQHandler( void )
+{
+	ANO_TC_I2C2_EV_IRQ();
+}
+void I2C2_ER_IRQHandler( void )
+{
+	ANO_TC_I2C2_ER_IRQ();
+}
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

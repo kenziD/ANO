@@ -145,7 +145,7 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, AngleOut[0], AngleOut[1], AngleOut[2]);
+	IMU_Quateration_Update(fGYRO_X *57.3, fGYRO_Y *57.3, fGYRO_Z *57.3, AngleOut[0], AngleOut[1], AngleOut[2]);
 	//IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, Angle_accX, Angle_accY, Angle_accZ);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
@@ -166,16 +166,16 @@ void IMU_getYawPitchRoll(float * angles) {
 
 	if (angle_offset_OK)
 	{
-		angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
-		angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI - pitch_offset; // pitch
-		angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI - roll_offset; // roll
+		angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1)*57.3; // yaw
+		angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) *57.3 - pitch_offset; // pitch
+		angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) *57.3 - roll_offset; // roll
 	}
 	else {
 		if (angle_offset_cnt < 200)
 		{
-			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
-			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI; // pitch
-			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI; // roll
+			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) *57.3; // yaw
+			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) *57.3; // pitch
+			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1)*57.3; // roll
 			sum_roll += angles[2];
 			sum_pitch += angles[1];
 			angle_offset_cnt++;

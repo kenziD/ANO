@@ -29,3 +29,4 @@
 ..\output\stm32f10x_it.o: ..\FWlib\inc\stm32f10x_usart.h
 ..\output\stm32f10x_it.o: ..\FWlib\inc\stm32f10x_wwdg.h
 ..\output\stm32f10x_it.o: ..\FWlib\inc\misc.h
+..\output\stm32f10x_it.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
