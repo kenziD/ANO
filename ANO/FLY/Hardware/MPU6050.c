@@ -69,7 +69,7 @@ void Mpu6050_Analyze(void)
 
 	GYRO_X_last =	(mpu6050_buffer[8] << 8) | mpu6050_buffer[9];
 	fGYRO_X = GYRO_X_last / Gyro_Sen - Gx_offset;
-
+	
 	GYRO_Y_last =	(mpu6050_buffer[10] << 8) | mpu6050_buffer[11];
 	fGYRO_Y = GYRO_Y_last / Gyro_Sen - Gy_offset;
 

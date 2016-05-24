@@ -11,6 +11,9 @@ extern int p;
 extern float expRoll;
 extern float expPitch;
 extern float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
+//debug
+extern short GYRO_X_last, GYRO_Y_last, GYRO_Z_last;
+extern short ACCEL_X_last, ACCEL_Y_last, ACCEL_Z_last;
 
 float AngleOut[3];
 
@@ -54,7 +57,8 @@ int main(void)
 		IMU_getYawPitchRoll(ypr);
 //	Uart1_send_custom_float(0xA1,ypr[1],ypr[2],ypr[0]);//·¢ËÍ×ËÌ¬½Ç ÓÃ×Ô¶¨ÒåÖ¡ floatÐÍ
 //	send_wave(16);
-
+		//printf("%d\t%d\t%d",ACCEL_X_last,ACCEL_Y_last,ACCEL_Z_last);
+		//printf("%d\t%d\t%d",GYRO_X_last,GYRO_Y_last,GYRO_Z_last);
 		if (NRF24L01_RxPacket(tmp_buf) == 0)
 		{
 			Receive_Data = (float)(tmp_buf[1] << 8 | tmp_buf[0]) / 1000.0;//
