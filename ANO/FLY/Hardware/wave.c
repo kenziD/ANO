@@ -110,6 +110,21 @@ void Uart1_send_custom_int16(int16_t aa)
 	sum +=Uart1_Put_Int16(aa);//发送16位数据  
 	Uart1_Put_Char(sum);
 }
+/****************给第一帧 第1,2,3位 发送int16_t数据*************/
+void Uart1_send_custom_three_int16(int16_t aa,int16_t bb,int16_t cc)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=Uart1_Put_Char(0x88);
+	sum +=Uart1_Put_Char(0xA1);
+	
+	sum +=Uart1_Put_Char(0x06);//发送的数据的长度 记得改
+	sum +=Uart1_Put_Int16(aa);//发送16位数据
+	sum +=Uart1_Put_Int16(bb);//发送16位数据  
+	sum +=Uart1_Put_Int16(cc);//发送16位数据    
+	Uart1_Put_Char(sum);
+}
 /****************给第一帧 第一位 发送float数据*************/
 
 void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc)

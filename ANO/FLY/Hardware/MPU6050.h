@@ -358,8 +358,10 @@
 #define MPU6050_WHO_AM_I_BIT        6
 #define MPU6050_WHO_AM_I_LENGTH     6
 
-#define Gyro_Sen 65.5 //根据GYRO_CONFIG测量范围设置
+#define Gyro_Sen 65.5 //根据GYRO_CONFIG测量范围设置 +-2000 对应65536/40000=16.384
 #define Acc_Sen 16.4;
+
+#define Gyro_G 		0.0610351f		//角速度变成度   此参数对应陀螺2000度每秒		1/Gyro_Sen=1/16.384
 
 #define Ax_min -88.045357
 #define Ay_min -89.067940

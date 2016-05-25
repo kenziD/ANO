@@ -1,8 +1,9 @@
 #include "config.h"
 
-extern double Gx_offset, Gy_offset, Gz_offset;
+extern float Gx_offset, Gy_offset, Gz_offset;
 extern volatile float Angle_gyroX, Angle_gyroY, Angle_gyroZ;
 extern float fGYRO_X, fGYRO_Y, fGYRO_Z, T_T;		 //X,Y,ZÖá
+extern float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
 volatile uint32_t lastUpdate, now;
 
 float q0 = 1, q1 = 0, q2 = 0, q3 = 0;        // quaternion elements representing the estimated orientation
@@ -145,8 +146,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	IMU_Quateration_Update(fGYRO_X *57.3, fGYRO_Y *57.3, fGYRO_Z *57.3, AngleOut[0], AngleOut[1], AngleOut[2]);
-	//IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, Angle_accX, Angle_accY, Angle_accZ);
+	//IMU_Quateration_Update(fGYRO_X *57.3, fGYRO_Y *57.3, fGYRO_Z *57.3, AngleOut[0], AngleOut[1], AngleOut[2]);
+	IMU_Quateration_Update(fGYRO_X *57.3, fGYRO_Y *57.3, fGYRO_Z *57.3, fACCEL_X, fACCEL_Y, fACCEL_Z);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;

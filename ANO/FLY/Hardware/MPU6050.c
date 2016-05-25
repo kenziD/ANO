@@ -16,8 +16,8 @@ float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
 float Angle_accX, Angle_accY, Angle_accZ; //存储加速计的角度
 volatile float Angle_gyroX, Angle_gyroY, Angle_gyroZ;
 
-double Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
-double Ax_offset = 0, Ay_offset = 0, Az_offset = 0;
+float Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
+float Ax_offset = 0, Ay_offset = 0, Az_offset = 0;
 int Mpu6050_init_offset_OK = 0;
 
 uint8_t *id = 0;
@@ -49,9 +49,9 @@ void Mpu6050_Init_offset(void)
 		sum_gy += fGYRO_Y;
 		sum_gz += fGYRO_Z;
 
-		sum_ax += Angle_accX;
-		sum_ay += Angle_accY;
-		sum_az += Angle_accZ;
+		sum_ax += fACCEL_X;
+		sum_ay += fACCEL_X;
+		sum_az += fACCEL_X;
 	}
 	Gx_offset = sum_gx / 50.0;
 	Gy_offset = sum_gy / 50.0;
@@ -67,23 +67,23 @@ void Mpu6050_Analyze(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
 
-	GYRO_X_last =	(mpu6050_buffer[8] << 8) | mpu6050_buffer[9];
-	fGYRO_X = GYRO_X_last / Gyro_Sen - Gx_offset;
+	fGYRO_X =	(mpu6050_buffer[8] << 8) | mpu6050_buffer[9];
+	fGYRO_X = fGYRO_X * Gyro_G - Gx_offset;
 	
-	GYRO_Y_last =	(mpu6050_buffer[10] << 8) | mpu6050_buffer[11];
-	fGYRO_Y = GYRO_Y_last / Gyro_Sen - Gy_offset;
+	fGYRO_Y =	(mpu6050_buffer[10] << 8) | mpu6050_buffer[11];
+	fGYRO_Y = fGYRO_Y * Gyro_G - Gy_offset;
 
-	GYRO_Z_last =	(mpu6050_buffer[12] << 8) | mpu6050_buffer[13];
-	fGYRO_Z = GYRO_Z_last / Gyro_Sen - Gz_offset;
+	fGYRO_Z =	(mpu6050_buffer[12] << 8) | mpu6050_buffer[13];
+	fGYRO_Z = fGYRO_Z * Gyro_G - Gz_offset;
 
-	ACCEL_X_last =	(mpu6050_buffer[0] << 8) | mpu6050_buffer[1];
-	fACCEL_X = ACCEL_X_last / Acc_Sen - Ax_offset;
+	fACCEL_X =	(mpu6050_buffer[0] << 8) | mpu6050_buffer[1];
+	fACCEL_X = fACCEL_X  - Ax_offset;
 
-	ACCEL_Y_last =	(mpu6050_buffer[2] << 8) | mpu6050_buffer[3];
-	fACCEL_Y = ACCEL_Y_last / Acc_Sen - Ay_offset;
+	fACCEL_Y =	(mpu6050_buffer[2] << 8) | mpu6050_buffer[3];
+	fACCEL_Y = fACCEL_Y  - Ay_offset;
 
-	ACCEL_Z_last =	(mpu6050_buffer[4] << 8) | mpu6050_buffer[5];
-	fACCEL_Z = ACCEL_Z_last / Acc_Sen - Az_offset;
+	fACCEL_Z =	(mpu6050_buffer[4] << 8) | mpu6050_buffer[5];
+	fACCEL_Z = fACCEL_Z  - Az_offset;
 
 	//if (Mpu6050_init_range_OK)
 	//{
@@ -134,7 +134,7 @@ void moveFilterAccData(float angle_accX, float angle_accY, float angle_accZ, flo
 void Read_Mpu6050(void)
 {
 	ANO_TC_I2C2_Read_Int(devAddr, MPU6050_RA_ACCEL_XOUT_H, 14, mpu6050_buffer);
-	ANO_TC_I2C2_Read_Int(devAddr, MPU6050_RA_WHO_AM_I, 1, id);
+
 }
 /**************************实现函数********************************************
 *函数原型:		u8 IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data)

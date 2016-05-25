@@ -22,14 +22,14 @@ Dialog DLL:      TARMSTM.DLL V1.64.0.0
  
 <h2>Project:</h2>
 D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\Project.uvprojx
-Project File Date:  05/23/2016
+Project File Date:  05/24/2016
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Rebuild target 'STM32_Project'
 assembling startup_stm32f10x_md.s...
 compiling main.c...
-main.c(22): warning:  #177-D: variable "q" was declared but never referenced
+main.c(20): warning:  #177-D: variable "q" was declared but never referenced
         float q[4];
 main.c: 1 warning, 0 errors
 compiling stm32f10x_it.c...
@@ -51,16 +51,6 @@ compiling usart.c...
 compiling IIC.c...
 compiling IMU.C...
 compiling MPU6050.c...
-..\Hardware\MPU6050.c(80): warning:  #174-D: expression has no effect
-        fACCEL_X = ACCEL_X_last / 
-cc_Sen - Ax_offset;
-..\Hardware\MPU6050.c(83): warning:  #174-D: expression has no effect
-        fACCEL_Y = ACCEL_Y_last / 
-cc_Sen - Ay_offset;
-..\Hardware\MPU6050.c(86): warning:  #174-D: expression has no effect
-        fACCEL_Z = ACCEL_Z_last / 
-cc_Sen - Az_offset;
-..\Hardware\MPU6050.c: 3 warnings, 0 errors
 compiling MOTOR.c...
 compiling 24l01.c...
 compiling spi.c...
@@ -72,9 +62,9 @@ compiling PID.c...
       static float roll_i = 0, pitch_i = 0, yaw_i = 0;
 ..\Hardware\PID.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=26168 RO-data=520 RW-data=332 ZI-data=1420  
+Program Size: Code=26200 RO-data=520 RW-data=300 ZI-data=1404  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 6 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\RTE

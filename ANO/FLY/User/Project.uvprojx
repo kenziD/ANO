@@ -562,6 +562,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\PID.c</FilePath>
             </File>
+            <File>
+              <FileName>ANO_TC_STM32F1_I2C.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Hardware\ANO_TC_STM32F1_I2C.lib</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
