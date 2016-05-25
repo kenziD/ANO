@@ -3,7 +3,7 @@
 
 float expRoll = 0;
 float expPitch = 0;
-extern float fGYRO_X, fGYRO_Y, fGYRO_Z;
+extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;
 
 
 PID_ PID_ROLL,PID_PITCH,PID_YAW;

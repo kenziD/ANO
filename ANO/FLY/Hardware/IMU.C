@@ -1,15 +1,13 @@
 #include "config.h"
 
-extern float Gx_offset, Gy_offset, Gz_offset;
-extern volatile float Angle_gyroX, Angle_gyroY, Angle_gyroZ;
-extern float fGYRO_X, fGYRO_Y, fGYRO_Z, T_T;		 //X,Y,ZÖá
-extern float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
+extern int16_t Gx_offset, Gy_offset, Gz_offset;
+extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z, T_T;		 //X,Y,ZÖá
+extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
 volatile uint32_t lastUpdate, now;
 
 float q0 = 1, q1 = 0, q2 = 0, q3 = 0;        // quaternion elements representing the estimated orientation
 float exInt = 0, eyInt = 0, ezInt = 0;        // scaled integral error
 
-extern float Angle_accX, Angle_accY, Angle_accZ; //´æ´¢¼ÓËÙ¼ÆµÄ½Ç¶È
 void Initial_Timer3(void)
 {
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -111,6 +109,10 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	}
 	//printf("%f",halfT);
 	lastUpdate = now;	//¸üÐÂÊ±¼ä
+	gx *= Gyro_Gr;
+	gy *= Gyro_Gr;
+	gz *= Gyro_Gr;
+	
 	norm = sqrt(ax * ax + ay * ay + az * az);
 	ax = ax / norm;
 	ay = ay / norm;
@@ -127,7 +129,7 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	exInt = exInt + ex * Ki ;
 	eyInt = eyInt + ey * Ki ;
 	ezInt = ezInt + ez * Ki ;
-
+	
 	gx = gx + Kp * ex + exInt;
 	gy = gy + Kp * ey + eyInt;
 	gz = gz + Kp * ez + ezInt;
@@ -146,8 +148,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	IMU_Quateration_Update(fGYRO_X, fGYRO_Y , fGYRO_Z , AngleOut[0], AngleOut[1], AngleOut[2]);
-	//IMU_Quateration_Update(fGYRO_X , fGYRO_Y , fGYRO_Z , fACCEL_X, fACCEL_Y, fACCEL_Z);
+	//IMU_Quateration_Update((float)fGYRO_X, (float)fGYRO_Y , (float)fGYRO_Z , (float)AngleOut[0], (float)AngleOut[1], (float)AngleOut[2]);
+	IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;

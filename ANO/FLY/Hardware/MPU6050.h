@@ -373,10 +373,10 @@
 #define FILTER_NUM 20
 
 void Mpu6050init(void);
-void Mpu6050_Init_offset(void);
+// void Mpu6050_Init_offset(void);
 void Read_Mpu6050(void);
 void Mpu6050_Analyze(void);
 
-void moveFilterAccData(float angle_accX, float angle_accY, float angle_accZ, float *angleOut);
+void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_accZ, int16_t *angleOut);
 
 #endif
