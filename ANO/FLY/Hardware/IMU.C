@@ -4,10 +4,10 @@ extern double Gx_offset, Gy_offset, Gz_offset;
 extern volatile float Angle_gyroX, Angle_gyroY, Angle_gyroZ;
 extern float fGYRO_X, fGYRO_Y, fGYRO_Z, T_T;		 //X,Y,ZÖá
 volatile uint32_t lastUpdate, now;
-
+extern short ACCEL_X_last, ACCEL_Y_last, ACCEL_Z_last;
 float q0 = 1, q1 = 0, q2 = 0, q3 = 0;        // quaternion elements representing the estimated orientation
 float exInt = 0, eyInt = 0, ezInt = 0;        // scaled integral error
-
+extern float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
 extern float Angle_accX, Angle_accY, Angle_accZ; //´æ´¢¼ÓËÙ¼ÆµÄ½Ç¶È
 void Initial_Timer3(void)
 {
@@ -94,13 +94,14 @@ uint32_t micros(void)
 
 
 
-void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az)
+void IMU_Quateration_Update(float Gx, float Gy, float Gz, float Ax, float Ay, float Az)
 {
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
 	float halfT;
-
+	float ax=Ax,ay=Ay,az=Az;
+	float gx=Gx,gy=Gy,gz=Gz;
 	now = micros();  //¶ÁÈ¡Ê±¼ä
 	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
 		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
@@ -145,8 +146,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	//IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, AngleOut[0], AngleOut[1], AngleOut[2]);
-	IMU_Quateration_Update(fGYRO_X * M_PI / 180, fGYRO_Y * M_PI / 180, fGYRO_Z * M_PI / 180, Angle_accX, Angle_accY, Angle_accZ);
+	//IMU_Quateration_Update(fGYRO_X, fGYRO_Y, fGYRO_Z, AngleOut[0], AngleOut[1], AngleOut[2]);
+	IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;
@@ -164,28 +165,28 @@ void IMU_getYawPitchRoll(float * angles) {
 
 	IMU_getQ(q);
 
-	if (angle_offset_OK)
-	{
-		angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
-		angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI - pitch_offset; // pitch
-		angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI - roll_offset; // roll
-	}
-	else {
-		if (angle_offset_cnt < 200)
-		{
-			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
-			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI; // pitch
-			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI; // roll
-			sum_roll += angles[2];
-			sum_pitch += angles[1];
-			angle_offset_cnt++;
-		}
-		else
-		{
-			roll_offset = sum_roll / 200.0;
-			pitch_offset = sum_pitch / 200.0;
-			angle_offset_OK = 1;
-		}
+	//if (angle_offset_OK)
+	//{
+		angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 57.3; // yaw
+		angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 57.3 - pitch_offset; // pitch
+		angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 57.3 - roll_offset; // roll
+	//}
+//	else {
+//		if (angle_offset_cnt < 200)
+//		{
+//			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) * 180 / M_PI; // yaw
+//			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) * 180 / M_PI; // pitch
+//			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) * 180 / M_PI; // roll
+//			sum_roll += angles[2];
+//			sum_pitch += angles[1];
+//			angle_offset_cnt++;
+//		}
+//		else
+//		{
+//			roll_offset = sum_roll / 200.0;
+//			pitch_offset = sum_pitch / 200.0;
+//			angle_offset_OK = 1;
+//		}
 
-	}
+//	}
 }

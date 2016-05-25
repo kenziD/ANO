@@ -25,8 +25,11 @@
 #define	PWR_MGMT_1		0x6B
 #define	WHO_AM_I		  0x75
 
-#define Gyro_Sen 65.5 //根据GYRO_CONFIG测量范围设置
-#define Acc_Sen 16384.0;
+#define Gyro_Sen 16.4 //根据GYRO_CONFIG测量范围设置
+#define Gyro_G 0.0610314f
+#define Gyro_Gr		0.0010653f		//角速度变成弧度 此参数对应陀螺2000度每秒	1/16.4/57.3
+#define Acc_Sen 8192.0;
+#define Acc_G 0.0001220f;
 
 #define Ax_min -88.045357
 #define Ay_min -89.067940

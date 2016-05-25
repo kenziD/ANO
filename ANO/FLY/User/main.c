@@ -12,7 +12,10 @@ extern float expRoll;
 extern float expPitch;
 extern float Angle_accX, Angle_accY, Angle_accZ; 
 float AngleOut[3];
-
+extern short ACCEL_X_last, ACCEL_Y_last, ACCEL_Z_last;
+extern float fGYRO_X, fGYRO_Y, fGYRO_Z, T_T;		 //X,Y,ZÖá
+extern float fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
+extern short GYRO_X_last, GYRO_Y_last, GYRO_Z_last; 
 int main(void)
 {
 	float q[4];
@@ -48,23 +51,19 @@ int main(void)
 	{
 		Read_Mpu6050();
 		IMU_getQ(q);
-		//moveFilterAccData(Angle_accX,Angle_accY,Angle_accZ,AngleOut);
+		//moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,AngleOut);
 		IMU_getYawPitchRoll(ypr);
-//	Uart1_send_custom_float(0xA1,ypr[1],ypr[2],ypr[0]);//·¢ËÍ×ËÌ¬½Ç ÓÃ×Ô¶¨ÒåÖ¡ floatÐÍ
-//	send_wave(16);
 
 		if (NRF24L01_RxPacket(tmp_buf) == 0)
 		{
 			Receive_Data = (float)(tmp_buf[1] << 8 | tmp_buf[0]) / 1000.0;//
 			throttle = (int)(Receive_Data * 999.0);
-			//printf("%d\n", throttle);
 			RC_get_Roll = ((tmp_buf[3] << 8 | tmp_buf[2]) - 1970) / 70.0; //????1970  ??????????????30°,????70
 			RC_get_Pitch = ((tmp_buf[5] << 8 | tmp_buf[4]) - 2120) / 70.0;;
 			if (tmp_buf[6] == 'a')
 				strcpy(status, "start");
 			if (tmp_buf[6] == 'b')
 				strcpy(status, "stop");
-			//printf("%s",status);
 		}
 
 		if (!strcmp(status, "stop"))
@@ -81,17 +80,16 @@ int main(void)
 			PID_Set();
 			Set_PWM(motor0, motor1, motor2, motor3);
 		}
-		//Uart1_Send_PID(320,PID_ROLL.KI,PID_ROLL.KD,1,0,0);
-		//send_wave(32);
+
 		if (STA == 1)
 		{
 			receive_Data();
 			STA = 0;
 			p = 0;
 		}
-		//Uart1_Send_AF(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
-		//send_wave(32);
-		//Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
-		//send_wave(32);
+		Uart1_Send_AF( (signed short int)ACCEL_X_last,  (signed short int)ACCEL_Y_last, (signed short int) ACCEL_Z_last, (signed short int)GYRO_X_last,(signed short int) GYRO_Y_last, (signed short int)GYRO_Z_last, (signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+	send_wave(32);
+		Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
+		send_wave(32);
 	}
 }
