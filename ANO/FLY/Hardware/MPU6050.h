@@ -362,7 +362,7 @@
 #define Acc_Sen 16.4;
 
 #define Gyro_G 		0.0610351f		//角速度变成度   此参数对应陀螺2000度每秒		1/Gyro_Sen=1/16.384
-
+#define Gyro_Gr 		0.0010653f		//角速度变成度   此参数对应陀螺2000度每秒		1/Gyro_Sen=1/16.384/57.3
 #define Ax_min -88.045357
 #define Ay_min -89.067940
 #define Az_min -89.826790

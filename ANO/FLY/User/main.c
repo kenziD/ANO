@@ -43,7 +43,6 @@ int main(void)
 	{
 		LED_ON;
 	}
-
 	NRF24L01_RX_Mode();
 	PID_Init();
 
@@ -51,14 +50,9 @@ int main(void)
 	{
 		Read_Mpu6050();
 		Mpu6050_Analyze();
-		//moveFilterAccData(Angle_accX, Angle_accY, Angle_accZ, AngleOut);
+		moveFilterAccData(fACCEL_X, fACCEL_Y, fACCEL_Z, AngleOut);
 		IMU_getYawPitchRoll(ypr);
-		//Uart1_send_custom_three_int16(ACCEL_X_last, ACCEL_Y_last, ACCEL_Z_last);
-		//send_wave(10);
-//	Uart1_send_custom_float(0xA1,ypr[1],ypr[2],ypr[0]);//·¢ËÍ×ËÌ¬½Ç ÓÃ×Ô¶¨ÒåÖ¡ floatÐÍ
-//	send_wave(16);
-		//printf("%d\t%d\t%d",ACCEL_X_last,ACCEL_Y_last,ACCEL_Z_last);
-		//printf("%d\t%d\t%d",GYRO_X_last,GYRO_Y_last,GYRO_Z_last);
+
 		if (NRF24L01_RxPacket(tmp_buf) == 0)
 		{
 			Receive_Data = (float)(tmp_buf[1] << 8 | tmp_buf[0]) / 1000.0;//

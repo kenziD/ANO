@@ -50,8 +50,8 @@ void Mpu6050_Init_offset(void)
 		sum_gz += fGYRO_Z;
 
 		sum_ax += fACCEL_X;
-		sum_ay += fACCEL_X;
-		sum_az += fACCEL_X;
+		sum_ay += fACCEL_Y;
+		sum_az += fACCEL_Z;
 	}
 	Gx_offset = sum_gx / 50.0;
 	Gy_offset = sum_gy / 50.0;
@@ -67,37 +67,24 @@ void Mpu6050_Analyze(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
 
-	fGYRO_X =	(mpu6050_buffer[8] << 8) | mpu6050_buffer[9];
-	fGYRO_X = fGYRO_X * Gyro_G - Gx_offset;
+	GYRO_X_last  =	(mpu6050_buffer[8] << 8) | mpu6050_buffer[9];
+	fGYRO_X = (GYRO_X_last- Gx_offset) *Gyro_Gr ;
 	
-	fGYRO_Y =	(mpu6050_buffer[10] << 8) | mpu6050_buffer[11];
-	fGYRO_Y = fGYRO_Y * Gyro_G - Gy_offset;
+	GYRO_Y_last  =	(mpu6050_buffer[10] << 8) | mpu6050_buffer[11];
+	fGYRO_Y = (GYRO_Y_last - Gy_offset)*Gyro_Gr;
+	
+	GYRO_Z_last  =	(mpu6050_buffer[12] << 8) | mpu6050_buffer[13];
+	//要转换成弧度 要不然到四元数哪里也要/180*2pi 但为啥拿去四元数运算的要转成弧度
+	fGYRO_Z = (GYRO_Z_last - Gz_offset) *Gyro_Gr;
 
-	fGYRO_Z =	(mpu6050_buffer[12] << 8) | mpu6050_buffer[13];
-	fGYRO_Z = fGYRO_Z * Gyro_G - Gz_offset;
+	ACCEL_X_last  =	(mpu6050_buffer[0] << 8) | mpu6050_buffer[1];
+	fACCEL_X = ACCEL_X_last  - Ax_offset;
 
-	fACCEL_X =	(mpu6050_buffer[0] << 8) | mpu6050_buffer[1];
-	fACCEL_X = fACCEL_X  - Ax_offset;
+	ACCEL_Y_last  =	(mpu6050_buffer[2] << 8) | mpu6050_buffer[3];
+	fACCEL_Y = ACCEL_Y_last  - Ay_offset;
 
-	fACCEL_Y =	(mpu6050_buffer[2] << 8) | mpu6050_buffer[3];
-	fACCEL_Y = fACCEL_Y  - Ay_offset;
-
-	fACCEL_Z =	(mpu6050_buffer[4] << 8) | mpu6050_buffer[5];
-	fACCEL_Z = fACCEL_Z  - Az_offset;
-
-	//if (Mpu6050_init_range_OK)
-	//{
-	//	Angle_accX = (atan(fACCEL_X / sqrt(fACCEL_Z * fACCEL_Z + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Ax_min) / X_range * 180 - 90;
-	//	Angle_accY = (atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14 - Ay_min) / Y_range * 180 - 90;
-	//	Angle_accZ = (atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Az_min) / Z_range * 180 - 90;
-	//}
-	//Angle_accX = atan(fACCEL_X / sqrt(fACCEL_Z * fACCEL_Z + fACCEL_Y * fACCEL_Y)) * 180 / 3.14;
-	//Angle_accY = atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14;
-	//Angle_accZ = atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14;
-
-	//Angle_accX = (atan(fACCEL_X / sqrt(fACCEL_Z * fACCEL_Z + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Ax_min) / X_range * 180 - 90;
-	//Angle_accY = (atan(fACCEL_Y / sqrt(fACCEL_X * fACCEL_X + fACCEL_Z * fACCEL_Z)) * 180 / 3.14 - Ay_min) / Y_range * 180 - 90;
-	//Angle_accZ = (atan(fACCEL_Z / sqrt(fACCEL_X * fACCEL_X + fACCEL_Y * fACCEL_Y)) * 180 / 3.14 - Az_min) / Z_range * 180 - 90;
+	ACCEL_Z_last  =	(mpu6050_buffer[4] << 8) | mpu6050_buffer[5];
+	fACCEL_Z = ACCEL_Z_last  ;
 }
 void moveFilterAccData(float angle_accX, float angle_accY, float angle_accZ, float *angleOut) {
 	static uint8_t 	filter_cnt = 0;

@@ -146,8 +146,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
-	//IMU_Quateration_Update(fGYRO_X *57.3, fGYRO_Y *57.3, fGYRO_Z *57.3, AngleOut[0], AngleOut[1], AngleOut[2]);
-	IMU_Quateration_Update(fGYRO_X *57.3, fGYRO_Y *57.3, fGYRO_Z *57.3, fACCEL_X, fACCEL_Y, fACCEL_Z);
+	IMU_Quateration_Update(fGYRO_X, fGYRO_Y , fGYRO_Z , AngleOut[0], AngleOut[1], AngleOut[2]);
+	//IMU_Quateration_Update(fGYRO_X , fGYRO_Y , fGYRO_Z , fACCEL_X, fACCEL_Y, fACCEL_Z);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;
@@ -165,28 +165,28 @@ void IMU_getYawPitchRoll(float * angles) {
 
 	IMU_getQ(q);
 
-	if (angle_offset_OK)
-	{
+//	if (angle_offset_OK)
+//	{
 		angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1)*57.3; // yaw
 		angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) *57.3 - pitch_offset; // pitch
 		angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1) *57.3 - roll_offset; // roll
-	}
-	else {
-		if (angle_offset_cnt < 200)
-		{
-			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) *57.3; // yaw
-			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) *57.3; // pitch
-			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1)*57.3; // roll
-			sum_roll += angles[2];
-			sum_pitch += angles[1];
-			angle_offset_cnt++;
-		}
-		else
-		{
-			roll_offset = sum_roll / 200.0;
-			pitch_offset = sum_pitch / 200.0;
-			angle_offset_OK = 1;
-		}
+//	}
+//	else {
+//		if (angle_offset_cnt < 200)
+//		{
+//			angles[0] = atan2(2 * q[1] * q[2] + 2 * q[0] * q[3], -2 * q[2] * q[2] - 2 * q[3] * q[3] + 1) *57.3; // yaw
+//			angles[1] = asin(-2 * q[1] * q[3] + 2 * q[0] * q[2]) *57.3; // pitch
+//			angles[2] = atan2(2 * q[2] * q[3] + 2 * q[0] * q[1], -2 * q[1] * q[1] - 2 * q[2] * q[2] + 1)*57.3; // roll
+//			sum_roll += angles[2];
+//			sum_pitch += angles[1];
+//			angle_offset_cnt++;
+//		}
+//		else
+//		{
+//			roll_offset = sum_roll / 200.0;
+//			pitch_offset = sum_pitch / 200.0;
+//			angle_offset_OK = 1;
+//		}
 
-	}
+	//}
 }
