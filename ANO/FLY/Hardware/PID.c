@@ -72,7 +72,7 @@ void PID_Set(void)
     else
     {
         PID_PITCH.Imax += 100;
-    }
+    } 
 
     if(pitch_i > PID_PITCH.Imax) pitch_i = PID_PITCH.Imax;
     if(pitch_i > PID_PITCH.Imax) pitch_i = -PID_PITCH.Imax;
