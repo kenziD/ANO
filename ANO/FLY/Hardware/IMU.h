@@ -13,4 +13,5 @@ void prepare_data(void);
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az);
 void IMU_getQ(float * q);
 void IMU_getYawPitchRoll(float * angles);
+void ComplementaryFilter(float gx, float gy, float gz,float Angle_accX,float Angle_accY,float Angle_accZ,float *angles);
 #endif

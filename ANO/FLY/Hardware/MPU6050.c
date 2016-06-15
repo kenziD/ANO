@@ -63,6 +63,7 @@ void Delay_ms_mpu(u16 nms)
 // }
 #define 	MPU6050_MAX		32767
 #define		MPU6050_MIN		-32768
+float Angle_accX, Angle_accY, Angle_accZ; //存储加速计的角度
 void Mpu6050_Analyze(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
@@ -74,24 +75,28 @@ void Mpu6050_Analyze(void)
 	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
 	//要转换成弧度 要不然到四元数哪里也要/180*2pi 但为啥拿去四元数运算的要转成弧度
 
-	fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  -Ax_offset;
+	fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  - Ax_offset;
 
-	fACCEL_Y  =	((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) -Ay_offset;
+	fACCEL_Y  =	((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) - Ay_offset;
 
 	fACCEL_Z  =	((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]);
+
+	fACCEL_X = fACCEL_X > MPU6050_MAX ? MPU6050_MAX : fACCEL_X;
+	fACCEL_X = fACCEL_X < MPU6050_MIN ? MPU6050_MIN : fACCEL_X;
+	fACCEL_Y = fACCEL_Y > MPU6050_MAX ? MPU6050_MAX : fACCEL_Y;
+	fACCEL_Y = fACCEL_Y < MPU6050_MIN ? MPU6050_MIN : fACCEL_Y;
+	fACCEL_Z = fACCEL_Z > MPU6050_MAX ? MPU6050_MAX : fACCEL_Z;
+	fACCEL_Z = fACCEL_Z < MPU6050_MIN ? MPU6050_MIN : fACCEL_Z;
+	fGYRO_X = fGYRO_X > MPU6050_MAX ? MPU6050_MAX : fGYRO_X;
+	fGYRO_X = fGYRO_X < MPU6050_MIN ? MPU6050_MIN : fGYRO_X;
+	fGYRO_Y = fGYRO_Y > MPU6050_MAX ? MPU6050_MAX : fGYRO_Y;
+	fGYRO_Y = fGYRO_Y < MPU6050_MIN ? MPU6050_MIN : fGYRO_Y;
+	fGYRO_Z = fGYRO_Z > MPU6050_MAX ? MPU6050_MAX : fGYRO_Z;
+	fGYRO_Z = fGYRO_Z < MPU6050_MIN ? MPU6050_MIN : fGYRO_Z;
 	
-	fACCEL_X = fACCEL_X>MPU6050_MAX ? MPU6050_MAX:fACCEL_X;
-	fACCEL_X = fACCEL_X<MPU6050_MIN ? MPU6050_MIN:fACCEL_X;
-	fACCEL_Y = fACCEL_Y>MPU6050_MAX ? MPU6050_MAX:fACCEL_Y;
-	fACCEL_Y = fACCEL_Y<MPU6050_MIN ? MPU6050_MIN:fACCEL_Y;
-	fACCEL_Z = fACCEL_Z>MPU6050_MAX ? MPU6050_MAX:fACCEL_Z;
-	fACCEL_Z = fACCEL_Z<MPU6050_MIN ? MPU6050_MIN:fACCEL_Z;
-	fGYRO_X = fGYRO_X>MPU6050_MAX ? MPU6050_MAX:fGYRO_X;
-	fGYRO_X = fGYRO_X<MPU6050_MIN ? MPU6050_MIN:fGYRO_X;
-	fGYRO_Y = fGYRO_Y>MPU6050_MAX ? MPU6050_MAX:fGYRO_Y;
-	fGYRO_Y = fGYRO_Y<MPU6050_MIN ? MPU6050_MIN:fGYRO_Y;
-	fGYRO_Z = fGYRO_Z>MPU6050_MAX ? MPU6050_MAX:fGYRO_Z;
-	fGYRO_Z = fGYRO_Z<MPU6050_MIN ? MPU6050_MIN:fGYRO_Z;
+	Angle_accX = (atan((float)fACCEL_X / sqrt((float)fACCEL_Z * (float)fACCEL_Z + (float)fACCEL_Y * (float)fACCEL_Y)) * 57.3 - Ax_min) / X_range * 180 - 90;
+	Angle_accY = (atan((float)fACCEL_Y / sqrt((float)fACCEL_X * (float)fACCEL_X + (float)fACCEL_Z * (float)fACCEL_Z)) * 57.3 - Ay_min) / Y_range * 180 - 90;
+	Angle_accZ = (atan((float)fACCEL_Z / sqrt((float)fACCEL_X * (float)fACCEL_X + (float)fACCEL_Y * (float)fACCEL_Y)) * 57.3 - Az_min) / Z_range * 180 - 90;
 	if (!GYRO_OFFSET_OK)
 	{
 		static int32_t	tempgx = 0, tempgy = 0, tempgz = 0;

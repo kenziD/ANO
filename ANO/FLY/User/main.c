@@ -10,9 +10,9 @@ extern uint8_t Res[32];
 extern int p;
 extern float expRoll;
 extern float expPitch;
-extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;		 //量化的陀螺仪数据     g(9.8m/s^2)
-extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
-
+extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;		 //量化的陀螺仪数据   rad/s   计算时要转换成度/s (弧度->度的转换)
+extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  g(9.8m/s^2)
+extern float Angle_accX, Angle_accY, Angle_accZ; //存储加速计的角度
 int16_t AngleOut[3];
 
 int main(void)
@@ -51,7 +51,7 @@ int main(void)
 		Read_Mpu6050();
 		Mpu6050_Analyze();
 		//moveFilterAccData(fACCEL_X, fACCEL_Y, fACCEL_Z, AngleOut);
-		IMU_getYawPitchRoll(ypr);
+		ComplementaryFilter((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z ,Angle_accX,Angle_accY,Angle_accZ,ypr);
 
 		// if (NRF24L01_RxPacket(tmp_buf) == 0)
 		// {
@@ -89,9 +89,9 @@ int main(void)
 		// 	STA = 0;
 		// 	p = 0;
 		// }
-		Uart1_Send_AF((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X,(int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+		Uart1_Send_AF((int16_t)(Angle_accX*100), (int16_t)(Angle_accY*100), (int16_t)(Angle_accZ*100), (int16_t)(fGYRO_X*Gyro_Gr*1000),(int16_t) (fGYRO_Y*Gyro_Gr*1000), (int16_t)(fGYRO_Z*Gyro_Gr*1000), (int16_t)(ypr[0] * 100), (signed short int)(ypr[1] * 100));
 		send_wave(32);
-		Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
-		send_wave(32);
+		//Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
+		//send_wave(32);
 	}
 }
