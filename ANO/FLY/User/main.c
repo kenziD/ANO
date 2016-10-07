@@ -14,7 +14,12 @@ extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;		 //量化的陀螺仪数据   rad/s  
 extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  g(9.8m/s^2)
 extern float Angle_accX, Angle_accY, Angle_accZ; //存储加速计的角度
 int16_t AngleOut[3];
-
+extern u8 getMpu6050Data;
+extern u8 calculateAngle;
+extern u8 sendPort;
+u8	send_senser_cnt = 0;
+u8	send_status_cnt = 0;
+int cnt = 0;
 int main(void)
 {
 	float q[4];
@@ -25,21 +30,26 @@ int main(void)
 	char status[] = "stop";
 	float RC_get_Roll = 0;
 	float RC_get_Pitch = 0;
+	
+	
+	u8	send_rcdata_cnt = 0;
+	
+	int send_cnt = 0;
+
 	RCC_HSE_Configuration();
 	SysTick_Init();
+	Tim3_Init(500);//0.5ms
 	USART1_Config(115200);
 	//LED_Init();
 	ANO_TC_I2C2_INIT(0xA6, 400000, 1, 1, 3, 3);
-	Initial_Timer3();
 	//TIM2_Init(999, 0);
-	
 	Mpu6050init();
 	//Mpu6050_Init_offset();
 	//MOT_GPIO_init();
 	//MOT_PWM_init();
 	//Set_PWM(0, 0, 0, 0);
-	//NRF24L01_Init();    			
-//	while (NRF24L01_Check())	
+	//NRF24L01_Init();
+//	while (NRF24L01_Check())
 //	{
 //		LED_ON;
 //	}
@@ -48,10 +58,29 @@ int main(void)
 
 	while (1)
 	{
-		Read_Mpu6050();
-		Mpu6050_Analyze();
 		//moveFilterAccData(fACCEL_X, fACCEL_Y, fACCEL_Z, AngleOut);
-		ComplementaryFilter((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z ,Angle_accX,Angle_accY,Angle_accZ,ypr);
+		if (getMpu6050Data == 1)//12ms
+		{
+				//nedd 8ms
+				Read_Mpu6050();
+				Mpu6050_Analyze();
+			
+			getMpu6050Data = 0;
+		
+		}
+		if (calculateAngle == 1)//12ms
+		{
+			ComplementaryFilter((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , Angle_accX, Angle_accY, Angle_accZ, ypr);
+			calculateAngle = 0;
+			
+		}
+		if (sendPort == 1)//12ms
+		{
+			Uart1_Send_AF((int16_t)(Angle_accX * 100), (int16_t)(Angle_accY * 100), (int16_t)(Angle_accZ * 100), (int16_t)(fGYRO_X * Gyro_Gr * 1000), (int16_t) (fGYRO_Y * Gyro_Gr * 1000), (int16_t)(fGYRO_Z * Gyro_Gr * 1000), (int16_t)(ypr[0] * 100), (signed short int)(ypr[1] * 100));
+			send_wave(32);
+			sendPort = 0;
+			
+		}
 
 		// if (NRF24L01_RxPacket(tmp_buf) == 0)
 		// {
@@ -89,8 +118,7 @@ int main(void)
 		// 	STA = 0;
 		// 	p = 0;
 		// }
-		Uart1_Send_AF((int16_t)(Angle_accX*100), (int16_t)(Angle_accY*100), (int16_t)(Angle_accZ*100), (int16_t)(fGYRO_X*Gyro_Gr*1000),(int16_t) (fGYRO_Y*Gyro_Gr*1000), (int16_t)(fGYRO_Z*Gyro_Gr*1000), (int16_t)(ypr[0] * 100), (signed short int)(ypr[1] * 100));
-		send_wave(32);
+		
 		//Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
 		//send_wave(32);
 	}

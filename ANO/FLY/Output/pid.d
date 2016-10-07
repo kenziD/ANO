@@ -44,5 +44,6 @@
 ..\output\pid.o: ..\Hardware\spi.h
 ..\output\pid.o: ..\Hardware\24l01.h
 ..\output\pid.o: ..\Hardware\PID.h
+..\output\pid.o: ..\Hardware\timer.h
 ..\output\pid.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\pid.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

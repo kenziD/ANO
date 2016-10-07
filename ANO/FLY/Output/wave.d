@@ -45,5 +45,6 @@
 ..\output\wave.o: ..\Hardware\spi.h
 ..\output\wave.o: ..\Hardware\24l01.h
 ..\output\wave.o: ..\Hardware\PID.h
+..\output\wave.o: ..\Hardware\timer.h
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

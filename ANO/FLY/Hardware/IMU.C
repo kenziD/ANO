@@ -94,15 +94,7 @@ uint32_t micros(void)
 
 void ComplementaryFilter(float gx, float gy, float gz,float Angle_accX,float Angle_accY,float Angle_accZ,float *angles){
 	static float angle[3];
-	float deltaT = 0;
-	now = micros();  //¶ÁÈ¡Ê±¼ä
-	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
-		deltaT =  ((float)(now + (0xffff - lastUpdate))/1000000.0f);
-	}
-	else	{
-		deltaT =  ((float)(now - lastUpdate)/1000000.0f);
-	}
-	lastUpdate = now;	//¸üÐÂÊ±¼ä
+	
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;
@@ -114,6 +106,7 @@ void ComplementaryFilter(float gx, float gy, float gz,float Angle_accX,float Ang
 	angles[2] = angle[2];
 
 }
+
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az)
 {
 	float norm;

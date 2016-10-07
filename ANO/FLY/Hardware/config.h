@@ -13,6 +13,7 @@
 #include "spi.h"
 #include "24l01.h"
 #include "PID.h"
+#include "timer.h"
 #include <math.h>
 #include "stm32f10x_tim.h"
 #include "stdint.h"

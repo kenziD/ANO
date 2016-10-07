@@ -281,6 +281,118 @@ void Uart1_Send_PID(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,
 	
 	Uart1_Put_Char(sum);
 }
+unsigned char Uart1_Put_Int32(int32_t DataToSend)
+{
+	unsigned char sum = 0;
+	TxBuffer[count++] = BYTE3(DataToSend);
+	TxBuffer[count++] = BYTE2(DataToSend);
+	TxBuffer[count++] = BYTE1(DataToSend);
+	TxBuffer[count++] = BYTE0(DataToSend);
+	sum += BYTE3(DataToSend);
+	sum += BYTE2(DataToSend);
+	sum += BYTE1(DataToSend);
+	sum += BYTE0(DataToSend);
+	return sum;
+}
+void send_status(int16_t rol, int16_t pitch, int16_t yaw, int16_t alt_cbs, int32_t alt_prs, u8 armed) {
+	unsigned char sum = 0;
+	count = 0;
+	sum += Uart1_Put_Char(0xAA);
+	sum += Uart1_Put_Char(0xAA);
+	sum += Uart1_Put_Char(0x01);
+	//14 BYTE
+	sum += Uart1_Put_Char(0x0D);
+	sum += Uart1_Put_Int16(rol);
+	sum += Uart1_Put_Int16(pitch);
+	sum += Uart1_Put_Int16(yaw);
+	sum += Uart1_Put_Int16(alt_cbs);
+	sum += Uart1_Put_Int32(alt_prs);
+
+	if (armed) {
+		sum += Uart1_Put_Char(0xA0);
+	}
+	else {
+		sum += Uart1_Put_Char(0xA1);
+	}
+	Uart1_Put_Char(sum);
+}
+void send_senser(int16_t acc_x, int16_t acc_y, int16_t acc_z, int16_t gyro_x, int16_t gyro_y, int16_t gyro_z, int16_t mag_x, int16_t mag_y, int16_t mag_z) {
+	unsigned char sum = 0;
+	count = 0;
+	sum += Uart1_Put_Char(0xAA);
+	sum += Uart1_Put_Char(0xAA);
+	sum += Uart1_Put_Char(0x02);
+	//18 BYTE
+	sum += Uart1_Put_Char(0x12);
+	sum += Uart1_Put_Int16(acc_x);
+
+	sum += Uart1_Put_Int16(acc_y);
+
+	sum += Uart1_Put_Int16(acc_z);
+
+	sum += Uart1_Put_Int16(gyro_x);
+
+	sum += Uart1_Put_Int16(gyro_y);
+
+	sum += Uart1_Put_Int16(gyro_z);
+
+	sum += Uart1_Put_Int16(mag_x);
+
+	sum += Uart1_Put_Int16(mag_y);
+
+	sum += Uart1_Put_Int16(mag_z);
+
+
+	Uart1_Put_Char(sum);
+}
+void send_rcdata(int16_t throttle, int16_t yaw, int16_t rol, int16_t pitch, int16_t aux1, int16_t aux2, int16_t aux3, int16_t aux4, int16_t aux5, int16_t aux6) {
+	unsigned char sum = 0;
+	count = 0;
+	sum += Uart1_Put_Char(0xAA);
+	sum += Uart1_Put_Char(0xAA);
+	sum += Uart1_Put_Char(0x03);
+	//14 BYTE
+	sum += Uart1_Put_Char(0x14);
+
+	sum += Uart1_Put_Int16(throttle);
+
+	sum += Uart1_Put_Int16(yaw);
+
+	sum += Uart1_Put_Int16(rol);
+
+	sum += Uart1_Put_Int16(pitch);
+
+	sum += Uart1_Put_Int16(aux1);
+
+	sum += Uart1_Put_Int16(aux2);
+
+	sum += Uart1_Put_Int16(aux3);
+
+	sum += Uart1_Put_Int16(aux4);
+
+	sum += Uart1_Put_Int16(aux5);
+
+	sum += Uart1_Put_Int16(aux6);
+
+	Uart1_Put_Char(sum);
+}
+//void Data_Exchange() {
+//	if (send_status_flag == 1) {
+//		send_status_flag = 0;
+//		send_status((signed short int)(ypr[2] * 100), (signed short int)(ypr[1] * 100), 0x00, 0x00, 0x00, 0x01);
+//		send_wave(18);
+//	}
+//	if (send_senser_flag == 1) {
+//		 send_senser_flag = 0;
+//		send_senser((signed short int)Angle_accX, (signed short int)Angle_accY, (signed short int)Angle_accZ, (signed short int)fGYRO_X, (signed short int)fGYRO_Y, (signed short int)fGYRO_Z, 0x00, 0x00, 0x00);
+//	send_wave(23);
+//	}
+//	if (send_rcdata_flag == 1) {
+//		send_rcdata_flag = 0;
+//		send_rcdata(throttle, 0x00, (signed short int)RC_get_Roll, (signed short int)RC_get_Pitch, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+//	send_wave(25);
+//	}
+//}
 void send_wave(int tx_num)//一共发送几个字节
 {
 	char count_1=0;

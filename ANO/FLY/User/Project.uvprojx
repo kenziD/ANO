@@ -567,6 +567,11 @@
               <FileType>4</FileType>
               <FilePath>..\Hardware\ANO_TC_STM32F1_I2C.lib</FilePath>
             </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\timer.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

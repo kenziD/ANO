@@ -45,5 +45,6 @@
 ..\output\hseconf.o: ..\Hardware\spi.h
 ..\output\hseconf.o: ..\Hardware\24l01.h
 ..\output\hseconf.o: ..\Hardware\PID.h
+..\output\hseconf.o: ..\Hardware\timer.h
 ..\output\hseconf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\hseconf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
