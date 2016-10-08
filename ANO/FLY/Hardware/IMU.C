@@ -33,17 +33,12 @@ void Initial_Timer3(void)
 	/* Enable the TIM2 Master Slave Mode */
 	TIM_SelectMasterSlaveMode(TIM4, TIM_MasterSlaveMode_Enable);
 	TIM_ARRPreloadConfig(TIM4, ENABLE);
-	/* ¶¨Ê±Æ÷ÅäÖÃ:
-	1.ÉèÖÃ¶¨Ê±Æ÷×î´ó¼ÆÊýÖµ 50000
-	2.ÉèÖÃÊ±ÖÓ·ÖÆµÏµÊý£ºTIM_CKD_DIV1
-	3. ÉèÖÃÔ¤·ÖÆµ£º  1Mhz/50000= 1hz
-	4.¶¨Ê±Æ÷¼ÆÊýÄ£Ê½  ÏòÉÏ¼ÆÊýÄ£Ê½
-	*/
+	
 	TIM_TimeBaseStructure.TIM_Period = 0xffff;
 	TIM_TimeBaseStructure.TIM_Prescaler = 72;	 //1M µÄÊ±ÖÓ
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	//Ó¦ÓÃÅäÖÃµ½TIM3
+
 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
 	// Ê¹ÄÜTIM3ÖØÔØ¼Ä´æÆ÷ARR
 	TIM_ARRPreloadConfig(TIM3, ENABLE);

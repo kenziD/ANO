@@ -1,7 +1,7 @@
 #include "config.h"
 #include "wave.h"
 
-extern int STA;//´®¿Ú½ÓÊÕ32×Ö·ûÍê³ÉµÄ×´Ì¬
+extern int STA;
 extern int16_t motor0, motor1, motor2, motor3;
 extern float surRoll, surPitch;
 extern int expThro;
@@ -10,8 +10,8 @@ extern uint8_t Res[32];
 extern int p;
 extern float expRoll;
 extern float expPitch;
-extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;		 //量化的陀螺仪数据     g(9.8m/s^2)
-extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
+extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;    //量化的陀螺仪数据 g(9.8m/s^2)
+extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据 °/s
 
 int16_t AngleOut[3];
 
@@ -32,19 +32,19 @@ int main(void)
 	ANO_TC_I2C2_INIT(0xA6, 400000, 1, 1, 3, 3);
 	Initial_Timer3();
 	//TIM2_Init(999, 0);
-	
+
 	Mpu6050init();
 	//Mpu6050_Init_offset();
 	//MOT_GPIO_init();
 	//MOT_PWM_init();
 	//Set_PWM(0, 0, 0, 0);
-	//NRF24L01_Init();    			
-//	while (NRF24L01_Check())	
-//	{
-//		LED_ON;
-//	}
-//	NRF24L01_RX_Mode();
-//	PID_Init();
+	//NRF24L01_Init();
+	//while (NRF24L01_Check())
+	//{
+	//	LED_ON;
+	//}
+	//NRF24L01_RX_Mode();
+	//PID_Init();
 
 	while (1)
 	{
@@ -89,7 +89,7 @@ int main(void)
 		// 	STA = 0;
 		// 	p = 0;
 		// }
-		Uart1_Send_AF((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X,(int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+		Uart1_Send_AF((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
 		send_wave(32);
 		Uart1_Send_AE((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
 		send_wave(32);
