@@ -14,9 +14,9 @@ void Initial_Timer3(void)
 
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4 | RCC_APB1Periph_TIM3, ENABLE);
 	/* TIM2 configuration*/
-	/* Time Base configuration »ù±¾ÅäÖÃ ÅäÖÃ¶¨Ê±Æ÷µÄÊ±»ùµ¥Ôª*/
+	
 	TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-	TIM_TimeBaseStructure.TIM_Period = 0xffff; //×Ô¶¯ÖØ×°Öµ
+	TIM_TimeBaseStructure.TIM_Period = 0xffff; 
 	TIM_TimeBaseStructure.TIM_Prescaler = 0x0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -33,19 +33,14 @@ void Initial_Timer3(void)
 	/* Enable the TIM2 Master Slave Mode */
 	TIM_SelectMasterSlaveMode(TIM4, TIM_MasterSlaveMode_Enable);
 	TIM_ARRPreloadConfig(TIM4, ENABLE);
-	/* ¶¨Ê±Æ÷ÅäÖÃ:
-	1.ÉèÖÃ¶¨Ê±Æ÷×î´ó¼ÆÊýÖµ 50000
-	2.ÉèÖÃÊ±ÖÓ·ÖÆµÏµÊý£ºTIM_CKD_DIV1
-	3. ÉèÖÃÔ¤·ÖÆµ£º  1Mhz/50000= 1hz
-	4.¶¨Ê±Æ÷¼ÆÊýÄ£Ê½  ÏòÉÏ¼ÆÊýÄ£Ê½
-	*/
+	
 	TIM_TimeBaseStructure.TIM_Period = 0xffff;
 	TIM_TimeBaseStructure.TIM_Prescaler = 72;	 //1M µÄÊ±ÖÓ
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	//Ó¦ÓÃÅäÖÃµ½TIM3
+	
 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
-	// Ê¹ÄÜTIM3ÖØÔØ¼Ä´æÆ÷ARR
+	
 	TIM_ARRPreloadConfig(TIM3, ENABLE);
 
 	TIM_SelectSlaveMode(TIM3, TIM_SlaveMode_Reset);
@@ -56,16 +51,15 @@ void Initial_Timer3(void)
 	/* Enable the TIM3 Master Slave Mode */
 	TIM_SelectMasterSlaveMode(TIM3, TIM_MasterSlaveMode_Enable);
 
-	//Æô¶¯¶¨Ê±Æ÷
 	TIM_Cmd(TIM3, ENABLE);
 	TIM_Cmd(TIM4, ENABLE);
 }
 uint32_t micros(void)
 {
 	uint32_t temp = 0 ;
-	temp = TIM4->CNT; //¶Á¸ß16Î»Ê±¼ä
+	temp = TIM4->CNT; 
 	temp = temp << 16;
-	temp += TIM3->CNT; //¶ÁµÍ16Î»Ê±¼ä
+	temp += TIM3->CNT; 
 	return temp;
 }
 
@@ -73,8 +67,8 @@ uint32_t micros(void)
 //{
 //	float halfT;
 //	static float Angle_gyroX_last, Angle_gyroY_last, Angle_gyroZ_last;
-//	now = micros();  //¶ÁÈ¡Ê±¼ä
-//	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
+//	now = micros();  
+//	if (now < lastUpdate) { 
 //		halfT =  ((float)(now + (0xffff - lastUpdate)) / 1000000.0f);
 //	}
 //	else	{
@@ -114,15 +108,15 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	float ex, ey, ez;
 	float halfT;
 
-	now = micros();  //¶ÁÈ¡Ê±¼ä
-	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
+	now = micros();  
+	if (now < lastUpdate) { 
 		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
 	}
 	else	{
 		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
 	}
 	//printf("%f",halfT);
-	lastUpdate = now;	//¸üÐÂÊ±¼ä
+	lastUpdate = now;	
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;
@@ -164,7 +158,7 @@ void IMU_getQ(float * q)
 {
 	//IMU_Quateration_Update((float)fGYRO_X, (float)fGYRO_Y , (float)fGYRO_Z , (float)AngleOut[0], (float)AngleOut[1], (float)AngleOut[2]);
 	IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z);
-	q[0] = q0; //·µ»Øµ±Ç°Öµ
+	q[0] = q0;
 	q[1] = q1;
 	q[2] = q2;
 	q[3] = q3;

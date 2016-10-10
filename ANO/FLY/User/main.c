@@ -1,7 +1,7 @@
 #include "config.h"
 #include "wave.h"
 
-extern int STA;//´®¿Ú½ÓÊÕ32×Ö·ûÍê³ÉµÄ×´Ì¬
+extern int STA;
 extern int16_t motor0, motor1, motor2, motor3;
 extern float surRoll, surPitch;
 extern int expThro;
