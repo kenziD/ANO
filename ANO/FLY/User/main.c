@@ -28,7 +28,8 @@ int main(void)
 	RCC_HSE_Configuration();
 	SysTick_Init();
 	USART1_Config(115200);
-	//LED_Init();
+	LED_Init();
+	LED_Flash(2,500000);
 	ANO_TC_I2C2_INIT(0xA6, 400000, 1, 1, 3, 3);
 	Initial_Timer3();
 	//TIM2_Init(999, 0);

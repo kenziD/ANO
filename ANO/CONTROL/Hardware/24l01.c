@@ -217,7 +217,7 @@ void NRF24L01_TX_Mode(void)
 	NRF24L01_Write_Reg(WRITE_REG_NRF + RF_CH, 40);    //设置RF通道为40
 	NRF24L01_Write_Reg(WRITE_REG_NRF + RF_SETUP, 0x0f); //设置TX发射参数,0db增益,2Mbps,低噪声增益开启
 	NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0e); //配置基本工作模式的参数;PWR_UP,EN_CRC,16BIT_CRC,发射模式,开启所有中断
-	NRF24L01_CE = 1; //CE为高,10us后启动发送
+	NRF24L01_CE = 1; //CE为高且保持10us后启动发送 
 }
 
 

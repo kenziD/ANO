@@ -163,8 +163,8 @@ u8 NRF24L01_TxPacket(u8 *txbuf)
 	}
 	return 0xff;//其他原因发送失败
 }
-//启动NRF24L01发送一次数据
-//txbuf:待发送数据首地址
+//启动NRF24L01接收一次数据
+//txbuf:待接收数据首地址
 //返回值:0，接收完成；其他，错误代码
 u8 NRF24L01_RxPacket(u8 *rxbuf)
 {

@@ -81,31 +81,3 @@ void delay_us(u32 nus)
 //  while(!(SysTick->CTRL&0x00010000)); //等待计数到0   
 //	SysTick->CTRL=0x00000004;//关闭定时器 
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
