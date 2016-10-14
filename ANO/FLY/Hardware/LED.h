@@ -9,7 +9,7 @@
 #define LED3_ON  		GPIO_SetBits(GPIOC, GPIO_Pin_13);
 #define LED3_OFF 			GPIO_ResetBits(GPIOC, GPIO_Pin_13);
 void LED_Init(void);
-void LED_Flash(u8 times, u32 time);
-
+void LED2_Flash(u8 times, u32 time);
+void LED3_Flash(u8 times, u32 time);
 #endif /* __LED_H */
 

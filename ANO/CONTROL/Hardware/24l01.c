@@ -219,7 +219,54 @@ void NRF24L01_TX_Mode(void)
 	NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0e); //配置基本工作模式的参数;PWR_UP,EN_CRC,16BIT_CRC,发射模式,开启所有中断
 	NRF24L01_CE = 1; //CE为高且保持10us后启动发送 
 }
-
-
+void NRF24L01_Mode_Config(u8 mode)
+{
+	NRF24L01_CE = 0;
+	NRF24L01_Write_Buf(WRITE_REG_NRF + RX_ADDR_P0, (u8*)RX_ADDRESS, RX_ADR_WIDTH); //设置TX节点地址,主要为了使能ACK
+	NRF24L01_Write_Reg(WRITE_REG_NRF + EN_AA, 0x01);  //使能通道0的自动应答
+	NRF24L01_Write_Reg(WRITE_REG_NRF + EN_RXADDR, 0x01); //使能通道0的接收地址
+	NRF24L01_Write_Reg(WRITE_REG_NRF + RF_CH, 40);    //设置RF通道为40
+	NRF24L01_Write_Reg(WRITE_REG_NRF + RF_SETUP, 0x0f); //设置TX发射参数,0db增益,2Mbps,低噪声增益开启
+	//该函数初始化NRF24L01到RX模式
+	//设置RX地址,写RX数据宽度,选择RF频道,波特率和LNA HCURR
+	//当CE变高后,即进入RX模式,并可以接收数据了
+	if(mode==1){
+		NRF24L01_Write_Reg(WRITE_REG_NRF + RX_PW_P0, RX_PLOAD_WIDTH); //选择通道0的有效数据宽度
+		NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0f); //配置基本工作模式的参数;PWR_UP,EN_CRC,16BIT_CRC,接收模式
+	}
+	//该函数初始化NRF24L01到TX模式
+	//设置TX地址,写TX数据宽度,设置RX自动应答的地址,填充TX发送数据,选择RF频道,波特率和LNA HCURR
+	//PWR_UP,CRC使能
+	//当CE变高后,即进入RX模式,并可以接收数据了
+	//CE为高大于10us,则启动发送.	见数据手册
+	if(mode==2){
+		NRF24L01_Write_Buf(WRITE_REG_NRF + TX_ADDR, (u8*)TX_ADDRESS, TX_ADR_WIDTH); //写TX节点地址
+		NRF24L01_Write_Reg(WRITE_REG_NRF + SETUP_RETR, 0x1a); //设置自动重发间隔时间:500us + 86us;最大自动重发次数:10次
+		NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0e); //配置基本工作模式的参数;PWR_UP,EN_CRC,16BIT_CRC,发射模式,开启所有中断
+	}
+	//RX2	伪双工
+	if(mode==3){
+		NRF24L01_Write_Reg(FLUSH_TX,0xff);
+		NRF24L01_Write_Reg(FLUSH_RX,0xff);
+		NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0f);   		 // IRQ收发完成中断开启,16位CRC,主接收
+		
+		SPI2_ReadWriteByte(0x50);
+		SPI2_ReadWriteByte(0x73);
+		NRF24L01_Write_Reg(WRITE_REG_NRF+0x1c,0x01);
+		NRF24L01_Write_Reg(WRITE_REG_NRF+0x1d,0x07);
+	}
+	//TX2	伪双工
+	if(mode==4){
+		NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0e);   		 // IRQ收发完成中断开启,16位CRC,主发送
+		NRF24L01_Write_Reg(FLUSH_TX,0xff);
+		NRF24L01_Write_Reg(FLUSH_RX,0xff);
+		
+		SPI2_ReadWriteByte(0x50);
+		SPI2_ReadWriteByte(0x73);
+		NRF24L01_Write_Reg(WRITE_REG_NRF+0x1c,0x01);
+		NRF24L01_Write_Reg(WRITE_REG_NRF+0x1d,0x07);
+	}
+	NRF24L01_CE = 1; //CE为高,10us后启动发送
+}
 
 

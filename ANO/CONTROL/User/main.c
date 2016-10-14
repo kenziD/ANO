@@ -22,12 +22,12 @@ int main(void)
 	}
 	LED1_ON;
 	LED2_OFF;
-	NRF24L01_TX_Mode();
-
+	//NRF24L01_TX_Mode();
+	NRF24L01_Mode_Config(2);
 	while (1)
 	{
 		key = KEY_scan();
-		if (NRF24L01_TxPacket(tmp_buf) == TX_OK)//早就超过5ms，不能放在中断里哦
+		if(NRF24L01_TxPacket(tmp_buf) == TX_OK)//早就超过5ms，不能放在中断里哦
 			{
 				LED1_ON;
 			} 

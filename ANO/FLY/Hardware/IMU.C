@@ -57,7 +57,7 @@ void Initial_Timer3(void)
 }
 uint32_t micros(void)
 {
-	uint32_t temp = 0 ;
+	uint32_t temp = 0;
 	temp = TIM4->CNT; //¶Á¸ß16Î»Ê±¼ä
 	temp = temp << 16;
 	temp += TIM3->CNT; //¶ÁµÍ16Î»Ê±¼ä

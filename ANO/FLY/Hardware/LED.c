@@ -26,17 +26,25 @@ void LED_Init(void)
 	GPIO_Init(GPIOC, &GPIO_Structure);
 }
 
-void LED_Flash(u8 times, u32 time)
+void LED2_Flash(u8 times, u32 time)
 {
     while(times--)
     {
         LED2_ON;
-				LED3_ON;
         delay_us(time);
         LED2_OFF;
+        delay_us(time);
+    }
+}
+void LED3_Flash(u8 times, u32 time)
+{
+    while(times--)
+    {
+        
+				LED3_ON;
+        delay_us(time);
+        
 				LED3_OFF;
         delay_us(time);
     }
-    LED2_ON;
-		LED3_ON;
 }
