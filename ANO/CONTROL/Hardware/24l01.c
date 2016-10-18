@@ -147,7 +147,7 @@ u8 NRF24L01_TxPacket(u8 *txbuf)
 	u8 sta;
 	SPI2_SetSpeed(SPI_BaudRatePrescaler_4);//spi速度为9Mhz（24L01的最大SPI时钟为10Mhz）
 	NRF24L01_CE = 0;
-	NRF24L01_Write_Buf(WR_TX_PLOAD, txbuf, TX_PLOAD_WIDTH); //写数据到TX BUF  5个字节
+	NRF24L01_Write_Buf(WR_TX_PLOAD, txbuf, TX_PLOAD_WIDTH); //写数据到TX BUF  32个字节
 	NRF24L01_CE = 1; //启动发送
 	while (NRF24L01_IRQ != 0); //等待发送完成
 	sta = NRF24L01_Read_Reg(STATUS); //读取状态寄存器的值
@@ -246,6 +246,7 @@ void NRF24L01_Mode_Config(u8 mode)
 	}
 	//RX2	伪双工
 	if(mode==3){
+		NRF24L01_Write_Reg(WRITE_REG_NRF + RX_PW_P0, RX_PLOAD_WIDTH); //选择通道0的有效数据宽度
 		NRF24L01_Write_Reg(FLUSH_TX,0xff);
 		NRF24L01_Write_Reg(FLUSH_RX,0xff);
 		NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0f);   		 // IRQ收发完成中断开启,16位CRC,主接收
@@ -257,6 +258,8 @@ void NRF24L01_Mode_Config(u8 mode)
 	}
 	//TX2	伪双工
 	if(mode==4){
+		NRF24L01_Write_Buf(WRITE_REG_NRF + TX_ADDR, (u8*)TX_ADDRESS, TX_ADR_WIDTH); //写TX节点地址
+		NRF24L01_Write_Reg(WRITE_REG_NRF + SETUP_RETR, 0x1a); //设置自动重发间隔时间:500us + 86us;最大自动重发次数:10次
 		NRF24L01_Write_Reg(WRITE_REG_NRF + CONFIG, 0x0e);   		 // IRQ收发完成中断开启,16位CRC,主发送
 		NRF24L01_Write_Reg(FLUSH_TX,0xff);
 		NRF24L01_Write_Reg(FLUSH_RX,0xff);
