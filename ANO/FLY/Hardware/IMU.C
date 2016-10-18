@@ -87,23 +87,23 @@ uint32_t micros(void)
 //}
 
 
-
+float halfT = 0.005;
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az)
 {
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
-	float halfT;
+	
 
-	now = micros();  //¶ÁÈ¡Ê±¼ä
-	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
-		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
-	}
-	else	{
-		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
-	}
-	//printf("%f",halfT);
-	lastUpdate = now;	//¸üÐÂÊ±¼ä
+//	now = micros();  //¶ÁÈ¡Ê±¼ä
+//	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
+//		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
+//	}
+//	else	{
+//		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
+//	}
+//lastUpdate = now;	//¸üÐÂÊ±¼ä
+	
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;

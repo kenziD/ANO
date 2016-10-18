@@ -230,6 +230,7 @@ void NRF24L01_Mode_Config(u8 mode)
 	//该函数初始化NRF24L01到RX模式
 	//设置RX地址,写RX数据宽度,选择RF频道,波特率和LNA HCURR
 	//当CE变高后,即进入RX模式,并可以接收数据了
+	//RX
 	if(mode==1){
 		NRF24L01_Write_Reg(WRITE_REG_NRF + RX_PW_P0, RX_PLOAD_WIDTH); //接收数据的时候总得知道收多少数据吧。选择通道0的有效数据宽度
 		NRF24L01_Write_Reg(WRITE_REG_NRF + NRF_CONFIG, 0x0f); //配置基本工作模式的参数;PWR_UP,EN_CRC,16BIT_CRC,接收模式
@@ -239,6 +240,7 @@ void NRF24L01_Mode_Config(u8 mode)
 	//PWR_UP,CRC使能
 	//当CE变高后,即进入RX模式,并可以接收数据了
 	//CE为高大于10us,则启动发送.	见数据手册
+	//TX
 	if(mode==2){
 		NRF24L01_Write_Buf(WRITE_REG_NRF + TX_ADDR, (u8*)TX_ADDRESS, TX_ADR_WIDTH); //写TX节点地址 寄信的时候的收件地址
 		NRF24L01_Write_Reg(WRITE_REG_NRF + SETUP_RETR, 0x1a); //设置自动重发间隔时间:500us + 86us;最大自动重发次数:10次
@@ -246,6 +248,7 @@ void NRF24L01_Mode_Config(u8 mode)
 	}
 	//RX2	伪双工
 	if(mode==3){
+		NRF24L01_Write_Reg(WRITE_REG_NRF + RX_PW_P0, RX_PLOAD_WIDTH); //接收数据的时候总得知道收多少数据吧。选择通道0的有效数据宽度
 		NRF24L01_Write_Reg(FLUSH_TX,0xff);
 		NRF24L01_Write_Reg(FLUSH_RX,0xff);
 		NRF24L01_Write_Reg(WRITE_REG_NRF + NRF_CONFIG, 0x0f);   		 // IRQ收发完成中断开启,16位CRC,主接收
@@ -257,6 +260,8 @@ void NRF24L01_Mode_Config(u8 mode)
 	}
 	//TX2	伪双工
 	if(mode==4){
+		NRF24L01_Write_Buf(WRITE_REG_NRF + TX_ADDR, (u8*)TX_ADDRESS, TX_ADR_WIDTH); //写TX节点地址 寄信的时候的收件地址
+		NRF24L01_Write_Reg(WRITE_REG_NRF + SETUP_RETR, 0x1a); //设置自动重发间隔时间:500us + 86us;最大自动重发次数:10次
 		NRF24L01_Write_Reg(WRITE_REG_NRF + NRF_CONFIG, 0x0e);   		 // IRQ收发完成中断开启,16位CRC,主发送
 		NRF24L01_Write_Reg(FLUSH_TX,0xff);
 		NRF24L01_Write_Reg(FLUSH_RX,0xff);

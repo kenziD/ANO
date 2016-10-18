@@ -22,17 +22,33 @@ Dialog DLL:      TARMSTM.DLL V1.64.0.0
  
 <h2>Project:</h2>
 D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\Project.uvprojx
-Project File Date:  10/11/2016
+Project File Date:  10/14/2016
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+*** Note: Rebuilding project, since 'Options->Output->Create Batch File' is selected.
 Rebuild target 'STM32_Project'
 assembling startup_stm32f10x_md.s...
 compiling main.c...
-main.c(20): warning:  #177-D: variable "q" was declared but never referenced
+main.c(28): warning:  #177-D: variable "q" was declared but never referenced
         float q[4];
-main.c: 1 warning, 0 errors
+main.c(30): warning:  #177-D: variable "tmp_buf" was declared but never referenced
+        u8 tmp_buf[32] = {0};
+main.c(31): warning:  #177-D: variable "Receive_Data" was declared but never referenced
+        float Receive_Data = 0;
+main.c(32): warning:  #177-D: variable "throttle" was declared but never referenced
+        int throttle = 0;
+main.c(33): warning:  #177-D: variable "status" was declared but never referenced
+        char status[] = "stop";
+main.c(34): warning:  #177-D: variable "RC_get_Roll" was declared but never referenced
+        float RC_get_Roll = 0;
+main.c(35): warning:  #177-D: variable "RC_get_Pitch" was declared but never referenced
+        float RC_get_Pitch = 0;
+main.c: 7 warnings, 0 errors
 compiling stm32f10x_it.c...
+stm32f10x_it.c(158): warning:  #177-D: variable "s1_cnt" was declared but never referenced
+    static u16 s1_cnt = 0;
+stm32f10x_it.c: 1 warning, 0 errors
 compiling misc.c...
 compiling stm32f10x_gpio.c...
 compiling stm32f10x_rcc.c...
@@ -55,16 +71,20 @@ compiling MOTOR.c...
 compiling 24l01.c...
 compiling spi.c...
 compiling wave.c...
+..\Hardware\wave.c(286): warning:  #177-D: variable "count_1" was declared but never referenced
+        char count_1=0;
+..\Hardware\wave.c: 1 warning, 0 errors
 compiling PID.c...
 ..\Hardware\PID.c(32): warning:  #177-D: variable "yaw_Out" was declared but never referenced
       static float roll_Out = 0, pitch_Out = 0, yaw_Out = 0;
 ..\Hardware\PID.c(33): warning:  #177-D: variable "yaw_i" was declared but never referenced
       static float roll_i = 0, pitch_i = 0, yaw_i = 0;
 ..\Hardware\PID.c: 2 warnings, 0 errors
+compiling timer.c...
 linking...
-Program Size: Code=26000 RO-data=520 RW-data=280 ZI-data=1408  
+Program Size: Code=25856 RO-data=520 RW-data=304 ZI-data=1408  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 3 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 11 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\RTE

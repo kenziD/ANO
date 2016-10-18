@@ -47,3 +47,4 @@
 ..\output\wave.o: ..\Hardware\PID.h
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\wave.o: ..\Hardware\timer.h

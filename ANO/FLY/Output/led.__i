@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys
+-I D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\RTE
+-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include
+-I C:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD
+-o ..\output\led.o --omf_browse ..\output\led.crf --depend ..\output\led.d "..\Hardware\LED.c"

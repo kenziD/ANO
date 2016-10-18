@@ -17,6 +17,7 @@
 #include "stm32f10x_tim.h"
 #include "stdint.h"
 #include <string.h>
+#include "timer.h"
 #endif /* __CONFIG_H_ */
 
 
