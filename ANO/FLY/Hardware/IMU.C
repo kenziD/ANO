@@ -87,8 +87,14 @@ uint32_t micros(void)
 //}
 
 
-float halfT = 0.005;
-void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az)
+float halfT = 0.0046;
+u8 angle_offset_cnt = 0;
+u8 angle_offset_OK = 0;
+float pitch_offset = 0;
+float roll_offset = 0;
+float sum_roll = 0;
+float sum_pitch = 0;
+void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
 {
 	float norm;
 	float vx, vy, vz;
@@ -139,24 +145,22 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	q1 = q1 / norm;
 	q2 = q2 / norm;
 	q3 = q3 / norm;
+	angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
+	angles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 - pitch_offset; // pitch
+	angles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 - roll_offset; // roll
 }
 extern float AngleOut[3];
 void IMU_getQ(float * q)
 {
 	//IMU_Quateration_Update((float)fGYRO_X, (float)fGYRO_Y , (float)fGYRO_Z , (float)AngleOut[0], (float)AngleOut[1], (float)AngleOut[2]);
-	IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z);
+	//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z);
 	q[0] = q0; //·µ»Øµ±Ç°Öµ
 	q[1] = q1;
 	q[2] = q2;
 	q[3] = q3;
 }
 
-u8 angle_offset_cnt = 0;
-u8 angle_offset_OK = 0;
-float pitch_offset = 0;
-float roll_offset = 0;
-float sum_roll = 0;
-float sum_pitch = 0;
+
 void IMU_getYawPitchRoll(float * angles) {
 	float q[4];
 

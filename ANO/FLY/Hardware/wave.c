@@ -287,11 +287,11 @@ void send_wave(int tx_num)//一共发送几个字节
 	#ifdef DATA_TRANSFER_USE_SPI_NRF
 		if(NRF24L01_TxPacket(TxBuffer) == TX_OK)
 		{
-			//LED2_ON;
+			LED2_ON;
 		}
 		else
 		{
-			//LED2_OFF;
+			LED2_OFF;
 		}
 	#endif
 	#ifdef DATA_TRANSFER_USE_USART

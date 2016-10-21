@@ -157,13 +157,13 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
   
   static u16 s1_cnt = 0;
 	//static u8 led_on = 0;
-//0.5ms
+	//0.5ms
   if (TIM3->SR & TIM_IT_Update)   //if ( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET )
   {
     TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
     ms1_cnt++;
 
-    if (ms1_cnt == 20) //6ms
+    if (ms1_cnt == 20) //10ms
     {
 			 
 			// if(led_on)
@@ -176,13 +176,12 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
    //      LED2_ON;
    //      led_on = 1;
    //     }
-      ms1_cnt = 0;
+     
       getMpu6050Data=1;
     }
-
-		if(ms1_cnt==8){
-			
-     calculateAngle=1;
+		if(ms1_cnt==21){
+			calculateAngle=1;
+			ms1_cnt = 0;
 		}
 		if(ms1_cnt==9 ){
 			

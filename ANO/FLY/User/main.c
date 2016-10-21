@@ -44,7 +44,7 @@ int main(void)
 	LED3_Flash(2,500000);
 	ANO_TC_I2C2_INIT(0xA6, 400000, 1, 1, 3, 3);
 	//硬实时
-	Tim3_Init(500);//0.05s
+	Tim3_Init(500);//0.005s
 	//软实时
 	//Initial_Timer3();
 	TIM2_Init(999, 0);
@@ -68,42 +68,40 @@ int main(void)
 
 	while (1)
 	{
-		if (getMpu6050Data == 1)//0.5s period,should be 10ms
+		if (getMpu6050Data == 1)//9.4ms,should be 10ms
 		{
-			//need 0.1ms
-			Read_Mpu6050();
-			Mpu6050_Analyze();
+			Read_Mpu6050(); //0.00000433s
+			Mpu6050_Analyze();//0.000011s
 			getMpu6050Data = 0;
 		}
 		if (calculateAngle == 1)//0.5s period
 		{
-			 if(led_on)
-			 {
-			 	LED2_OFF;
-			 	led_on = 0;
-			 }
-			 else
-			 {
-			 	LED2_ON;
-			 	led_on = 1;
-			 }
+//			 if(led_on)
+//			 {
+//			 	LED2_OFF;
+//			 	led_on = 0;
+//			 }
+//			 else
+//			 {
+//			 	LED2_ON;
+//			 	led_on = 1;
+//			 }
 			
-			IMU_getYawPitchRoll(ypr);
+			//IMU_getYawPitchRoll(ypr);
+			//18.367s
+			IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,ypr);//0.00057325s 0.00060588
 			calculateAngle = 0;
 		}
 		if (sendData == 1)//12ms
 		{
-			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
-			send_wave(32);
-			sendPwmVoltage((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);
-			send_wave(32);
+			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
+			send_wave(32);//0.00013279s
+			sendPwmVoltage((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);//0.00003974s
+			send_wave(32);//
 			sendData = 0;
 		}
-		//Read_Mpu6050();
-		//Mpu6050_Analyze();
 		////moveFilterAccData(fACCEL_X, fACCEL_Y, fACCEL_Z, AngleOut);
-		//IMU_getYawPitchRoll(ypr);
-		
+
 		
 		// if (NRF24L01_RxPacket(tmp_buf) == 0)
 		// {

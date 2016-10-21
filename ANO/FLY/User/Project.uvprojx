@@ -56,7 +56,7 @@
           <ListingPath>..\Listing\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
-          <CreateBatchFile>0</CreateBatchFile>
+          <CreateBatchFile>1</CreateBatchFile>
           <BeforeCompile>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
@@ -566,6 +566,11 @@
               <FileName>ANO_TC_STM32F1_I2C.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\Hardware\ANO_TC_STM32F1_I2C.lib</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\timer.c</FilePath>
             </File>
           </Files>
         </Group>
