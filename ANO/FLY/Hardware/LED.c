@@ -1,4 +1,10 @@
 #include "config.h"
+void Delay_ms_led(u16 nms)
+{	
+	uint16_t i,j;
+	for(i=0;i<nms;i++)
+		for(j=0;j<8500;j++);
+} 
 
 void LED_Init(void)
 {
@@ -31,9 +37,9 @@ void LED2_Flash(u8 times, u32 time)
     while(times--)
     {
         LED2_ON;
-        delay_us(time);
+        Delay_ms_led(time);
         LED2_OFF;
-        delay_us(time);
+        Delay_ms_led(time);
     }
 }
 void LED3_Flash(u8 times, u32 time)
@@ -42,9 +48,9 @@ void LED3_Flash(u8 times, u32 time)
     {
         
 				LED3_ON;
-        delay_us(time);
+        Delay_ms_led(time);
         
 				LED3_OFF;
-        delay_us(time);
+        Delay_ms_led(time);
     }
 }

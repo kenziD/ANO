@@ -96,11 +96,21 @@ float sum_roll = 0;
 float sum_pitch = 0;
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
 {
+	
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
-	
-
+	// ÏÈ°ÑÕâÐ©ÓÃµÃµ½µÄÖµËãºÃ
+	float q0q0 = q0*q0;
+	float q0q1 = q0*q1;
+	float q0q2 = q0*q2;
+//  float q0q3 = q0*q3;
+	float q1q1 = q1*q1;
+//  float q1q2 = q1*q2;
+	float q1q3 = q1*q3;
+	float q2q2 = q2*q2;
+	float q2q3 = q2*q3;
+	float q3q3 = q3*q3;
 //	now = micros();  //¶ÁÈ¡Ê±¼ä
 //	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
 //		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
@@ -109,43 +119,77 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 //		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
 //	}
 //lastUpdate = now;	//¸üÐÂÊ±¼ä
+	if(ax*ay*az==0)
+	return;
 	
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;
 	
+	////////////////////////////
+	/*1.3*0.05ms = 0.065ms;*/
+	////////////////////////////
+	
+	////////////////////////////
+	/*0.05ms*/
 	norm = sqrt(ax * ax + ay * ay + az * az);
+	///////////////////////////
+
+	//////////////////////////
+	/*0.015ms*/
 	ax = ax / norm;
 	ay = ay / norm;
 	az = az / norm;
-
-	vx = 2 * (q1 * q3 - q0 * q2);
-	vy = 2 * (q0 * q1 + q2 * q3);
-	vz = q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
-
+	//////////////////////////
+	
+	////////////////////////////
+	/*0.8*10us= 0.008ms*/
+	vx = 2 * (q1q3 - q0q2);
+	vy = 2 * (q0q1 + q2q3);
+	vz = q0q0 - q1q1 - q2q2 + q3q3;
+	////////////////////////////
+	
+	///////////////////////////
+	/*0.01ms*/
 	ex = (ay * vz - az * vy);
 	ey = (az * vx - ax * vz);
 	ez = (ax * vy - ay * vx);
-
+	
+	////////////////////////////
+	
+	/////////////////////////////
+	/*0.01ms*/
 	exInt = exInt + ex * Ki ;
 	eyInt = eyInt + ey * Ki ;
 	ezInt = ezInt + ez * Ki ;
+	/////////////////////////////
 	
+	/////////////////////////////
+	/*0.01ms*/
 	gx = gx + Kp * ex + exInt;
 	gy = gy + Kp * ey + eyInt;
 	gz = gz + Kp * ez + ezInt;
-
+	//////////////////////////////
+	
+	//////////////////////////////
+	/*1.4*25us = 0.035ms*/
 	q0 = q0 + (-q1 * gx - q2 * gy - q3 * gz) * halfT;
 	q1 = q1 + (q0 * gx + q2 * gz - q3 * gy) * halfT;
 	q2 = q2 + (q0 * gy - q1 * gz + q3 * gx) * halfT;
 	q3 = q3 + (q0 * gz + q1 * gy - q2 * gx) * halfT;
-
+	//////////////////////////////
+	////////////////////////////////
+	/*0.045ms*/
+	//LED2_ON;
 	norm = sqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
+	//LED2_OFF;
+	////////////////////////////////
 	q0 = q0 / norm;
 	q1 = q1 / norm;
 	q2 = q2 / norm;
 	q3 = q3 / norm;
-	angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
+	angles[0] += gz*Gyro_Gr*0.002;
+	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
 	angles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 - pitch_offset; // pitch
 	angles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 - roll_offset; // roll
 }

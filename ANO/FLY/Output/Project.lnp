@@ -27,7 +27,7 @@
 "..\output\pid.o"
 "..\Hardware\ANO_TC_STM32F1_I2C.lib"
 "..\output\timer.o"
---library_type=microlib --strict --scatter "..\Output\Project.sct"
+--strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "..\Listing\Project.map" -o ..\Output\Project.axf

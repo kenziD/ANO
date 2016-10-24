@@ -22,7 +22,7 @@ Dialog DLL:      TARMSTM.DLL V1.64.0.0
  
 <h2>Project:</h2>
 D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\Project.uvprojx
-Project File Date:  10/14/2016
+Project File Date:  10/20/2016
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
@@ -43,13 +43,17 @@ main.c(34): warning:  #177-D: variable "RC_get_Roll" was declared but never refe
         float RC_get_Roll = 0;
 main.c(35): warning:  #177-D: variable "RC_get_Pitch" was declared but never referenced
         float RC_get_Pitch = 0;
+main.c(36): warning:  #177-D: variable "test" was declared but never referenced
+        float test = 0;
 main.c(37): warning:  #177-D: variable "led_on" was declared but never referenced
         static u8 led_on = 0;
-main.c: 8 warnings, 0 errors
+main.c: 9 warnings, 0 errors
 compiling stm32f10x_it.c...
 stm32f10x_it.c(158): warning:  #177-D: variable "s1_cnt" was declared but never referenced
     static u16 s1_cnt = 0;
-stm32f10x_it.c: 1 warning, 0 errors
+stm32f10x_it.c(159): warning:  #177-D: variable "led_on" was declared but never referenced
+        static u8 led_on = 0;
+stm32f10x_it.c: 2 warnings, 0 errors
 compiling misc.c...
 compiling stm32f10x_gpio.c...
 compiling stm32f10x_rcc.c...
@@ -83,9 +87,9 @@ compiling PID.c...
 ..\Hardware\PID.c: 2 warnings, 0 errors
 compiling timer.c...
 linking...
-Program Size: Code=26208 RO-data=520 RW-data=292 ZI-data=1404  
+Program Size: Code=25954 RO-data=518 RW-data=276 ZI-data=1980  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 12 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 14 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   D:\future\Sceince\DRAGON\ANO\ANO\FLY\User\RTE
