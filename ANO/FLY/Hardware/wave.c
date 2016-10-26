@@ -303,15 +303,6 @@ void send_wave(int tx_num)//一共发送几个字节
 	
 }
 
-void testAdd(void)
-{
-	uint16_t i,j;
-	//LED2_ON;
-	for(i=0;i<1;i++)
-		for(j=0;j<8500;j++);
-
-	//LED2_OFF;
-}
 void sendSenserPackage(void)
 {
 //		static u8 led_on = 0;

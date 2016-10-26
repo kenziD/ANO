@@ -82,11 +82,11 @@ int main(void)
 //			 	led_on = 1;
 //			 }
 			//0.01ms?
-			Read_Mpu6050(); //0.00000433s
-			Mpu6050_Analyze();//0.000011s
+			Read_Mpu6050(); 
+			Mpu6050_Analyze();
 			getMpu6050Data = 0;
 		}
-		if (calculateAngle == 1)//4ms period?
+		if (calculateAngle == 1)//2ms period
 		{
 			//0.2ms
 			//LED2_ON;
@@ -94,7 +94,7 @@ int main(void)
 			//LED2_OFF;
 			calculateAngle = 0;
 		}
-		if (sendData == 1)//12ms
+		if (sendData == 1)//2ms
 		{
 			
 			//if wait for the IRQ it need 9ms
