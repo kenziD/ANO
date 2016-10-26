@@ -371,6 +371,8 @@
 #define Z_range 179.7
 
 #define FILTER_NUM 20
+extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;    //量化的陀螺仪数据 g(9.8m/s^2)
+extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据 °/s
 
 void Mpu6050init(void);
 // void Mpu6050_Init_offset(void);

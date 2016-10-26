@@ -2,13 +2,14 @@
 #include "usart.h"
 #include "config.h"
 #include "pid.h"
+#include "MPU6050.h"
 //#define tx_num	32
 unsigned char temp[6];
 unsigned char TxBuffer[32];//一共发送的字节数 记得改
 unsigned char count=0; 
 extern PID_ PID_ROLL,PID_PITCH;
 extern uint8_t Res[32];
-
+extern float ypr[3];
 #define BYTE0(dwTemp)       (*(char *)(&dwTemp))
 #define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))
 #define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))
@@ -287,11 +288,11 @@ void send_wave(int tx_num)//一共发送几个字节
 	#ifdef DATA_TRANSFER_USE_SPI_NRF
 		if(NRF24L01_TxPacket(TxBuffer) == TX_OK)
 		{
-			// LED2_ON;
+			 LED2_ON;
 		}
 		else
 		{
-			// LED2_OFF;
+			LED2_OFF;
 		}
 	#endif
 	#ifdef DATA_TRANSFER_USE_USART
@@ -300,6 +301,32 @@ void send_wave(int tx_num)//一共发送几个字节
 	#endif
 	
 	
+}
+
+void testAdd(void)
+{
+	uint16_t i,j;
+	//LED2_ON;
+	for(i=0;i<1;i++)
+		for(j=0;j<8500;j++);
+
+	//LED2_OFF;
+}
+void sendSenserPackage(void)
+{
+//		static u8 led_on = 0;
+//		if(led_on)
+//    {
+//       LED2_OFF;
+//       led_on = 0;
+//    }
+//    else
+//    {
+//       LED2_ON;
+//       led_on = 1;
+//    }
+	sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
+	send_wave(32);//0.00013279s
 }
 void send_temp(int tx_num)//一共发送几个字节
 {

@@ -87,7 +87,7 @@ uint32_t micros(void)
 //}
 
 
-float halfT = 0.0046;
+float halfT = 0.001;
 u8 angle_offset_cnt = 0;
 u8 angle_offset_OK = 0;
 float pitch_offset = 0;

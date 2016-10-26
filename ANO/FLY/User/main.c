@@ -10,8 +10,7 @@ extern uint8_t Res[32];
 extern int p;
 extern float expRoll;
 extern float expPitch;
-extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;    //量化的陀螺仪数据 g(9.8m/s^2)
-extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据 °/s
+
 
 int16_t AngleOut[3];
 
@@ -22,11 +21,11 @@ u8	send_senser_cnt = 0;
 u8	send_status_cnt = 0;
 int cnt = 0;
 
-
+float ypr[3];
 int main(void)
 {
 	float q[4];
-	float ypr[3]; // yaw pitch roll
+	//float ypr[3]; // yaw pitch roll
 	u8 tmp_buf[32] = {0};
 	float Receive_Data = 0;
 	int throttle = 0;
@@ -36,8 +35,8 @@ int main(void)
 	float test = 0;
 	static u8 led_on = 0;
 	
-	//RCC_HSE_Configuration();
-	//SysTick_Init();
+	RCC_HSE_Configuration();
+	SysTick_Init();
 	NVIC_Configuration();
 	USART1_Config(115200);
 	LED_Init();
@@ -68,17 +67,11 @@ int main(void)
 
 	while (1)
 	{
+		
 		if (getMpu6050Data == 1)//9.4ms,should be 10ms
 		{
-			LED2_ON;
-			Read_Mpu6050(); //0.00000433s
-			Mpu6050_Analyze();//0.000011s
-			LED2_OFF;
-			getMpu6050Data = 0;
-		}
-		if (calculateAngle == 1)//0.5s period
-		{
-//			 if(led_on)
+			
+			 //if(led_on)
 //			 {
 //			 	LED2_OFF;
 //			 	led_on = 0;
@@ -88,16 +81,31 @@ int main(void)
 //			 	LED2_ON;
 //			 	led_on = 1;
 //			 }
+			//0.01ms?
+			Read_Mpu6050(); //0.00000433s
+			Mpu6050_Analyze();//0.000011s
+			getMpu6050Data = 0;
+		}
+		if (calculateAngle == 1)//4ms period?
+		{
+			//0.2ms
+			//LED2_ON;
 			IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,ypr);//0.00057325s 0.00060588
-			
+			//LED2_OFF;
 			calculateAngle = 0;
 		}
 		if (sendData == 1)//12ms
 		{
-			//sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
-			//send_wave(32);//0.00013279s
+			
+			//if wait for the IRQ it need 9ms
+			//if not wait for IRQ it runtime need 100us*1.2=0.12ms
+			//LED2_ON;
+			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
+			send_wave(32);//0.00013279s
+			//LED2_OFF;
 			//sendPwmVoltage((uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100), 320);//0.00003974s
 			//send_wave(32);//
+			
 			sendData = 0;
 		}
 		//moveFilterAccData(fACCEL_X, fACCEL_Y, fACCEL_Z, AngleOut);

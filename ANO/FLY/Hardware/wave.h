@@ -30,5 +30,6 @@ void print5n(unsigned int x);
 void print4n(unsigned int x);
 void print3n(unsigned int x);
 void print2n(unsigned int x);
-
+void sendSenserPackage(void);
+void testAdd(void);
 #endif /* WAVE_H_ */
