@@ -117,8 +117,8 @@ u8 NRF24L01_Read_Buf(u8 reg, u8 *pBuf, u8 len)
 	u8 status, u8_ctr;
 	NRF24L01_CSN = 0;           //使能SPI传输
 	status = SPI1_ReadWriteByte(reg); //发送寄存器值(位置),并读取状态值
-	for (u8_ctr = 0; u8_ctr < len; u8_ctr++)
-	pBuf[u8_ctr] = SPI1_ReadWriteByte(0XFF); //读出数据//0xff只是为了发起时钟。
+	for(u8_ctr = 0; u8_ctr < len; u8_ctr++)
+		pBuf[u8_ctr] = SPI1_ReadWriteByte(0XFF); //读出数据//0xff只是为了发起时钟。
 	NRF24L01_CSN = 1;     //关闭SPI传输
 	return status;        //返回读到的状态值
 }
@@ -146,7 +146,7 @@ u8 NRF24L01_TxPacket(u8 *txbuf)
 {
 	u8 sta;
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);//spi速度为9Mhz（24L01的最大SPI时钟为10Mhz）
-	NRF24L01_CE = 0;
+	NRF24L01_CE = 0; //spi stand by
 	NRF24L01_Write_Buf(WR_TX_PLOAD, txbuf, TX_PLOAD_WIDTH); //写数据到TX BUF  32个字节
 	NRF24L01_CE = 1; //启动发送
 	//while (NRF24L01_IRQ != 0); //等待发送完成
@@ -157,7 +157,7 @@ u8 NRF24L01_TxPacket(u8 *txbuf)
 		NRF24L01_Write_Reg(FLUSH_TX, 0xff); //清除TX FIFO寄存器
 		return MAX_TX;
 	}
-	if (sta & TX_OK) //发送完成
+	if (sta & TX_OK) //发送完成中断且收到应答信号置1
 	{
 		return TX_OK;
 	}

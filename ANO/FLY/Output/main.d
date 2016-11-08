@@ -47,4 +47,6 @@
 ..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\main.o: ..\Hardware\timer.h
+..\output\main.o: ..\Hardware\adc.h
 ..\output\main.o: ..\Hardware\wave.h
+..\output\main.o: ..\Hardware\Rc.h

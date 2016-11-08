@@ -3,6 +3,9 @@
 #include "config.h"
 #include "pid.h"
 #include "MPU6050.h"
+#include "24l01.h"
+
+#include "Rc.h"
 //#define tx_num	32
 unsigned char temp[6];
 unsigned char TxBuffer[32];//一共发送的字节数 记得改
@@ -23,6 +26,7 @@ __inline unsigned char UART_Putc(unsigned char data)			//
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
 	return data;
 }
+
 
 unsigned char putChar(unsigned char DataToSend)
 {
@@ -197,30 +201,33 @@ void sendSenser(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t f
 	putChar(0);
 	putChar(sum);
 }
-void sendPwmVoltage(uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee)
+void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd)
 {
 	unsigned char sum = 0;
+	float voltage_temp = ADC_ConvertedValue*2*3.3/4096.0;//四轴电压
+	u16 v_10 = voltage_temp*10;
+	u16 pwm_vol = voltage_temp*100*rc_data->throttle/999.0;
 	count=0;
 	sum += putChar(0x88);
 	sum += putChar(0xAE);
 	sum += putChar(0x1C);
 	
-	putChar(0);
-	putChar(0);//throttle
-	putChar(0);
-	putChar(0);//yaw
-	putChar(0);
-	putChar(0);//roll
-	putChar(0);
-	putChar(0);//pitch
+	sum += putChar(BYTE1(rc_data->throttle));
+	sum += putChar(BYTE0(rc_data->throttle));//throttle
+	sum += putChar(BYTE1(rc_data->yaw));
+	sum += putChar(BYTE0(rc_data->yaw));//yaw
+	sum += putChar(BYTE1(rc_data->roll));
+	sum += putChar(BYTE0(rc_data->roll));//roll
+	sum += putChar(BYTE1(rc_data->pitch));
+	sum += putChar(BYTE0(rc_data->pitch));//pitch
 	putChar(0);
 	putChar(0);//aux 1
 	putChar(0);
 	putChar(0);//aux 2
 	putChar(0);
 	putChar(0);//aux 3
-	putChar(0);
-	putChar(0);//aux 4
+	sum += putChar(BYTE1(v_10));
+	sum += putChar(BYTE0(v_10));//aux 4
 	putChar(0);
 	putChar(0);//aux 5
 	
@@ -232,8 +239,8 @@ void sendPwmVoltage(uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd,uint16_t ee)
 	sum += putChar(BYTE0(cc));
 	sum += putChar(BYTE1(dd));//PWM 4
 	sum += putChar(BYTE0(dd));
-	sum += putChar(BYTE1(ee));//VOLTAGE
-	sum += putChar(BYTE0(ee));
+	sum += putChar(BYTE1(pwm_vol));//VOLTAGE
+	sum += putChar(BYTE0(pwm_vol));
 
 
 	putChar(sum);
@@ -282,25 +289,26 @@ void Uart1_Send_PID(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,
 	
 	putChar(sum);
 }
-void send_wave(int tx_num)//一共发送几个字节
+void send_wave(int tx_num)//一共发送几个字节,如果是传送到NRF24L01会有应答ack。将应答结果写入rxbuf。这里是利用了应答形成了双向通讯。主函数里会对应答数据进行分析。主要是遥控数据。
 {	
 	char count_1=0;
 	#ifdef DATA_TRANSFER_USE_SPI_NRF
-		if(NRF24L01_TxPacket(TxBuffer) == TX_OK)
+		int send_result = NRF24L01_TxPacket(TxBuffer);
+		if(send_result == RX_OK)
 		{
-			 LED2_ON;
+			//LED2_ON;
 		}
 		else
 		{
-			LED2_OFF;
+			//LED2_OFF;
+		
 		}
 	#endif
+		
 	#ifdef DATA_TRANSFER_USE_USART
 		while(count_1<tx_num)
 	      UART_Putc(TxBuffer[count_1++]);
 	#endif
-	
-	
 }
 
 void sendSenserPackage(void)
@@ -316,8 +324,8 @@ void sendSenserPackage(void)
 //       LED2_ON;
 //       led_on = 1;
 //    }
-	sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
-	send_wave(32);//0.00013279s
+	//sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
+	//send_wave(32);//0.00013279s
 }
 void send_temp(int tx_num)//一共发送几个字节
 {
@@ -378,7 +386,7 @@ void receive_Data(void)
 		if(Res[3]==0XAD)//发送PID
 		{
 			Uart1_Send_PID((uint16_t)(PID_ROLL.KP*100),(uint16_t)(PID_ROLL.KI*100),(uint16_t)(PID_ROLL.KD*100),(uint16_t)(PID_PITCH.KP*100),(uint16_t)(PID_PITCH.KI*100),(uint16_t)(PID_PITCH.KD*100));
-			send_wave(32);
+			//send_wave(32);
 		}
 		if(Res[3]==0XAE)//接收PID
 		{
@@ -392,6 +400,7 @@ void receive_Data(void)
 		}
 	}
 }
+
 /*************************sendData********************/
 
 

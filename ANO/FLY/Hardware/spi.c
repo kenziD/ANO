@@ -47,7 +47,6 @@ void SPI1_Init(void)
 	SPI_Cmd(SPI1, ENABLE); //使能SPI外设
 	
 	SPI1_ReadWriteByte(0xff);//启动传输		 
- 
 
 }   
 //SPI 速度设置函数
@@ -63,7 +62,6 @@ void SPI1_SetSpeed(u8 SPI_BaudRatePrescaler)
 	SPI1->CR1&=0XFFC7;
 	SPI1->CR1|=SPI_BaudRatePrescaler;	//设置SPI1速度 
 	SPI_Cmd(SPI1,ENABLE); 
-
 } 
 
 //SPIx 读写一个字节

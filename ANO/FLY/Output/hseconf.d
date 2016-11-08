@@ -48,3 +48,4 @@
 ..\output\hseconf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\hseconf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\hseconf.o: ..\Hardware\timer.h
+..\output\hseconf.o: ..\Hardware\adc.h

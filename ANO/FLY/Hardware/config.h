@@ -18,6 +18,7 @@
 #include "stdint.h"
 #include <string.h>
 #include "timer.h"
+#include "adc.h"
 #endif /* __CONFIG_H_ */
 
 

@@ -48,3 +48,4 @@
 ..\output\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\motor.o: ..\Hardware\timer.h
+..\output\motor.o: ..\Hardware\adc.h

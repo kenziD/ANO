@@ -174,7 +174,7 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
 //        LED2_ON;
 //        led_on = 1;
 //       }
- if (ms1_cnt == 2) //1ms
+		if (ms1_cnt == 2) //1ms
     {
       getMpu6050Data=1;
     }
@@ -184,13 +184,9 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
 		}
 		if(ms1_cnt==4)
 		{
-     sendData=1;
+			sendData=1;
 			ms1_cnt = 0;
 		}
-    //LED2_ON;
-		//delay_ms(1);
-    //LED2_OFF;
-		//sendSenserPackage();
   }
 }
 /******************************************************************************/

@@ -163,6 +163,15 @@ u8 NRF24L01_TxPacket(u8 *txbuf)
 	}
 	return 0xff;//其他原因发送失败
 }
+//send control data
+u8 NRF24L01_TxPacket_AP(u8 *txbuf)
+{
+	u8 sta;
+	SPI2_SetSpeed(SPI_BaudRatePrescaler_4);//spi速度为9Mhz（24L01的最大SPI时钟为10Mhz）
+	NRF24L01_CE = 0;
+	NRF24L01_Write_Buf(0xa8, txbuf, TX_PLOAD_WIDTH); //写数据到TX BUF  32个字节
+	NRF24L01_CE = 1; //启动发送
+}
 //启动NRF24L01发送一次数据
 //txbuf:待发送数据首地址
 //返回值:0，接收完成；其他，错误代码

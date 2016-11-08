@@ -47,3 +47,4 @@
 ..\output\imu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\imu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\imu.o: ..\Hardware\timer.h
+..\output\imu.o: ..\Hardware\adc.h

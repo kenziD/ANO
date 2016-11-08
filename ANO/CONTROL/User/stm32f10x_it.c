@@ -147,17 +147,22 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 }
-extern u8 tmp_buf[32];
+extern u8 rc_buf[32];
 extern u8 key;
+u16 throttle;
+#define upRange 2086 //2010-4096
+#define downRange 2010 //0-2010
+#define inStaticRange(throttle) (throttle<2015 && throttle>2005) ? true:false //中值为2010
 void TIM3_IRQHandler(void)    //0.5ms中断一次
 {
   static u8 ms1 = 0, ms2 = 0, ms5 = 0, ms10 = 0;    //中断次数计数器
-	
+	static u16 throttle_vol =0;
   static float percent = 0;
-
+	static u16 gap;
   uint16_t per_1000;
 	static u16 Roll = 0;
 	static u16 Pitch = 0;
+	static u16 Yaw = 0;
   if (TIM3->SR & TIM_IT_Update)   //if ( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET )
   {
     TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
@@ -182,20 +187,43 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
     if (ms10 == 20)
     {
       ms10 = 0;       //每二十次中断执行一次,10ms
-      percent = (float)voltage1() / 4093.0;
-      per_1000 = (uint16_t)(percent * 1000);
+      //percent = (float)voltage1() / 4093.0;
+      //per_1000 = (uint16_t)(percent * 1000);
+			
+			
+			throttle_vol = voltage1();
+			if(throttle_vol>2015)//左-上
+			{
+				gap = (uint16_t)(((float)(throttle_vol-2010)/upRange)*20.0);
+				throttle = throttle + (uint16_t)(((float)(throttle_vol-2010)/upRange)*20.0);
+				if(throttle>999) throttle=999;
+			}
+			else if (throttle_vol<2005) //左-下
+			{
+				gap = (uint16_t)((float)(2010-throttle_vol)/downRange*25.0);
+				if(throttle<gap) throttle = 0;
+				else if(throttle>gap) {
+					throttle = throttle - gap;
+				}
+			}
+			
+			Yaw = voltage2();
 			Roll = voltage3();
 			Pitch = voltage4();
-      tmp_buf[0] = BYTE0( per_1000);
-      tmp_buf[1] = BYTE1( per_1000);
-			tmp_buf[2] = BYTE0(Roll);
-      tmp_buf[3] = BYTE1(Roll);
-			tmp_buf[4] = BYTE0(Pitch);
-			tmp_buf[5] = BYTE1(Pitch);
+      rc_buf[0] = BYTE0( throttle);
+      rc_buf[1] = BYTE1( throttle);
+			rc_buf[2] = BYTE0(Roll);
+      rc_buf[3] = BYTE1(Roll);
+			rc_buf[4] = BYTE0(Pitch);
+			rc_buf[5] = BYTE1(Pitch);
+			rc_buf[6] = BYTE0(Yaw);
+      rc_buf[7] = BYTE1(Yaw);
+			rc_buf[8] = 'c';
 			if(key == MODE_KEY_DOWN)
-				tmp_buf[6] = 'a';//接收端判断如果为a，则判为start
+				rc_buf[8] = 'a';//接收端判断如果为a，则判为start
+				
 			if(key == FUN_KEY_DOWN)
-				tmp_buf[6] = 'b';//接收端判断如果为b,则判为stop
+				rc_buf[8] = 'b';//接收端判断如果为b,则判为stop
     }
   }
 }

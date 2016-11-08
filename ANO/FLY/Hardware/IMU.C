@@ -94,9 +94,12 @@ float pitch_offset = 0;
 float roll_offset = 0;
 float sum_roll = 0;
 float sum_pitch = 0;
+
+float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
 {
-	
+	static u16 initCnt = 0;
+	static float yawSum = 0,pitchSum = 0,rollSum = 0;
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
@@ -190,7 +193,23 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	q3 = q3 / norm;
 	angles[0] += gz*Gyro_Gr*0.002;
 	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
-	angles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 - pitch_offset; // pitch
-	angles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 - roll_offset; // roll
+	angles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
+	angles[1] -= pitch_offset;
+	angles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
+	angles[2] -=roll_offset;
+	if(initCnt<=3000)
+	{
+		yawSum += angles[0];
+		pitchSum += angles[1];
+		rollSum += angles[2];
+		if(initCnt==3000)
+		{
+			yawOffsetCache = yawSum/3000.0;
+			pitchOffsetCache = pitchSum/3000.0;
+			rollOffsetCache = rollSum/3000.0;
+		}
+		initCnt++;
+	}
+	
 }
 extern float AngleOut[3];
