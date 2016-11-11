@@ -65,10 +65,11 @@ int main(void)
 		}
 		if (calculateAngle == 1)//2ms period
 		{
-			//0.2ms
+			//0.2ms T
 			//LED2_ON;
-				
-			IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,ypr);//0.00057325s 0.00060588
+
+			//100us
+			IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,ypr);
 			//LED2_OFF;
 			calculateAngle = 0;
 		}
@@ -84,6 +85,7 @@ int main(void)
         LED2_ON;
        led_on = 1;
        }
+			
 			if (NRF24L01_RxPacket(tmp_buf) == 0)
 			{
 			//10us
@@ -92,7 +94,7 @@ int main(void)
 			//if wait for the IRQ it need 9ms
 			//if not wait for IRQ it runtime need 100us*1.2=0.12ms
 			
-			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
+			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[0] * 100), (signed short int)(ypr[1] * 100));
 			send_wave(32);
 
 			//0.14ms run time

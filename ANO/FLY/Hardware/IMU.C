@@ -96,14 +96,14 @@ float sum_roll = 0;
 float sum_pitch = 0;
 
 float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
-void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
-{
-	static u16 initCnt = 0;
+
+void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles){
+static u16 initCnt = 0;
 	static float yawSum = 0,pitchSum = 0,rollSum = 0;
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
-	// ÏÈ°ÑÕâÐ©ÓÃµÃµ½µÄÖµËãºÃ
+	// 脧脠掳脩脮芒脨漏脫脙碌脙碌陆碌脛脰碌脣茫潞脙
 	float q0q0 = q0*q0;
 	float q0q1 = q0*q1;
 	float q0q2 = q0*q2;
@@ -114,14 +114,14 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	float q2q2 = q2*q2;
 	float q2q3 = q2*q3;
 	float q3q3 = q3*q3;
-//	now = micros();  //¶ÁÈ¡Ê±¼ä
-//	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
+//	now = micros();  //露脕脠隆脢卤录盲
+//	if (now < lastUpdate) { //露篓脢卤脝梅脪莽鲁枚鹿媒脕脣隆拢
 //		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
 //	}
 //	else	{
 //		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
 //	}
-//lastUpdate = now;	//¸üÐÂÊ±¼ä
+//lastUpdate = now;	//赂眉脨脗脢卤录盲
 	if(ax*ay*az==0)
 	return;
 	
@@ -159,22 +159,19 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	ez = (ax * vy - ay * vx);
 	
 	////////////////////////////
-	
-	/////////////////////////////
+/////////////////////////////
 	/*0.01ms*/
 	exInt = exInt + ex * Ki ;
 	eyInt = eyInt + ey * Ki ;
 	ezInt = ezInt + ez * Ki ;
 	/////////////////////////////
-	
-	/////////////////////////////
+/////////////////////////////
 	/*0.01ms*/
 	gx = gx + Kp * ex + exInt;
 	gy = gy + Kp * ey + eyInt;
 	gz = gz + Kp * ez + ezInt;
 	//////////////////////////////
-	
-	//////////////////////////////
+//////////////////////////////
 	/*1.4*25us = 0.035ms*/
 	q0 = q0 + (-q1 * gx - q2 * gy - q3 * gz) * halfT;
 	q1 = q1 + (q0 * gx + q2 * gz - q3 * gy) * halfT;
@@ -210,6 +207,5 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 		}
 		initCnt++;
 	}
-	
-}
+	}
 extern float AngleOut[3];
