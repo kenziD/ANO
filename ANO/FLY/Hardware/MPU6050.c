@@ -72,7 +72,7 @@ void Mpu6050_Analyze(void)
 	fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) - Gy_offset;
 
 	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
-	//要转换成弧度 要不然到四元数哪里也要/180*2pi 但为啥拿去四元数运算的要转成弧度
+	//要转换成弧度 要不然到四元数哪里也要/180*pi 但为啥拿去四元数运算的要转成弧度
 
 	fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  -Ax_offset;
 
