@@ -96,120 +96,62 @@ float sum_roll = 0;
 float sum_pitch = 0;
 
 float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
-void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
-{
-	static u16 initCnt = 0;
-	static float yawSum = 0,pitchSum = 0,rollSum = 0;
-	float norm;
-	float vx, vy, vz;
-	float ex, ey, ez;
-	// ÏÈ°ÑÕâÐ©ÓÃµÃµ½µÄÖµËãºÃ
-	float q0q0 = q0*q0;
-	float q0q1 = q0*q1;
-	float q0q2 = q0*q2;
-//  float q0q3 = q0*q3;
-	float q1q1 = q1*q1;
-//  float q1q2 = q1*q2;
-	float q1q3 = q1*q3;
-	float q2q2 = q2*q2;
-	float q2q3 = q2*q3;
-	float q3q3 = q3*q3;
-//	now = micros();  //¶ÁÈ¡Ê±¼ä
-//	if (now < lastUpdate) { //¶¨Ê±Æ÷Òç³ö¹ýÁË¡£
-//		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
-//	}
-//	else	{
-//		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
-//	}
-//lastUpdate = now;	//¸üÐÂÊ±¼ä
-	if(ax*ay*az==0)
-	return;
-	
-	gx *= Gyro_Gr;
-	gy *= Gyro_Gr;
-	gz *= Gyro_Gr;
-	
-	////////////////////////////
-	/*1.3*0.05ms = 0.065ms;*/
-	////////////////////////////
-	
-	////////////////////////////
-	/*0.05ms*/
-	norm = sqrt(ax * ax + ay * ay + az * az);
-	///////////////////////////
 
-	//////////////////////////
-	/*0.015ms*/
-	ax = ax / norm;
-	ay = ay / norm;
-	az = az / norm;
-	//////////////////////////
+float P_00 = 0.0f,P_01 = 0.0f,P_10 = 0.0f,P_11 = 0.0f;
+float dt = 0.002;//2ms T
+float Qangle = 0.001;
+float Qrate = 0.003;
+float R_measure = 0.03;
+float K0 = 0,K1 = 0;
+float D = 0;
+
+struct GyroBias {
+	float x;
+	float y;
+	float z;
+}gyroBias = {0,0,0};
+
+struct AccAngle{
+	float accRoll;
+	float accPitch;
+	float accYaw;
+}accAngle = {0,0,0};
+struct Angle{
+	float roll;
+	float pitch;
+	float yaw;
+}angle = {0,0,0};
+void IMU_KalmanFilter(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
+{
+	static float e=0;
+	P_00 = P_00 + dt*(dt*P_11-P_10-P_01)+dt*Qangle;
+	P_01 = P_01 - dt*P_11;
+	P_10 = P_10 - dt*P_11;
+	P_11 = P_11 + Qrate*dt;
+
+	D = P_00+R_measure;
+
+	K0 = P_00/D;
+	K1 = P_10/D;
 	
-	////////////////////////////
-	/*0.8*10us= 0.008ms*/
-	vx = 2 * (q1q3 - q0q2);
-	vy = 2 * (q0q1 + q2q3);
-	vz = q0q0 - q1q1 - q2q2 + q3q3;
-	////////////////////////////
+	accAngle.accRoll = atan2(ay,az)*180/3.14;
+	angle.roll = angle.roll + dt*(gx-gyroBias.x);//roll
+	e = accAngle.accRoll-angle.roll;
+	angle.roll = angle.roll + K0*e;
+	gyroBias.x = gyroBias.x + K1*e;
 	
-	///////////////////////////
-	/*0.01ms*/
-	ex = (ay * vz - az * vy);
-	ey = (az * vx - ax * vz);
-	ez = (ax * vy - ay * vx);
+	//accAngle.accPitch = atan2(ax,az)*180/3.14;
+	//angle.pitch = angle.pitch + dt*(gy-gyroBias.y);//pitch
+	//angle.pitch = angle.pitch + K0*(accAngle.accPitch-angle.pitch);
+	//gyroBias.y = gyroBias.y + K1*(accAngle.accPitch-angle.pitch);
 	
-	////////////////////////////
-	
-	/////////////////////////////
-	/*0.01ms*/
-	exInt = exInt + ex * Ki ;
-	eyInt = eyInt + ey * Ki ;
-	ezInt = ezInt + ez * Ki ;
-	/////////////////////////////
-	
-	/////////////////////////////
-	/*0.01ms*/
-	gx = gx + Kp * ex + exInt;
-	gy = gy + Kp * ey + eyInt;
-	gz = gz + Kp * ez + ezInt;
-	//////////////////////////////
-	
-	//////////////////////////////
-	/*1.4*25us = 0.035ms*/
-	q0 = q0 + (-q1 * gx - q2 * gy - q3 * gz) * halfT;
-	q1 = q1 + (q0 * gx + q2 * gz - q3 * gy) * halfT;
-	q2 = q2 + (q0 * gy - q1 * gz + q3 * gx) * halfT;
-	q3 = q3 + (q0 * gz + q1 * gy - q2 * gx) * halfT;
-	//////////////////////////////
-	////////////////////////////////
-	/*0.045ms*/
-	//LED2_ON;
-	norm = sqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
-	//LED2_OFF;
-	////////////////////////////////
-	q0 = q0 / norm;
-	q1 = q1 / norm;
-	q2 = q2 / norm;
-	q3 = q3 / norm;
-	angles[0] += gz*Gyro_Gr*0.002;
-	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
-	angles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
-	angles[1] -= pitch_offset;
-	angles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
-	angles[2] -=roll_offset;
-	if(initCnt<=3000)
-	{
-		yawSum += angles[0];
-		pitchSum += angles[1];
-		rollSum += angles[2];
-		if(initCnt==3000)
-		{
-			yawOffsetCache = yawSum/3000.0;
-			pitchOffsetCache = pitchSum/3000.0;
-			rollOffsetCache = rollSum/3000.0;
-		}
-		initCnt++;
-	}
+	angles[0] =angle.roll;
+	angles[1] = 0;
+	angles[2] = 0;
+	P_00 = P_00 - P_00*K0;
+	P_01 = P_01 - P_01*K0;
+	P_10 = P_10 - K1*P_00;
+	P_11 = P_11 - K1*P_01;
 	
 }
 extern float AngleOut[3];

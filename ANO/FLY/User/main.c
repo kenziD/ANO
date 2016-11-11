@@ -68,7 +68,7 @@ int main(void)
 			//0.2ms
 			//LED2_ON;
 				
-			IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,ypr);//0.00057325s 0.00060588
+			IMU_KalmanFilter((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,ypr);//0.00057325s 0.00060588
 			//LED2_OFF;
 			calculateAngle = 0;
 		}
