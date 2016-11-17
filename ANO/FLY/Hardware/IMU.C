@@ -101,7 +101,7 @@ float P_00 = 0.0f,P_01 = 0.0f,P_10 = 0.0f,P_11 = 0.0f;
 float dt = 0.002;//2ms T
 float Qangle = 0.001;
 float Qrate = 0.003;
-float R_measure = 0.03;
+float R_measure = 0.0058;
 float K0 = 0,K1 = 0;
 float D = 0;
 
@@ -123,7 +123,7 @@ struct Angle{
 }angle = {0,0,0};
 void IMU_KalmanFilter(float gx, float gy, float gz, float ax, float ay, float az,float * angles)
 {
-	static float e=0;
+	static float e1=0,e2=0;
 	P_00 = P_00 + dt*(dt*P_11-P_10-P_01)+dt*Qangle;
 	P_01 = P_01 - dt*P_11;
 	P_10 = P_10 - dt*P_11;
@@ -134,19 +134,20 @@ void IMU_KalmanFilter(float gx, float gy, float gz, float ax, float ay, float az
 	K0 = P_00/D;
 	K1 = P_10/D;
 	
-	accAngle.accRoll = atan2(ay,az)*180/3.14;
-	angle.roll = angle.roll + dt*(gx-gyroBias.x);//roll
-	e = accAngle.accRoll-angle.roll;
-	angle.roll = angle.roll + K0*e;
-	gyroBias.x = gyroBias.x + K1*e;
+	accAngle.accRoll = atan2(ay,az)*57.3;
+	angle.roll = angle.roll + dt*(gx/16.4-gyroBias.x);//roll
+	e1 = accAngle.accRoll-angle.roll;
+	angle.roll = angle.roll + K0*e1;
+	gyroBias.x = gyroBias.x + K1*e1;
 	
-	//accAngle.accPitch = atan2(ax,az)*180/3.14;
-	//angle.pitch = angle.pitch + dt*(gy-gyroBias.y);//pitch
-	//angle.pitch = angle.pitch + K0*(accAngle.accPitch-angle.pitch);
-	//gyroBias.y = gyroBias.y + K1*(accAngle.accPitch-angle.pitch);
+	accAngle.accPitch = atan2(ax,az)*57.3;
+	angle.pitch = angle.pitch + dt*(gy/16.4-gyroBias.y);//pitch
+	e2 = accAngle.accPitch-angle.pitch;
+	angle.pitch = angle.pitch + K0*e2;
+	gyroBias.y = gyroBias.y + K1*e2;
 	
 	angles[0] =angle.roll;
-	angles[1] = 0;
+	angles[1] = angle.pitch;
 	angles[2] = 0;
 	P_00 = P_00 - P_00*K0;
 	P_01 = P_01 - P_01*K0;
