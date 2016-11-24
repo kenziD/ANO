@@ -140,7 +140,8 @@ void IMU_KalmanFilter(float gx, float gy, float gz, float ax, float ay, float az
 	angle.roll = angle.roll + K0*e1;
 	gyroBias.x = gyroBias.x + K1*e1;
 	
-	accAngle.accPitch = atan2(ax,az)*57.3;
+	//add a -.insteadof +atan2(ax,az).because u need to know the Gyro direction.and the y direction.
+	accAngle.accPitch = -atan2(ax,az)*57.3;
 	angle.pitch = angle.pitch + dt*(gy/16.4-gyroBias.y);//pitch
 	e2 = accAngle.accPitch-angle.pitch;
 	angle.pitch = angle.pitch + K0*e2;
