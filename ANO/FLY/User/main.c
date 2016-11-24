@@ -94,7 +94,7 @@ int main(void)
 			//if wait for the IRQ it need 9ms
 			//if not wait for IRQ it runtime need 100us*1.2=0.12ms
 			
-			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[0] * 100), (signed short int)(ypr[1] * 100));
+			sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));
 			send_wave(32);
 
 			//0.14ms run time
