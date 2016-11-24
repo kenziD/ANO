@@ -48,5 +48,19 @@ int fgetc(FILE *f)
 
 		return (int)USART_ReceiveData(USART1);
 }
-                    
+/**************************向物理串口发一个字节***************************************
+*******************************************************************************/
+__inline unsigned char UART_Putc(unsigned char data)			//
+{
+	USART_SendData(USART1,  (uint8_t)data);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+	return data;
+}
+
+void send_wave(int tx_num,u8 *TxBuffer)//一共发送几个字节
+{	
+	char count_1=0;
+		while(count_1<tx_num)
+	      UART_Putc(TxBuffer[count_1++]);
+}
 /*********************************************END OF FILE**********************/

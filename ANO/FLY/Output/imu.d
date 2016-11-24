@@ -36,6 +36,7 @@
 ..\output\imu.o: ..\Hardware\LED.h
 ..\output\imu.o: ..\Hardware\IIC.h
 ..\output\imu.o: ..\Hardware\MPU6050.h
+..\output\imu.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\imu.o: ..\Hardware\IMU.h
 ..\output\imu.o: ..\Hardware\HSEconf.h
 ..\output\imu.o: ..\Hardware\config.h
@@ -45,3 +46,5 @@
 ..\output\imu.o: ..\Hardware\PID.h
 ..\output\imu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\imu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\imu.o: ..\Hardware\timer.h
+..\output\imu.o: ..\Hardware\adc.h

@@ -3,7 +3,7 @@
 
 float expRoll = 0;
 float expPitch = 0;
-extern float fGYRO_X, fGYRO_Y, fGYRO_Z;
+extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;
 
 
 PID_ PID_ROLL,PID_PITCH,PID_YAW;
@@ -72,7 +72,7 @@ void PID_Set(void)
     else
     {
         PID_PITCH.Imax += 100;
-    }
+    } 
 
     if(pitch_i > PID_PITCH.Imax) pitch_i = PID_PITCH.Imax;
     if(pitch_i > PID_PITCH.Imax) pitch_i = -PID_PITCH.Imax;

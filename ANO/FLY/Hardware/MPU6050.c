@@ -1,173 +1,169 @@
-#include "IIC.h"
-#include <math.h>
 #include "MPU6050.h"
+#include <math.h>
 #include "delay.h"
 
+static u8	mpu6050_buffer[14];		//iicè¯»å–åå­˜æ”¾æ•°æ®
+
 #define uchar unsigned char
-unsigned char BUF[12];      
-short GYRO_X_last, GYRO_Y_last, GYRO_Z_last; 
-short ACCEL_X_last, ACCEL_Y_last, ACCEL_Z_last;
+unsigned char BUF[12];
 
-float fGYRO_X, fGYRO_Y, fGYRO_Z;		 //Á¿»¯µÄÍÓÂİÒÇÊı¾İ     g(9.8m/s^2)
-float fACCEL_X, fACCEL_Y, fACCEL_Z; //Á¿»¯µÄ¼ÓËÙ¶È¼ÆÊı¾İ  ¡ã/s
+int16_t fGYRO_X = 0, fGYRO_Y = 0, fGYRO_Z = 0;		 //é‡åŒ–çš„é™€èºä»ªæ•°æ®     g(9.8m/s^2)
+int16_t fACCEL_X = 0, fACCEL_Y = 0, fACCEL_Z = 0; //é‡åŒ–çš„åŠ é€Ÿåº¦è®¡æ•°æ®  Â°/s
 
-float Angle_accX, Angle_accY, Angle_accZ; //´æ´¢¼ÓËÙ¼ÆµÄ½Ç¶È
-volatile float Angle_gyroX, Angle_gyroY, Angle_gyroZ;
 
-double Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
-double Ax_offset = 0, Ay_offset = 0, Az_offset = 0;
+int16_t Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
+int16_t Ax_offset = 0, Ay_offset = 0, Az_offset = 0;
+
 int Mpu6050_init_offset_OK = 0;
 
-/*****************************ÀûÓÃiicĞ´Ò»¸ö×Ö½Ú***************************/
-void Single_Write_Mpu6050(uchar Mpu6050_addr, uchar Register_addr, uchar Register_data)
+int GYRO_OFFSET_OK = 0;
+int ACC_OFFSET_OK = 0;
+uint8_t *id = 0;
+void Delay_ms_mpu(u16 nms)
 {
-	IIC_Start();
-	IIC_Send_Byte(Mpu6050_addr);
-	IIC_Send_Byte(Register_addr);
-	IIC_Send_Byte(Register_data);
-	IIC_Stop();
+	uint16_t i, j;
+	for (i = 0; i < nms; i++)
+		for (j = 0; j < 8500; j++);
 }
 
-/************************ÀûÓÃiic¶ÁÈ¡Ò»¸ö×Ö½Ú*************************/
-u8 Single_Read_Mpu6050(uchar Mpu6050_addr, uchar Register_addr)
-{
-	u8 Reg_data;
-	IIC_Start();
-	IIC_Send_Byte(Mpu6050_addr);
-	IIC_Send_Byte(Register_addr);
-	IIC_Start();
-	IIC_Send_Byte(Mpu6050_addr + 1);
-	Reg_data = IIC_Read_Byte(); //Ó¦´ğÓë²»Ó¦´ğÓĞÉ¶Çø±ğ£¿
-	IIC_NAck();//Ö÷»ú£¨stm32£©·¢ËÍÒ»¸öNAck±íÊ¾¶ÁÈ¡½áÊø
-	IIC_Stop();
-	return Reg_data;
-}
+/******************åˆå§‹åŒ–é™€èºä»ªé™æ­¢åç§»*****************/
+// void Mpu6050_Init_offset(void)
+// {
+// 	unsigned char i;
+// 	float sum_gx = 0;
+// 	float sum_gy = 0;
+// 	float sum_gz = 0;
+// 	float sum_ax = 0;
+// 	float sum_ay = 0;
+// 	float sum_az = 0;
+// 	delay_us(200);//å¼€æœºå¯èƒ½æœ‰è„‰å†²ï¼Œç¨ç­‰ä¸€ä¸‹å†è®¡ç®—åç§»é‡
+// 	for (i = 0; i < 50; i ++)
+// 	{
 
-/*****************************³õÊ¼»¯ÉèÖÃ*************************************/
-void Mpu6050init()
-{
-	Single_Write_Mpu6050(Mpu6050_Address, PWR_MGMT_1, 0x00); //½â³ıĞİÃß
-	delay_ms(200);
-	Single_Write_Mpu6050(Mpu6050_Address, PWR_MGMT_1, 0x03); //Ñ¡È¡ÍÓÂİÒÇxÖá×÷ÎªÊ±ÖÓ
-	Single_Write_Mpu6050(Mpu6050_Address, SMPLRT_DIV, 0x07);
-	Single_Write_Mpu6050(Mpu6050_Address, CONFIG, 0x06);  	//ÂË²¨ÆµÂÊ£ºÍÓÂİÒÇ42hz,¼ÓËÙ¶È¼Æ44hz?
-	Single_Write_Mpu6050(Mpu6050_Address, GYRO_CONFIG, 0x18);
-	Single_Write_Mpu6050(Mpu6050_Address, ACCEL_CONFIG, 0x08);
-}
+// 		Read_Mpu6050();
+// 		Mpu6050_Analyze();
 
+// 		sum_gx += GYRO_X_last;
+// 		sum_gy += GYRO_Y_last;
+// 		sum_gz += GYRO_Z_last;
 
-/******************³õÊ¼»¯ÍÓÂİÒÇ¾²Ö¹Æ«ÒÆ*****************/
-void Mpu6050_Init_offset()
-{
-	unsigned char i;
-	float sum_gx = 0;
-	float sum_gy = 0;
-	float sum_gz = 0;
-	float sum_ax = 0;
-	float sum_ay = 0;
-	float sum_az = 0;
-	delay_us(200);//¿ª»ú¿ÉÄÜÓĞÂö³å£¬ÉÔµÈÒ»ÏÂÔÙ¼ÆËãÆ«ÒÆÁ¿
-	for (i = 0; i < 50; i ++)
-	{
+// 		sum_ax += ACCEL_X_last;
+// 		sum_ay += ACCEL_Y_last;
+// 		sum_az += ACCEL_Z_last;
+// 	}
+// 	Gx_offset = sum_gx / 50.0;
+// 	Gy_offset = sum_gy / 50.0;
+// 	Gz_offset = sum_gz / 50.0;
 
-		Read_Mpu6050();
-		sum_gx += GYRO_X_last;
-		sum_gy += GYRO_Y_last;
-		sum_gz += GYRO_Z_last;
+// 	Ax_offset = sum_ax / 50.0;
+// 	Ay_offset = sum_ay / 50.0;
+// 	Az_offset = sum_az / 50.0;
+// 	Mpu6050_init_offset_OK = 1;
 
-		sum_ax += ACCEL_X_last;
-		sum_ay += ACCEL_Y_last;
-		sum_az += ACCEL_Z_last;
-	}
-	Gx_offset = sum_gx / 50.0;
-	Gy_offset = sum_gy / 50.0;
-	Gz_offset = sum_gz / 50.0;
-	
-	Ax_offset = sum_ax / 50.0;
-	Ay_offset = sum_ay / 50.0;
-	//az_offset ²»ÄÜ¼õÈ¥¡£ÒòÎªË®Æ½Ê±£¬az¾Í±íÊ¾ÁËÖØÁ¦¼ÓËÙ¶ÈÔÚzÖáµÄÈ«²¿·ÖÁ¿
-	//Az_offset = sum_az / 50.0;
-	Mpu6050_init_offset_OK = 1;
-
-}
-/***************·¶Î§½ÃÕı*****************/
-//void compare(float real_time_vel, float* max, float* min)
-//{
-//	if (real_time_vel > *max)
-//	{
-//		*max = real_time_vel;
-//		return;
-//	}
-//
-//	if (real_time_vel < *min)
-//	{
-//		*min = real_time_vel;
-//		return;
-//	}
-//}
-//
-//void Mpu6050_init_range(void)
-//{
-//	int i = 0;
-//	for (i = 0; i < 5000; i ++)
-//	{
-//		Read_Mpu6050();
-//		compare(Angle_accX, &Ax_max, &Ax_min);
-//		compare(Angle_accY, &Ay_max, &Ay_min);
-//		compare(Angle_accZ, &Az_max, &Az_min);
-//	}
-//	X_range = Ax_max - Ax_min;
-//	Y_range = Ay_max - Ay_min;
-//	Z_range = Az_max - Az_min;
-//	Mpu6050_init_range_OK = 1;
-//}
-//ĞŞ¸Ä³É²»ÒªÏÈ»»Ëã³É½Ç¶È£¬Ö±½Ó°Ñ65536Õâ¸ö·¶Î§µÄÊıÄÃÈ¥ºÍÍÓÂİÒÇµÄ»¡¶È/s½øĞĞÈÚºÏ·´µ¹ÌØ±ğ×¼£¬ÉõÖÁ²»ÓÃ¼õÈ¥angleoffset¾ÍºÜ×¼È·ÂÊ¡£
-void Read_Mpu6050(void)
+// }
+#define 	MPU6050_MAX		32767
+#define		MPU6050_MIN		-32768
+void Mpu6050_Analyze(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
-	BUF[0] = Single_Read_Mpu6050(Mpu6050_Address, GYRO_XOUT_L);
-	BUF[1] = Single_Read_Mpu6050(Mpu6050_Address, GYRO_XOUT_H);
-	GYRO_X_last =	(BUF[1] << 8) | BUF[0];
-	fGYRO_X = (GYRO_X_last- Gx_offset) *Gyro_Gr ;
 
-	BUF[2] = Single_Read_Mpu6050(Mpu6050_Address, GYRO_YOUT_L);
-	BUF[3] = Single_Read_Mpu6050(Mpu6050_Address, GYRO_YOUT_H);
-	GYRO_Y_last =	(BUF[3] << 8) | BUF[2];
-	fGYRO_Y = (GYRO_Y_last - Gy_offset)*Gyro_Gr;
+	fGYRO_X  =	((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]) - Gx_offset;
 
-	BUF[4] = Single_Read_Mpu6050(Mpu6050_Address, GYRO_ZOUT_L);
-	BUF[5] = Single_Read_Mpu6050(Mpu6050_Address, GYRO_ZOUT_H);
-	GYRO_Z_last =	(BUF[5] << 8) | BUF[4];
-	//Òª×ª»»³É»¡¶È Òª²»È»µ½ËÄÔªÊıÄÄÀïÒ²Òª/180*2pi µ«ÎªÉ¶ÄÃÈ¥ËÄÔªÊıÔËËãµÄÒª×ª³É»¡¶È
-	fGYRO_Z = (GYRO_Z_last - Gz_offset) *Gyro_Gr;
+	fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) - Gy_offset;
 
-	BUF[6] = Single_Read_Mpu6050(Mpu6050_Address, ACCEL_XOUT_L);
-	BUF[7] = Single_Read_Mpu6050(Mpu6050_Address, ACCEL_XOUT_H);
-	ACCEL_X_last =	(BUF[7] << 8) | BUF[6];
-	fACCEL_X = ACCEL_X_last-Ax_offset;
+	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
+	//è¦è½¬æ¢æˆå¼§åº¦ è¦ä¸ç„¶åˆ°å››å…ƒæ•°å“ªé‡Œä¹Ÿè¦/180*pi ä½†ä¸ºå•¥æ‹¿å»å››å…ƒæ•°è¿ç®—çš„è¦è½¬æˆå¼§åº¦
 
-	BUF[8] = Single_Read_Mpu6050(Mpu6050_Address, ACCEL_YOUT_L);
-	BUF[9] = Single_Read_Mpu6050(Mpu6050_Address, ACCEL_YOUT_H);
-	ACCEL_Y_last =	(BUF[9] << 8) | BUF[8];
-	fACCEL_Y = ACCEL_Y_last-Ay_offset ;
+	fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  -Ax_offset;
 
-	BUF[10] = Single_Read_Mpu6050(Mpu6050_Address, ACCEL_ZOUT_L);
-	BUF[11] = Single_Read_Mpu6050(Mpu6050_Address, ACCEL_ZOUT_H);
-	ACCEL_Z_last =	(BUF[11] << 8) | BUF[10];
-	//ÕâÀï×¢Òâ²»Òª¼õÈ¥offset
-	fACCEL_Z = ACCEL_Z_last ;
+	fACCEL_Y  =	((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) -Ay_offset;
 
+	fACCEL_Z  =	((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]);
+	
+	fACCEL_X = fACCEL_X>MPU6050_MAX ? MPU6050_MAX:fACCEL_X;
+	fACCEL_X = fACCEL_X<MPU6050_MIN ? MPU6050_MIN:fACCEL_X;
+	fACCEL_Y = fACCEL_Y>MPU6050_MAX ? MPU6050_MAX:fACCEL_Y;
+	fACCEL_Y = fACCEL_Y<MPU6050_MIN ? MPU6050_MIN:fACCEL_Y;
+	fACCEL_Z = fACCEL_Z>MPU6050_MAX ? MPU6050_MAX:fACCEL_Z;
+	fACCEL_Z = fACCEL_Z<MPU6050_MIN ? MPU6050_MIN:fACCEL_Z;
+	fGYRO_X = fGYRO_X>MPU6050_MAX ? MPU6050_MAX:fGYRO_X;
+	fGYRO_X = fGYRO_X<MPU6050_MIN ? MPU6050_MIN:fGYRO_X;
+	fGYRO_Y = fGYRO_Y>MPU6050_MAX ? MPU6050_MAX:fGYRO_Y;
+	fGYRO_Y = fGYRO_Y<MPU6050_MIN ? MPU6050_MIN:fGYRO_Y;
+	fGYRO_Z = fGYRO_Z>MPU6050_MAX ? MPU6050_MAX:fGYRO_Z;
+	fGYRO_Z = fGYRO_Z<MPU6050_MIN ? MPU6050_MIN:fGYRO_Z;
+	if (!GYRO_OFFSET_OK)
+	{
+		static int32_t	tempgx = 0, tempgy = 0, tempgz = 0;
+		static uint8_t cnt_g = 0;
+
+		if (cnt_g == 0)
+		{
+			Gx_offset = 0;
+			Gy_offset = 0;
+			Gz_offset = 0;
+			tempgx = 0;
+			tempgy = 0;
+			tempgz = 0;
+			cnt_g = 1;
+			return;
+		}
+		tempgx += fGYRO_X;
+		tempgy += fGYRO_Y;
+		tempgz += fGYRO_Z;
+		if (cnt_g == 200)
+		{
+			Gx_offset = tempgx / cnt_g;
+			Gy_offset = tempgy / cnt_g;
+			Gz_offset = tempgz / cnt_g;
+			cnt_g = 0;
+			GYRO_OFFSET_OK = 1;
+			return;
+		}
+		cnt_g++;
+	}
+	if (!ACC_OFFSET_OK)
+	{
+		static int32_t	tempax = 0, tempay = 0, tempaz = 0;
+		static uint8_t cnt_a = 0;
+
+
+		if (cnt_a == 0)
+		{
+			Ax_offset = 0;
+			Ay_offset = 0;
+			Az_offset = 0;
+			tempax = 0;
+			tempay = 0;
+			tempaz = 0;
+			cnt_a = 1;
+			return;
+		}
+		tempax += fACCEL_X;
+		tempay += fACCEL_Y;
+		//tempaz+= MPU6050_ACC_LAST.Z;
+		if (cnt_a == 200)
+		{
+			Ax_offset = tempax / cnt_a;
+			Ay_offset = tempay / cnt_a;
+			Az_offset = tempaz / cnt_a;
+			cnt_a = 0;
+			ACC_OFFSET_OK = 1;
+			return;
+		}
+		cnt_a++;
+	}
 }
-void moveFilterAccData(float angle_accX,float angle_accY,float angle_accZ,float *angleOut){
-	static uint8_t 	filter_cnt=0;
-	static float	ACC_X_BUF[FILTER_NUM],ACC_Y_BUF[FILTER_NUM],ACC_Z_BUF[FILTER_NUM];
-	int32_t temp1=0,temp2=0,temp3=0;
+void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_accZ, int16_t *angleOut) {
+	static uint8_t 	filter_cnt = 0;
+	static float	ACC_X_BUF[FILTER_NUM], ACC_Y_BUF[FILTER_NUM], ACC_Z_BUF[FILTER_NUM];
+	int32_t temp1 = 0, temp2 = 0, temp3 = 0;
 	uint8_t i;
 
 	ACC_X_BUF[filter_cnt] = angle_accX;
 	ACC_Y_BUF[filter_cnt] = angle_accY;
 	ACC_Z_BUF[filter_cnt] = angle_accZ;
-	for(i=0;i<FILTER_NUM;i++)
+	for (i = 0; i < FILTER_NUM; i++)
 	{
 		temp1 += ACC_X_BUF[i];
 		temp2 += ACC_Y_BUF[i];
@@ -177,5 +173,148 @@ void moveFilterAccData(float angle_accX,float angle_accY,float angle_accZ,float 
 	angleOut[1] = temp2 / FILTER_NUM;
 	angleOut[2] = temp3 / FILTER_NUM;
 	filter_cnt++;
-	if(filter_cnt==FILTER_NUM)	filter_cnt=0;
+	if (filter_cnt == FILTER_NUM)	filter_cnt = 0;
+}
+
+/**************************å®ç°å‡½æ•°********************************************
+//å°†iicè¯»å–åˆ°å¾—æ•°æ®åˆ†æ‹†,æ”¾å…¥ç›¸åº”å¯„å­˜å™¨
+*******************************************************************************/
+#define 	MPU6050_MAX		32767
+#define		MPU6050_MIN		-32768
+
+
+/**************************å®ç°å‡½æ•°********************************************
+//å°†iicè¯»å–åˆ°å¾—æ•°æ®åˆ†æ‹†,æ”¾å…¥ç›¸åº”å¯„å­˜å™¨,æ›´æ–°MPU6050_Last
+*******************************************************************************/
+void Read_Mpu6050(void)
+{
+	ANO_TC_I2C2_Read_Int(devAddr, MPU6050_RA_ACCEL_XOUT_H, 14, mpu6050_buffer);
+
+}
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		u8 IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data)
+*åŠŸã€€ã€€èƒ½:	    è¯» ä¿®æ”¹ å†™ æŒ‡å®šè®¾å¤‡ æŒ‡å®šå¯„å­˜å™¨ä¸€ä¸ªå­—èŠ‚ ä¸­çš„1ä¸ªä½
+è¾“å…¥	dev  ç›®æ ‡è®¾å¤‡åœ°å€
+reg	   å¯„å­˜å™¨åœ°å€
+bitNum  è¦ä¿®æ”¹ç›®æ ‡å­—èŠ‚çš„bitNumä½
+data  ä¸º0 æ—¶ï¼Œç›®æ ‡ä½å°†è¢«æ¸…0 å¦åˆ™å°†è¢«ç½®ä½
+è¿”å›   æˆåŠŸ ä¸º1
+å¤±è´¥ä¸º0
+*******************************************************************************/
+void IICwriteBit(u8 dev, u8 reg, u8 bitNum, u8 data) {
+	u8 b;
+	ANO_TC_I2C2_Read_Buf(dev, reg, 1, &b);
+	b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
+	ANO_TC_I2C2_Write_Buf(dev, reg, 1, &b);
+}
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		u8 IICwriteBits(u8 dev,u8 reg,u8 bitStart,u8 length,u8 data)
+*åŠŸã€€ã€€èƒ½:	    è¯» ä¿®æ”¹ å†™ æŒ‡å®šè®¾å¤‡ æŒ‡å®šå¯„å­˜å™¨ä¸€ä¸ªå­—èŠ‚ ä¸­çš„å¤šä¸ªä½
+è¾“å…¥	dev  ç›®æ ‡è®¾å¤‡åœ°å€
+reg	   å¯„å­˜å™¨åœ°å€
+bitStart  ç›®æ ‡å­—èŠ‚çš„èµ·å§‹ä½
+length   ä½é•¿åº¦
+data    å­˜æ”¾æ”¹å˜ç›®æ ‡å­—èŠ‚ä½çš„å€¼
+è¿”å›   æˆåŠŸ ä¸º1
+å¤±è´¥ä¸º0
+*******************************************************************************/
+void IICwriteBits(u8 dev, u8 reg, u8 bitStart, u8 length, u8 data)
+{
+
+	u8 b, mask;
+	ANO_TC_I2C2_Read_Buf(dev, reg, 1, &b);
+	mask = (0xFF << (bitStart + 1)) | 0xFF >> ((8 - bitStart) + length - 1);
+	data <<= (8 - length);
+	data >>= (7 - bitStart);
+	b &= mask;
+	b |= data;
+	ANO_TC_I2C2_Write_Buf(dev, reg, 1, &b);
+}
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		void MPU6050_setClockSource(uint8_t source)
+*åŠŸã€€ã€€èƒ½:	    è®¾ç½®  MPU6050 çš„æ—¶é’Ÿæº
+* CLK_SEL | Clock Source
+* --------+--------------------------------------
+* 0       | Internal oscillator
+* 1       | PLL with X Gyro reference
+* 2       | PLL with Y Gyro reference
+* 3       | PLL with Z Gyro reference
+* 4       | PLL with external 32.768kHz reference
+* 5       | PLL with external 19.2MHz reference
+* 6       | Reserved
+* 7       | Stops the clock and keeps the timing generator in reset
+*******************************************************************************/
+void MPU6050_setClockSource(uint8_t source) {
+	IICwriteBits(devAddr, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, source);
+
+}
+/** Set full-scale gyroscope range.
+* @param range New full-scale gyroscope range value
+* @see getFullScaleRange()
+* @see MPU6050_GYRO_FS_250
+* @see MPU6050_RA_GYRO_CONFIG
+* @see MPU6050_GCONFIG_FS_SEL_BIT
+* @see MPU6050_GCONFIG_FS_SEL_LENGTH
+*/
+void MPU6050_setFullScaleGyroRange(uint8_t range) {
+	IICwriteBits(devAddr, MPU6050_RA_GYRO_CONFIG, MPU6050_GCONFIG_FS_SEL_BIT, MPU6050_GCONFIG_FS_SEL_LENGTH, range);
+}
+
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		void MPU6050_setFullScaleAccelRange(uint8_t range)
+*åŠŸã€€ã€€èƒ½:	    è®¾ç½®  MPU6050 åŠ é€Ÿåº¦è®¡çš„æœ€å¤§é‡ç¨‹
+*******************************************************************************/
+void MPU6050_setFullScaleAccelRange(uint8_t range) {
+	IICwriteBits(devAddr, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, range);
+}
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		void MPU6050_setSleepEnabled(uint8_t enabled)
+*åŠŸã€€ã€€èƒ½:	    è®¾ç½®  MPU6050 æ˜¯å¦è¿›å…¥ç¡çœ æ¨¡å¼
+enabled =1   ç¡è§‰
+enabled =0   å·¥ä½œ
+*******************************************************************************/
+void MPU6050_setSleepEnabled(uint8_t enabled) {
+	IICwriteBit(devAddr, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, enabled);
+}
+
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		void MPU6050_setI2CMasterModeEnabled(uint8_t enabled)
+*åŠŸã€€ã€€èƒ½:	    è®¾ç½® MPU6050 æ˜¯å¦ä¸ºAUX I2Cçº¿çš„ä¸»æœº
+*******************************************************************************/
+void MPU6050_setI2CMasterModeEnabled(uint8_t enabled) {
+	IICwriteBit(devAddr, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_I2C_MST_EN_BIT, enabled);
+}
+
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		void MPU6050_setI2CBypassEnabled(uint8_t enabled)
+*åŠŸã€€ã€€èƒ½:	    è®¾ç½® MPU6050 æ˜¯å¦ä¸ºAUX I2Cçº¿çš„ä¸»æœº
+*******************************************************************************/
+void MPU6050_setI2CBypassEnabled(uint8_t enabled) {
+	IICwriteBit(devAddr, MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_I2C_BYPASS_EN_BIT, enabled);
+}
+
+void MPU6050_setDLPF(uint8_t mode)
+{
+	IICwriteBits(devAddr, MPU6050_RA_CONFIG, MPU6050_CFG_DLPF_CFG_BIT, MPU6050_CFG_DLPF_CFG_LENGTH, mode);
+}
+/**************************å®ç°å‡½æ•°********************************************
+*å‡½æ•°åŸå‹:		void MPU6050_initialize(void)
+*åŠŸã€€ã€€èƒ½:	    åˆå§‹åŒ– 	MPU6050 ä»¥è¿›å…¥å¯ç”¨çŠ¶æ€ã€‚
+*******************************************************************************/
+void Mpu6050init(void)
+{
+	MPU6050_setSleepEnabled(0); //è¿›å…¥å·¥ä½œçŠ¶æ€
+	Delay_ms_mpu(200);
+	MPU6050_setClockSource(MPU6050_CLOCK_PLL_XGYRO); //è®¾ç½®æ—¶é’Ÿ  0x6b   0x01
+	Delay_ms_mpu(50);
+	MPU6050_setFullScaleGyroRange(MPU6050_GYRO_FS_2000);//é™€èºä»ªæœ€å¤§é‡ç¨‹ +-2000åº¦æ¯ç§’
+	Delay_ms_mpu(50);
+	MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_4);	//åŠ é€Ÿåº¦åº¦æœ€å¤§é‡ç¨‹ +-4G
+	Delay_ms_mpu(50);
+	MPU6050_setDLPF(MPU6050_DLPF_BW_42);
+	Delay_ms_mpu(50);
+	MPU6050_setI2CMasterModeEnabled(0);	 //ä¸è®©MPU6050 æ§åˆ¶AUXI2C
+	Delay_ms_mpu(50);
+	MPU6050_setI2CBypassEnabled(1);	 //ä¸»æ§åˆ¶å™¨çš„I2Cä¸	MPU6050çš„AUXI2C	ç›´é€šã€‚æ§åˆ¶å™¨å¯ä»¥ç›´æ¥è®¿é—®HMC5883L
+	Delay_ms_mpu(50);
 }

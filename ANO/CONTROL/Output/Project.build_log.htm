@@ -5,10 +5,10 @@
 <h2>Tool Versions:</h2>
 IDE-Version: μVision V5.15
 Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: RE SGF, FGF, LIC=----
+License Information: RE SGF, FGF, LIC=YA3AR-KG3G9-VEZHA-152PN-H1EV6-CWPQ6
  
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.15.0
+Toolchain:       MDK-ARM Standard  Version: 5.15.0
 Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
 C Compiler:      Armcc.exe V5.05 update 2 (build 169)
 Assembler:       Armasm.exe V5.05 update 2 (build 169)
@@ -21,8 +21,8 @@ Target DLL:      Segger\JL2CM3.dll V2.99.15.0
 Dialog DLL:      TCM.DLL V1.14.5.0
  
 <h2>Project:</h2>
-D:\future\科研\Program for Dragon2\ANO\CONTROL\User\Project.uvprojx
-Project File Date:  10/15/2015
+D:\future\Sceince\DRAGON\ANO\ANO\CONTROL\User\Project.uvprojx
+Project File Date:  05/18/2016
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
@@ -30,6 +30,11 @@ Rebuild target 'STM32_Project'
 assembling startup_stm32f10x_md.s...
 compiling main.c...
 compiling stm32f10x_it.c...
+stm32f10x_it.c(160): warning:  #177-D: variable "percent" was declared but never referenced
+    static float percent = 0;
+stm32f10x_it.c(162): warning:  #177-D: variable "per_1000" was declared but never referenced
+    uint16_t per_1000;
+stm32f10x_it.c: 2 warnings, 0 errors
 compiling misc.c...
 compiling stm32f10x_gpio.c...
 compiling stm32f10x_rcc.c...
@@ -48,14 +53,19 @@ compiling adc.c...
 compiling sys.c...
 compiling usart.c...
 compiling 24l01.c...
+..\Hardware\24l01.c(174): warning:  #940-D: missing return statement at end of non-void function "NRF24L01_TxPacket_AP"
+  }
+..\Hardware\24l01.c(169): warning:  #177-D: variable "sta" was declared but never referenced
+        u8 sta;
+..\Hardware\24l01.c: 2 warnings, 0 errors
 compiling spi.c...
 compiling tim.c...
 compiling nvic.c...
 compiling Key.c...
 linking...
-Program Size: Code=13444 RO-data=280 RW-data=64 ZI-data=1136  
+Program Size: Code=14080 RO-data=280 RW-data=72 ZI-data=1168  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 0 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 4 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -66,7 +76,7 @@ Package Vendor: ARM
    * Component: CORE Version: 4.1.0
 
 <h2>Collection of Component include folders:</h2>
-  D:\future\科研\Program for Dragon2\ANO\CONTROL\User\RTE
+  D:\future\Sceince\DRAGON\ANO\ANO\CONTROL\User\RTE
   C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include
   C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include
 

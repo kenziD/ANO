@@ -1,11 +1,13 @@
 #include "config.h"
 #include "stdint.h"
 
-u8 tmp_buf[32] = "";
+u8 tmp_buf[32] = {0};
+u8 rc_buf[32] = {0};
 u8 status = 0;
 u8 key = 0;
 int main(void)
 {
+	int dianya_fly = 0;
 	SysTick_Init();
 	Tim3_Init(500);
 	Nvic_Init();
@@ -22,18 +24,34 @@ int main(void)
 	}
 	LED1_ON;
 	LED2_OFF;
-	NRF24L01_TX_Mode();
-
+	//TX mode
+	//NRF24L01_TX_Mode();
+	//NRF24L01_Mode_Config(2);
+	
+	//RX mode
+	NRF24L01_Mode_Config(3);
 	while (1)
 	{
 		key = KEY_scan();
-		if (NRF24L01_TxPacket(tmp_buf) == TX_OK)//早就超过5ms，不能放在中断里哦
+
+		
+		if (NRF24L01_RxPacket(tmp_buf) == 0)
+		{
+			NRF24L01_TxPacket_AP(rc_buf);
+			LED1_ON;
+			if(tmp_buf[0]==0x88 && tmp_buf[1]==0xAE && tmp_buf[2]==0x1C)
 			{
-				LED1_ON;
-			} 
-		else
-			{
-				LED1_OFF;
+				dianya_fly = tmp_buf[17]<<8|tmp_buf[18];
+				if(dianya_fly<36 && dianya_fly>20)
+				{
+					LED2_ON;
+				}
 			}
+			send_wave(32,tmp_buf);
+		}
+		else
+		{
+			LED1_OFF;
+		}
 	}
 }

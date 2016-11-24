@@ -56,7 +56,7 @@
           <ListingPath>..\Listing\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
-          <CreateBatchFile>0</CreateBatchFile>
+          <CreateBatchFile>1</CreateBatchFile>
           <BeforeCompile>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
@@ -226,7 +226,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
@@ -472,6 +472,16 @@
               <FileType>1</FileType>
               <FilePath>..\FWlib\src\stm32f10x_spi.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FWlib\src\stm32f10x_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FWlib\src\stm32f10x_dma.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -563,9 +573,24 @@
               <FilePath>..\Hardware\PID.c</FilePath>
             </File>
             <File>
+              <FileName>ANO_TC_STM32F1_I2C.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Hardware\ANO_TC_STM32F1_I2C.lib</FilePath>
+            </File>
+            <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Rc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Rc.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\adc.c</FilePath>
             </File>
           </Files>
         </Group>

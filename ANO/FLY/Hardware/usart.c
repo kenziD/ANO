@@ -7,7 +7,7 @@ void USART1_Config(uint32_t bound)
 {
 		GPIO_InitTypeDef GPIO_InitStructure;
 		USART_InitTypeDef USART_InitStructure;
-		NVIC_InitTypeDef NVIC_InitStructure;
+		
 		/* config USART1 clock */
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE);
 		
@@ -33,11 +33,6 @@ void USART1_Config(uint32_t bound)
 		USART_Init(USART1, &USART_InitStructure); 
 		
 	//#ifdef EN_USART1_RX
-	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3 ; //抢占优先级 3
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3; //子优先级 3
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ 通道使能
-	NVIC_Init(&NVIC_InitStructure);  //中断优先级初始化
 //⑤开启中断
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 //#endif

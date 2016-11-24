@@ -37,6 +37,7 @@
 ..\output\motor.o: ..\Hardware\LED.h
 ..\output\motor.o: ..\Hardware\IIC.h
 ..\output\motor.o: ..\Hardware\MPU6050.h
+..\output\motor.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\motor.o: ..\Hardware\IMU.h
 ..\output\motor.o: ..\Hardware\HSEconf.h
 ..\output\motor.o: ..\Hardware\config.h
@@ -46,3 +47,5 @@
 ..\output\motor.o: ..\Hardware\PID.h
 ..\output\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\motor.o: ..\Hardware\timer.h
+..\output\motor.o: ..\Hardware\adc.h

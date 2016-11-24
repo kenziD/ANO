@@ -9,6 +9,8 @@
 "..\output\stm32f10x_i2c.o"
 "..\output\stm32f10x_tim.o"
 "..\output\stm32f10x_spi.o"
+"..\output\stm32f10x_adc.o"
+"..\output\stm32f10x_dma.o"
 "..\output\core_cm3.o"
 "..\output\system_stm32f10x.o"
 "..\output\config.o"
@@ -25,7 +27,11 @@
 "..\output\spi.o"
 "..\output\wave.o"
 "..\output\pid.o"
---library_type=microlib --strict --scatter "..\Output\Project.sct"
+"..\Hardware\ANO_TC_STM32F1_I2C.lib"
+"..\output\timer.o"
+"..\output\rc.o"
+"..\output\adc.o"
+--strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "..\Listing\Project.map" -o ..\Output\Project.axf

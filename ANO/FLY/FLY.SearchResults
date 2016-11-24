@@ -1,0 +1,9 @@
+---- STA Matches (8 in 4 files) ----
+Main.c (user):extern int STA;
+Main.c (user):		if (STA == 1)
+Main.c (user):			STA = 0;
+Stm32f10x.h (cmsis):  __I uint32_t STA;
+Stm32f10x_sdio.c (fwlib\src):  if ((SDIO->STA & SDIO_FLAG) != (uint32_t)RESET)
+Stm32f10x_sdio.c (fwlib\src):  if ((SDIO->STA & SDIO_IT) != (uint32_t)RESET)  
+Usart.c (hardware):int STA = 0;
+Usart.c (hardware):			STA=1;

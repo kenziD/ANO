@@ -31,12 +31,15 @@
 ..\output\wave.o: ..\FWlib\inc\stm32f10x_wwdg.h
 ..\output\wave.o: ..\FWlib\inc\misc.h
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\wave.o: ..\Hardware\Rc.h
+..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\wave.o: ..\Hardware\config.h
 ..\output\wave.o: ..\Hardware\delay.h
 ..\output\wave.o: ..\Hardware\sys.h
 ..\output\wave.o: ..\Hardware\LED.h
 ..\output\wave.o: ..\Hardware\IIC.h
 ..\output\wave.o: ..\Hardware\MPU6050.h
+..\output\wave.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\wave.o: ..\Hardware\IMU.h
 ..\output\wave.o: ..\Hardware\HSEconf.h
 ..\output\wave.o: ..\Hardware\config.h
@@ -45,4 +48,5 @@
 ..\output\wave.o: ..\Hardware\24l01.h
 ..\output\wave.o: ..\Hardware\PID.h
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\wave.o: ..\Hardware\timer.h
+..\output\wave.o: ..\Hardware\adc.h
