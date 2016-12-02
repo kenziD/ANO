@@ -19,4 +19,8 @@ u16 voltage1(void);
 u16 voltage2(void);
 u16 voltage3(void);
 u16 voltage4(void);
+u16 voltage5(void);
+u16 voltage6(void);
+u16 voltage7(void);
+u16 voltage8(void);
 #endif 

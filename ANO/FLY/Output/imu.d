@@ -48,3 +48,4 @@
 ..\output\imu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\imu.o: ..\Hardware\timer.h
 ..\output\imu.o: ..\Hardware\adc.h
+..\output\imu.o: ..\Hardware\Rc.h

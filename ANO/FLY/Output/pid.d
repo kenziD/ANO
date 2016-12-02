@@ -48,3 +48,4 @@
 ..\output\pid.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\pid.o: ..\Hardware\timer.h
 ..\output\pid.o: ..\Hardware\adc.h
+..\output\pid.o: ..\Hardware\Rc.h

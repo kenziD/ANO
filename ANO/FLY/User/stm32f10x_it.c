@@ -154,39 +154,34 @@ u8 getMpu6050Data = 0;
 u8 calculateAngle = 0;
 u8 sendData = 0;
 u8 ms1_cnt = 0;
-
+u8 ms2_cnt = 0;
 void TIM3_IRQHandler(void)    //0.5ms中断一次
 {
-  static u16 s1_cnt = 0;
-	static u8 led_on = 0;
+//	static u8 led_on = 0;
+	
 	//0.5ms
   if (TIM3->SR & TIM_IT_Update)   //if ( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET )
   {
     TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
     ms1_cnt++;
-//	 if(led_on)
-//       {
-//        LED2_OFF;
-//        led_on = 0;
-//       }
-//       else
-//       {
-//        LED2_ON;
-//        led_on = 1;
-//       }
+		ms2_cnt++;
 		if (ms1_cnt == 2) //1ms
     {
       getMpu6050Data=1;
-    }
-		if(ms1_cnt == 3)
-		{
-			calculateAngle=1;
-		}
-		if(ms1_cnt==4)
-		{
 			sendData=1;
 			ms1_cnt = 0;
-		}
+    }
+//		if(ms2_cnt == 4)
+//		{
+//			calculateAngle=1;
+//			ms2_cnt = 0;
+//		}
+		Data_Transfer();
+		//if(ms1_cnt==4)
+		//{
+			//sendData=1;
+			//ms1_cnt = 0;
+		//}
   }
 }
 /******************************************************************************/

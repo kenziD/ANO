@@ -24,19 +24,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 #include "usart.h"
-#include "adc.h"
 #include "stdint.h"
-#include "24l01.h"
-#include "Key.h"
 #include "string.h"
 #include "LED.h"
+#include "Rc.h"
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
   */
-#define BYTE0(dwTemp)       (*(char *)(&dwTemp))
-#define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))
-#define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))
-#define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))
+
 	
 #define ON 1;
 #define OFF 0;
@@ -147,22 +142,25 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 }
-extern u8 rc_buf[32];
-extern u8 key;
-u16 throttle;
-#define upRange 2086 //2010-4096
-#define downRange 2010 //0-2010
-#define inStaticRange(throttle) (throttle<2015 && throttle>2005) ? true:false //中值为2010
+//extern u8 rc_buf[32];
+//extern u8 key;
+//u16 throttle=0;
+
+	
+//int throttle_stick_is_middle = 1;
 void TIM3_IRQHandler(void)    //0.5ms中断一次
 {
   static u8 ms1 = 0, ms2 = 0, ms5 = 0, ms10 = 0;    //中断次数计数器
-	static u16 throttle_vol =0;
-  static float percent = 0;
-	static u16 gap;
-  uint16_t per_1000;
-	static u16 Roll = 0;
-	static u16 Pitch = 0;
-	static u16 Yaw = 0;
+//	static u16 throttle_vol =0;
+//  static float percent = 0;
+//	static u16 gap;
+//  uint16_t per_1000;
+//	static u16 Roll = 0;
+//	static u16 Pitch = 0;
+//	static u16 Yaw = 0;
+//		static u16 aux1 = 0;
+//		static u16 aux2 = 0;
+//		static u16 aux3 = 0;
   if (TIM3->SR & TIM_IT_Update)   //if ( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET )
   {
     TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
@@ -174,6 +172,7 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
     //Nrf_Check_Event();
     if (ms1 == 2)     //每两次中断执行一次,1ms
     {
+				
       ms1 = 0;
     }
     if (ms2 == 4)     //每四次中断执行一次,2ms
@@ -182,48 +181,17 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
     }
     if (ms5 == 10)
     {
+		loadRcData();
       ms5 = 0;        //每十次中断执行一次,5ms
+			
     }
     if (ms10 == 20)
     {
+			
       ms10 = 0;       //每二十次中断执行一次,10ms
       //percent = (float)voltage1() / 4093.0;
       //per_1000 = (uint16_t)(percent * 1000);
 			
-			
-			throttle_vol = voltage1();
-			if(throttle_vol>2015)//左-上
-			{
-				gap = (uint16_t)(((float)(throttle_vol-2010)/upRange)*20.0);
-				throttle = throttle + (uint16_t)(((float)(throttle_vol-2010)/upRange)*20.0);
-				if(throttle>999) throttle=999;
-			}
-			else if (throttle_vol<2005) //左-下
-			{
-				gap = (uint16_t)((float)(2010-throttle_vol)/downRange*25.0);
-				if(throttle<gap) throttle = 0;
-				else if(throttle>gap) {
-					throttle = throttle - gap;
-				}
-			}
-			
-			Yaw = voltage2();
-			Roll = voltage3();
-			Pitch = voltage4();
-      rc_buf[0] = BYTE0( throttle);
-      rc_buf[1] = BYTE1( throttle);
-			rc_buf[2] = BYTE0(Roll);
-      rc_buf[3] = BYTE1(Roll);
-			rc_buf[4] = BYTE0(Pitch);
-			rc_buf[5] = BYTE1(Pitch);
-			rc_buf[6] = BYTE0(Yaw);
-      rc_buf[7] = BYTE1(Yaw);
-			rc_buf[8] = 'c';
-			if(key == MODE_KEY_DOWN)
-				rc_buf[8] = 'a';//接收端判断如果为a，则判为start
-				
-			if(key == FUN_KEY_DOWN)
-				rc_buf[8] = 'b';//接收端判断如果为b,则判为stop
     }
   }
 }

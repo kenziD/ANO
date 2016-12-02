@@ -10,7 +10,7 @@ void LED_Init(void)
 	
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 		GPIO_SetBits(GPIOB , GPIO_Pin_11);
-	GPIO_SetBits(GPIOB , GPIO_Pin_12);
+		GPIO_SetBits(GPIOB , GPIO_Pin_12);
     //LED_Flash(5, 100);
 }
 

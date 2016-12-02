@@ -154,7 +154,7 @@ void Mpu6050_Analyze(void)
 		cnt_a++;
 	}
 }
-void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_accZ, int16_t *angleOut) {
+void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_accZ, Int16xyz *acc_out) {
 	static uint8_t 	filter_cnt = 0;
 	static float	ACC_X_BUF[FILTER_NUM], ACC_Y_BUF[FILTER_NUM], ACC_Z_BUF[FILTER_NUM];
 	int32_t temp1 = 0, temp2 = 0, temp3 = 0;
@@ -169,9 +169,9 @@ void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_acc
 		temp2 += ACC_Y_BUF[i];
 		temp3 += ACC_Z_BUF[i];
 	}
-	angleOut[0] = temp1 / FILTER_NUM;
-	angleOut[1] = temp2 / FILTER_NUM;
-	angleOut[2] = temp3 / FILTER_NUM;
+	acc_out->x = temp1 / FILTER_NUM;
+	acc_out->y = temp2 / FILTER_NUM;
+	acc_out->z = temp3 / FILTER_NUM;
 	filter_cnt++;
 	if (filter_cnt == FILTER_NUM)	filter_cnt = 0;
 }

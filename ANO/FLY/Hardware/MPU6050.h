@@ -373,12 +373,17 @@
 #define FILTER_NUM 20
 extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;    //量化的陀螺仪数据 g(9.8m/s^2)
 extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据 °/s
-
+typedef struct 
+{
+	int16_t x;
+	int16_t y;
+	int16_t z;
+} Int16xyz ;
 void Mpu6050init(void);
 // void Mpu6050_Init_offset(void);
 void Read_Mpu6050(void);
 void Mpu6050_Analyze(void);
 
-void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_accZ, int16_t *angleOut);
+void moveFilterAccData(int16_t angle_accX, int16_t angle_accY, int16_t angle_accZ, Int16xyz *acc_out);
 
 #endif

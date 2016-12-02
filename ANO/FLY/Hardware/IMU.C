@@ -94,12 +94,12 @@ float pitch_offset = 0;
 float roll_offset = 0;
 float sum_roll = 0;
 float sum_pitch = 0;
-
+float originAngles[3] = {0};
 float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
-
+extern float gCalibrate;
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,float * angles){
-static u16 initCnt = 0;
-	static float yawSum = 0,pitchSum = 0,rollSum = 0;
+//static u16 initCnt = 0;
+//	static float yawSum = 0,pitchSum = 0,rollSum = 0;
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
@@ -114,6 +114,8 @@ static u16 initCnt = 0;
 	float q2q2 = q2*q2;
 	float q2q3 = q2*q3;
 	float q3q3 = q3*q3;
+	float realGz=0;
+	
 //	now = micros();  //露脕脠隆脢卤录盲
 //	if (now < lastUpdate) { //露篓脢卤脝梅脪莽鲁枚鹿媒脕脣隆拢
 //		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
@@ -124,7 +126,7 @@ static u16 initCnt = 0;
 //lastUpdate = now;	//赂眉脨脗脢卤录盲
 	if(ax*ay*az==0)
 	return;
-	
+	realGz=gz;
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;
@@ -188,24 +190,38 @@ static u16 initCnt = 0;
 	q1 = q1 / norm;
 	q2 = q2 / norm;
 	q3 = q3 / norm;
-	angles[0] += gz*Gyro_Gr*0.002;
-	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
-	angles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
-	angles[1] -= pitch_offset;
-	angles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
-	angles[2] -=roll_offset;
-	if(initCnt<=3000)
-	{
-		yawSum += angles[0];
-		pitchSum += angles[1];
-		rollSum += angles[2];
-		if(initCnt==3000)
-		{
-			yawOffsetCache = yawSum/3000.0;
-			pitchOffsetCache = pitchSum/3000.0;
-			rollOffsetCache = rollSum/3000.0;
-		}
-		initCnt++;
+	if(realGz<5 && realGz>-5){
+		realGz = 0;
 	}
+	originAngles[0] += realGz*Gyro_G*0.002;
+	originAngles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
+	originAngles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
+	
+	angles[0] = originAngles[0]-yawOffsetCache;
+	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
+	angles[1] = originAngles[1]-pitchOffsetCache;
+	
+	angles[2] = originAngles[2]-rollOffsetCache;
+
+	if(gCalibrate)
+	{
+		yawOffsetCache = originAngles[0];
+		pitchOffsetCache = originAngles[1];
+		rollOffsetCache = originAngles[2];
+		gCalibrate = 0;
+	}
+//	if(initCnt<=3000)
+//	{
+//		yawSum += angles[0];
+//		pitchSum += angles[1];
+//		rollSum += angles[2];
+//		if(initCnt==3000)
+//		{
+//			yawOffsetCache = yawSum/3000.0;
+//			pitchOffsetCache = pitchSum/3000.0;
+//			rollOffsetCache = rollSum/3000.0;
+//		}
+//		initCnt++;
+//	}
 	}
 extern float AngleOut[3];

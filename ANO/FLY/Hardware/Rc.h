@@ -6,10 +6,13 @@
 typedef struct 
 {
 	int throttle;
-	float roll;
-	float pitch;
-	float yaw;
-	char status[5];
+	uint16_t roll;
+	uint16_t pitch;
+	uint16_t yaw;
+	u8 start;
+	u16 aux1;
+	u16 aux2;
+	u16 aux3;
 } Define_Rc_Data ;
 
 

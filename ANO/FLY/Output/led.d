@@ -48,3 +48,4 @@
 ..\output\led.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\led.o: ..\Hardware\timer.h
 ..\output\led.o: ..\Hardware\adc.h
+..\output\led.o: ..\Hardware\Rc.h

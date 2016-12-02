@@ -29,17 +29,7 @@ Project File Date:  11/03/2016
 Rebuild target 'STM32_Project'
 assembling startup_stm32f10x_md.s...
 compiling main.c...
-main.c(27): warning:  #177-D: variable "q" was declared but never referenced
-        float q[4];
-main.c(29): warning:  #177-D: variable "test" was declared but never referenced
-        float test = 0;
-main.c: 2 warnings, 0 errors
 compiling stm32f10x_it.c...
-stm32f10x_it.c(160): warning:  #177-D: variable "s1_cnt" was declared but never referenced
-    static u16 s1_cnt = 0;
-stm32f10x_it.c(161): warning:  #177-D: variable "led_on" was declared but never referenced
-        static u8 led_on = 0;
-stm32f10x_it.c: 2 warnings, 0 errors
 compiling misc.c...
 compiling stm32f10x_gpio.c...
 compiling stm32f10x_rcc.c...
@@ -64,28 +54,30 @@ compiling MOTOR.c...
 compiling 24l01.c...
 compiling spi.c...
 compiling wave.c...
-..\Hardware\wave.c(294): warning:  #177-D: variable "count_1" was declared but never referenced
+..\Hardware\wave.c(30): warning:  #177-D: variable "sta" was declared but never referenced
+        u8 sta = 0;
+..\Hardware\wave.c(79): warning:  #177-D: variable "FIFOstatus" was declared but never referenced
+        u8 FIFOstatus = 0x10;
+..\Hardware\wave.c(319): warning:  #550-D: variable "pitch_expire_1000" was set but never used
+        u16 pitch_expire_1000 = 0;
+..\Hardware\wave.c(320): warning:  #550-D: variable "roll_expire_1000" was set but never used
+        u16 roll_expire_1000 = 0;
+..\Hardware\wave.c(414): warning:  #177-D: variable "count_1" was declared but never referenced
         char count_1=0;
-..\Hardware\wave.c: 1 warning, 0 errors
+..\Hardware\wave.c: 5 warnings, 0 errors
 compiling PID.c...
-..\Hardware\PID.c(32): warning:  #177-D: variable "yaw_Out" was declared but never referenced
-      static float roll_Out = 0, pitch_Out = 0, yaw_Out = 0;
-..\Hardware\PID.c(33): warning:  #177-D: variable "yaw_i" was declared but never referenced
-      static float roll_i = 0, pitch_i = 0, yaw_i = 0;
-..\Hardware\PID.c: 2 warnings, 0 errors
 compiling timer.c...
 compiling Rc.c...
-..\Hardware\Rc.c(13): warning:  #177-D: variable "led_on" was declared but never referenced
-        static u8 led_on = 0;
-..\Hardware\Rc.c: 1 warning, 0 errors
+..\Hardware\Rc.c(13): warning:  #177-D: variable "num" was declared but never referenced
+        u8 num  =32;
+..\Hardware\Rc.c(14): warning:  #177-D: variable "sum" was declared but never referenced
+        u8 sum = 0;
+..\Hardware\Rc.c: 2 warnings, 0 errors
 compiling adc.c...
-..\Hardware\adc.c(83): warning:  #1-D: last line of file ends without a newline
-  /******************* (C) COPYRIGHT 2011 Ò°»ðÇ¶ÈëÊ½¿ª·¢¹¤×÷ÊÒ *****END OF FILE****/
-..\Hardware\adc.c: 1 warning, 0 errors
 linking...
-Program Size: Code=31990 RO-data=522 RW-data=364 ZI-data=2028  
+Program Size: Code=32502 RO-data=522 RW-data=340 ZI-data=2092  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 9 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   D:\future\Sceince\recover\ANO\FLY\User\RTE

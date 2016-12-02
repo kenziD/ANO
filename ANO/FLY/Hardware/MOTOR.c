@@ -130,7 +130,12 @@ void MOT_GPIO_init(void)
 void MOT_PWM_init(void)
 {
 	MOT0_PWM_init();
+	
 	MOT1_PWM_init();
 	MOT2_PWM_init();
 	MOT3_PWM_init();
+	  TIM_SetCompare1(TIM2,0);//M1
+    TIM_SetCompare2(TIM2,0);//M2
+    TIM_SetCompare3(TIM2,0);//M0
+    TIM_SetCompare4(TIM2,0);//M3
 }

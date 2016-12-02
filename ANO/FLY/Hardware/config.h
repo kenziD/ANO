@@ -19,6 +19,7 @@
 #include <string.h>
 #include "timer.h"
 #include "adc.h"
+#include "Rc.h"
 #endif /* __CONFIG_H_ */
 
 

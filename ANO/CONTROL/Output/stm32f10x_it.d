@@ -31,9 +31,6 @@
 ..\output\stm32f10x_it.o: ..\FWlib\inc\misc.h
 ..\output\stm32f10x_it.o: ..\Hardware\usart.h
 ..\output\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\output\stm32f10x_it.o: ..\Hardware\adc.h
-..\output\stm32f10x_it.o: ..\Hardware\sys.h
-..\output\stm32f10x_it.o: ..\Hardware\24l01.h
-..\output\stm32f10x_it.o: ..\Hardware\Key.h
 ..\output\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\stm32f10x_it.o: ..\Hardware\LED.h
+..\output\stm32f10x_it.o: ..\Hardware\Rc.h

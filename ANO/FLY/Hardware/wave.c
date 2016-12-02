@@ -4,7 +4,6 @@
 #include "pid.h"
 #include "MPU6050.h"
 #include "24l01.h"
-
 #include "Rc.h"
 //#define tx_num	32
 unsigned char temp[6];
@@ -17,7 +16,101 @@ extern float ypr[3];
 #define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))
 #define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))
 #define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))
-
+Define_Rc_Data Rc_Data = {0,0,0,0, 0 ,0,0,0};
+u8 rc_tmp[32] = {0};
+extern u8 send_Senser;
+extern u8 send_Status;
+extern u8 send_AngleWave;
+extern u8 send_PwmWave;
+extern u8 send_desirePIDAngle;
+void NRF_Check()
+{
+		
+	static u8 led_on = 0;
+	u8 sta = 0;
+	if (NRF24L01_RxPacket(rc_tmp) == 0)
+	{
+		if(led_on)
+    {
+       LED2_OFF;
+       led_on = 0;
+    }
+    else
+    {
+       LED2_ON;
+       led_on = 1;
+    }
+		//10us
+		//LED2_ON;
+		Rc_Data_Analyze(rc_tmp,&Rc_Data);
+	}
+	else
+	{
+		//LED2_OFF;
+	}
+//	SPI1_SetSpeed(SPI_BaudRatePrescaler_8); //spiËÙ¶ÈÎª9Mhz£¨24L01µÄ×î´óSPIÊ±ÖÓÎª10Mhz£©
+//	sta = NRF24L01_Read_Reg(STATUS); 
+//	if (sta & RX_OK) 
+//	{
+//		//LED2_ON;
+//		NRF24L01_Read_Buf(RD_RX_PLOAD, rc_tmp, RX_PLOAD_WIDTH); 
+//		Rc_Data_Analyze(rc_tmp,&Rc_Data);
+//		NRF24L01_Write_Reg(FLUSH_RX, 0xff); 
+//	}
+//	else
+//	{
+//		//LED2_OFF;
+//	}
+//	if(sta & MAX_TX)
+//	{
+//		NRF24L01_Write_Reg(FLUSH_TX, 0xff); 
+//	}
+//	NRF24L01_Write_Reg(WRITE_REG_NRF + STATUS, sta); 
+}
+extern int16_t motor0, motor1, motor2, motor3;
+extern Int16xyz ACC_AVG;
+u8 getTX_FIFO_status()
+{
+	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
+	return NRF24L01_Read_Reg(NRF_FIFO_STATUS);
+}
+void Data_Transfer()
+{
+	u8 FIFOstatus = 0x10;
+	NRF_Check();
+	//FIFOstatus = getTX_FIFO_status();
+	//if TX_FIFO is not empty,the last time transfer didn't receive an acknowlege.return.
+	//if((FIFOstatus & (1<<4))==0)
+	//{
+	//	return;
+	//}
+	if(send_Senser)
+	{
+		send_Senser = 0;
+		sendSenser(ACC_AVG.x, ACC_AVG.y,ACC_AVG.z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
+		send_wave(32);
+	}
+	if(send_Status)
+	{
+		send_Status = 0;
+		sendPwmVoltage(&Rc_Data,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100));//0.00003974s
+		send_wave(32);
+	}
+	if(send_AngleWave)
+	{
+		//Data_Send_AngleWave();
+	}
+	if(send_PwmWave)
+	{
+		//Data_Send_PwmWave();
+	}
+	//if(send_desirePIDAngle)
+	//{
+		//给第3帧 第1,2,3位 发送float数据
+	//	Uart1_send_custom_float(0xA3,0.3,0.5,0.9);
+	//	send_wave(16);
+	//}
+}
 /**************************向物理串口发一个字节***************************************
 *******************************************************************************/
 __inline unsigned char UART_Putc(unsigned char data)			//
@@ -130,7 +223,23 @@ void Uart1_send_custom_three_int16(int16_t aa,int16_t bb,int16_t cc)
 	sum +=Uart1_Put_Int16(cc);//发送16位数据    
 	putChar(sum);
 }
-/****************给第一帧 第一位 发送float数据*************/
+/****************给第2帧 第1,2,3,4位 发送int16_t数据*************/
+void zhen2_send_custom_four_int16(int16_t aa,int16_t bb,int16_t cc,int16_t dd)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0x88);
+	sum +=putChar(0xA2);
+	
+	sum +=putChar(0x08);//发送的数据的长度 记得改
+	sum +=Uart1_Put_Int16(aa);//发送16位数据
+	sum +=Uart1_Put_Int16(bb);//发送16位数据  
+	sum +=Uart1_Put_Int16(cc);//发送16位数据  
+	sum +=Uart1_Put_Int16(dd);//发送16位数据      
+	putChar(sum);
+}
+/****************给第X帧 第X位 发送float数据*************/
 
 void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc)
 {
@@ -163,7 +272,7 @@ void Uart1_send_custom_PID(uint8_t aa)
 
 	putChar(sum);
 }
-void sendSenser(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t gg,int16_t hh)
+void sendSenser(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t roll,int16_t pitch,int16_t yaw)
 {
 	unsigned char sum = 0;
 	count=0;
@@ -188,12 +297,12 @@ void sendSenser(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t f
 	putChar(0);
 	putChar(0);
 	putChar(0);//磁力计
-	sum += putChar(BYTE1(gg));//7 ANGLE DATA ROLL
-	sum += putChar(BYTE0(gg));
-	sum += putChar(BYTE1(hh));//8 PITCH
-	sum += putChar(BYTE0(hh));
-	putChar(0);//YAW
-	putChar(0);
+	sum += putChar(BYTE1(roll));//7 ANGLE DATA ROLL
+	sum += putChar(BYTE0(roll));
+	sum += putChar(BYTE1(pitch));//8 PITCH
+	sum += putChar(BYTE0(pitch));
+	sum += putChar(BYTE1(yaw));//9 YAW
+	sum += putChar(BYTE0(yaw));
 	
 	putChar(0);
 	putChar(0);
@@ -205,9 +314,19 @@ void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,
 {
 	unsigned char sum = 0;
 	float voltage_temp = ADC_ConvertedValue*2*3.3/4096.0;//四轴电压
-	u16 v_10 = voltage_temp*10;
+		float roll_expire = 0;
+	float pitch_expire = 0;
+	u16 pitch_expire_1000 = 0;
+	u16 roll_expire_1000 = 0;
+	u16 v_100 = voltage_temp*100;
 	u16 pwm_vol = voltage_temp*100*rc_data->throttle/999.0;
 	count=0;
+	
+
+	roll_expire = (rc_data->aux1-2008)/51.0/10.0;
+	roll_expire_1000 = roll_expire*1000;
+	pitch_expire = (rc_data->aux2-2028)/51.0/10.0;
+	pitch_expire_1000 = pitch_expire*1000;
 	sum += putChar(0x88);
 	sum += putChar(0xAE);
 	sum += putChar(0x1C);
@@ -220,14 +339,15 @@ void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,
 	sum += putChar(BYTE0(rc_data->roll));//roll
 	sum += putChar(BYTE1(rc_data->pitch));
 	sum += putChar(BYTE0(rc_data->pitch));//pitch
-	putChar(0);
-	putChar(0);//aux 1
-	putChar(0);
-	putChar(0);//aux 2
-	putChar(0);
-	putChar(0);//aux 3
-	sum += putChar(BYTE1(v_10));
-	sum += putChar(BYTE0(v_10));//aux 4
+	sum += putChar(BYTE1(rc_data->aux1));
+	sum += putChar(BYTE0(rc_data->aux1));//aux1
+	sum += putChar(BYTE1(rc_data->aux2));
+	sum += putChar(BYTE0(rc_data->aux2));//aux2
+	sum += putChar(BYTE1(rc_data->aux3));
+	sum += putChar(BYTE0(rc_data->aux3));//aux3
+	//电池
+	sum += putChar(BYTE1(v_100));
+	sum += putChar(BYTE0(v_100));//aux 4
 	putChar(0);
 	putChar(0);//aux 5
 	
@@ -301,7 +421,6 @@ void send_wave(int tx_num)//一共发送几个字节,如果是传送到NRF24L01�
 		else
 		{
 			//LED2_OFF;
-		
 		}
 	#endif
 		

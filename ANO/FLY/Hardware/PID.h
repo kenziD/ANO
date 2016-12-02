@@ -15,8 +15,7 @@ typedef struct PID
 extern PID_ PID;
 //void change_PID();
 //void changePIDNum(float* pid_num);
-void PID_Set(void);
+void ControlPID(int16_t expThro);
 void PID_Init(void);
-void Set_PWM(int16_t m0, int16_t m1,int16_t m2,int16_t m3);
 
 #endif

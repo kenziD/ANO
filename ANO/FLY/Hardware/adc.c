@@ -78,6 +78,3 @@ void ADC1_Init(void)
 	ADC1_GPIO_Config();
 	ADC1_Mode_Config();
 }
-
-
-/******************* (C) COPYRIGHT 2011 Ò°»ðÇ¶ÈëÊ½¿ª·¢¹¤×÷ÊÒ *****END OF FILE****/
