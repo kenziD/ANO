@@ -26,7 +26,8 @@ int cnt = 0;
 
 float ypr[3];
 
-
+floatEurlaAngle outAngle = {0.0,0.0,0.0};
+floatEurlaAngle desireAngle = {0.0,0.0,0.0};
 Int16xyz ACC_AVG = {0,0,0};
 float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
@@ -38,6 +39,7 @@ int main(void)
 	static u8 send_Status_cnt = 0;
 	static u8 send_desirePIDAngle_cnt = 0;
 	static u8 att_cnt = 0;
+	static u8 outterPid_cnt = 0;
 	RCC_HSE_Configuration();
 	SysTick_Init();
 	NVIC_Configuration();
@@ -80,13 +82,21 @@ int main(void)
 			if(att_cnt==2)
 			{
 				att_cnt = 0;
+				outterPid_cnt++;
 				//LED2_ON;
-				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,ypr);
-				surRoll = ypr[2];
-				surPitch = ypr[1];
-				surYaw = ypr[0];
+				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+				surRoll =outAngle.roll;
+				surPitch = outAngle.pitch;
+				surYaw = outAngle.yaw;
 				expRoll = (Rc_Data.aux1-2046)/1024.0;
 				expPitch= (Rc_Data.aux2-2046)/1024.0;
+				//gyroControl(Rc_Data.throttle);
+				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
+//				if(outterPid_cnt==2)//4ms
+//				{
+//					outterPid_cnt = 0;
+//					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
+//				}
 				ControlPID(Rc_Data.throttle);
 				calculateAngle = 0;
 				//LED2_OFF;

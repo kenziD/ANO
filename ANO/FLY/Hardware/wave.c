@@ -17,6 +17,7 @@ extern float ypr[3];
 #define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))
 #define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))
 Define_Rc_Data Rc_Data = {0,0,0,0, 0 ,0,0,0};
+extern floatEurlaAngle outAngle;;
 u8 rc_tmp[32] = {0};
 extern u8 send_Senser;
 extern u8 send_Status;
@@ -91,7 +92,7 @@ void Data_Transfer()
 	{
 		send_Senser = 0;
 		//sendSenser(ACC_AVG.x, ACC_AVG.y,ACC_AVG.z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
-		sendSenser(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
+		sendSenser(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(outAngle.roll* 100), (int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 10));
 		send_wave(32);
 	}
 	else if(send_Status)
