@@ -23,6 +23,9 @@ extern u8 send_Status;
 extern u8 send_AngleWave;
 extern u8 send_PwmWave;
 extern u8 send_desirePIDAngle;
+extern float expRoll;
+extern float expPitch;
+extern float expYaw;
 void NRF_Check()
 {
 		
@@ -30,16 +33,16 @@ void NRF_Check()
 	u8 sta = 0;
 	if (NRF24L01_RxPacket(rc_tmp) == 0)
 	{
-		if(led_on)
-    {
-       LED2_OFF;
-       led_on = 0;
-    }
-    else
-    {
-       LED2_ON;
-       led_on = 1;
-    }
+//		if(led_on)
+//    {
+//       LED2_OFF;
+//       led_on = 0;
+//    }
+//    else
+//    {
+//       LED2_ON;
+//       led_on = 1;
+//    }
 		//10us
 		//LED2_ON;
 		Rc_Data_Analyze(rc_tmp,&Rc_Data);
@@ -87,29 +90,33 @@ void Data_Transfer()
 	if(send_Senser)
 	{
 		send_Senser = 0;
-		sendSenser(ACC_AVG.x, ACC_AVG.y,ACC_AVG.z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
+		//sendSenser(ACC_AVG.x, ACC_AVG.y,ACC_AVG.z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
+		sendSenser(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
 		send_wave(32);
 	}
-	if(send_Status)
+	else if(send_Status)
 	{
 		send_Status = 0;
 		sendPwmVoltage(&Rc_Data,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100));//0.00003974s
 		send_wave(32);
 	}
-	if(send_AngleWave)
+	else if(send_AngleWave)
 	{
 		//Data_Send_AngleWave();
 	}
-	if(send_PwmWave)
+	else if(send_PwmWave)
 	{
 		//Data_Send_PwmWave();
 	}
-	//if(send_desirePIDAngle)
-	//{
+	else if(send_desirePIDAngle)
+	{
+		send_desirePIDAngle = 0;
+		//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
+		//send_wave(10);
 		//给第3帧 第1,2,3位 发送float数据
-	//	Uart1_send_custom_float(0xA3,0.3,0.5,0.9);
-	//	send_wave(16);
-	//}
+		Uart1_send_custom_float(0xA3,expRoll,expPitch,(Rc_Data.aux3-2046)/1024.0);
+		send_wave(16);
+	}
 }
 /**************************向物理串口发一个字节***************************************
 *******************************************************************************/

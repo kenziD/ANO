@@ -49,12 +49,12 @@ int main(void)
 		else
 		{
 			LED1_OFF;
+			//LED1_Flash(2,500000);
 		}
 		if(g_LoadRcReadyFlag==1)
 		{
 			g_LoadRcReadyFlag = 0;
 			NRF24L01_TxPacket_AP(rc_buf);
-			
 		}
 		
 	}

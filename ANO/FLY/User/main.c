@@ -33,7 +33,7 @@ extern Define_Rc_Data Rc_Data;
 int main(void)
 {
 
-//	static u8 led_on = 0;
+	static u8 led_on = 0;
 	static u8 send_Senser_cnt = 0;
 	static u8 send_Status_cnt = 0;
 	static u8 send_desirePIDAngle_cnt = 0;
@@ -72,7 +72,6 @@ int main(void)
 	{
 		if (getMpu6050Data == 1)//1ms period
 		{
-
 			att_cnt++;
 			Read_Mpu6050(); 
 			Mpu6050_Analyze();
@@ -86,6 +85,8 @@ int main(void)
 				surRoll = ypr[2];
 				surPitch = ypr[1];
 				surYaw = ypr[0];
+				expRoll = (Rc_Data.aux1-2046)/1024.0;
+				expPitch= (Rc_Data.aux2-2046)/1024.0;
 				ControlPID(Rc_Data.throttle);
 				calculateAngle = 0;
 				//LED2_OFF;
@@ -107,11 +108,11 @@ int main(void)
 					send_Status = 1;
 					send_Status_cnt = 0;
 				}
-				//if(send_desirePIDAngle_cnt==20)//20ms
-				//{
-				//	send_desirePIDAngle = 1;
-				//	send_desirePIDAngle_cnt = 0;
-				//}
+				if(send_desirePIDAngle_cnt==10)//5ms
+				{
+					send_desirePIDAngle = 1;
+					send_desirePIDAngle_cnt = 0;
+				}
 
 			//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
 			//send_wave(10);
