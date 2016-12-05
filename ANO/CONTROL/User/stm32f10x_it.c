@@ -181,13 +181,13 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
     }
     if (ms5 == 10)
     {
-		loadRcData();
+		
       ms5 = 0;        //每十次中断执行一次,5ms
 			
     }
     if (ms10 == 20)
     {
-			
+			loadRcData();
       ms10 = 0;       //每二十次中断执行一次,10ms
       //percent = (float)voltage1() / 4093.0;
       //per_1000 = (uint16_t)(percent * 1000);

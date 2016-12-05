@@ -33,7 +33,6 @@ float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
 int main(void)
 {
-
 	static u8 led_on = 0;
 	static u8 send_Senser_cnt = 0;
 	static u8 send_Status_cnt = 0;
@@ -90,8 +89,8 @@ int main(void)
 				//surYaw = outAngle.yaw;
 				//expRoll = (Rc_Data.aux1-2046)/1024.0;
 				//expPitch= (Rc_Data.aux2-2046)/1024.0;
-				desireAngle.roll = (Rc_Data.aux1-2046)/1024.0;
-				desireAngle.pitch = (Rc_Data.aux2-2046)/1024.0;
+				desireAngle.roll = (Rc_Data.aux1-2046)/341.0f;
+				desireAngle.pitch = (Rc_Data.aux2-2046)/341.0f;
 				gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
 				if(outterPid_cnt==2)//4ms

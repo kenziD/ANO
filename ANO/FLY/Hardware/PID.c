@@ -90,7 +90,7 @@ void angleControl(floatEurlaAngle *outAngle, floatEurlaAngle *desireAngle, int16
     static floatEurlaAngle controlAngle;
     static floatEurlaAngle lastAngle;
     //////////////////////////////////roll///////////////////////////////////////
-    controlAngle.roll = 0 - outAngle->roll;
+    controlAngle.roll = desireAngle->roll - outAngle->roll;
 
     PID_ROLL.intergral += controlAngle.roll;
 
@@ -106,7 +106,7 @@ void angleControl(floatEurlaAngle *outAngle, floatEurlaAngle *desireAngle, int16
     lastAngle.roll = controlAngle.roll;
 
     //////////////////////////////////pitch/////////////////////////////////////
-    controlAngle.pitch = -5 - outAngle->pitch;
+    controlAngle.pitch = desireAngle->pitch - outAngle->pitch;
 
     PID_PITCH.intergral += controlAngle.pitch;
 

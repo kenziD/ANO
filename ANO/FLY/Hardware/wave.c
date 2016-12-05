@@ -110,7 +110,7 @@ void Data_Transfer()
 	{
 		//Data_Send_PwmWave();
 	}
-	else if(send_desirePIDAngle)
+	if(send_desirePIDAngle)
 	{
 		send_desirePIDAngle = 0;
 		//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
@@ -333,10 +333,10 @@ void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,
 	count=0;
 	
 
-	roll_expire = (rc_data->aux1-2008)/51.0/10.0;
-	roll_expire_1000 = roll_expire*1000;
-	pitch_expire = (rc_data->aux2-2028)/51.0/10.0;
-	pitch_expire_1000 = pitch_expire*1000;
+//	roll_expire = (rc_data->aux1-2008)/51.0/10.0;
+	//roll_expire_1000 = roll_expire*1000;
+	//pitch_expire = (rc_data->aux2-2028)/51.0/10.0;
+	//pitch_expire_1000 = pitch_expire*1000;
 	sum += putChar(0x88);
 	sum += putChar(0xAE);
 	sum += putChar(0x1C);
