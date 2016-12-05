@@ -106,7 +106,7 @@ void angleControl(floatEurlaAngle *outAngle, floatEurlaAngle *desireAngle, int16
     lastAngle.roll = controlAngle.roll;
 
     //////////////////////////////////pitch/////////////////////////////////////
-    controlAngle.pitch = -5 - outAngle->pitch;
+    controlAngle.pitch = 0 - outAngle->pitch;
 
     PID_PITCH.intergral += controlAngle.pitch;
 
@@ -139,7 +139,7 @@ void gyroControl(int16_t expThro)
     PID_GYRO_PITCH.output = PID_GYRO_PITCH.KP * controlGyro.pitch + PID_GYRO_PITCH.KI * PID_GYRO_PITCH.intergral + PID_GYRO_PITCH.KD * (controlGyro.pitch - lastGyro.pitch);
     lastGyro.pitch = controlGyro.pitch;
 	/////////////////////////////yaw///////////////////////////////////////////////////////
-		controlGyro.yaw = -fGYRO_Z*Gyro_G;
+	controlGyro.yaw = -fGYRO_Z*Gyro_G;
     PID_GYRO_YAW.intergral += controlGyro.yaw;
     if (PID_GYRO_YAW.intergral > PID_GYRO_YAW.Imax) PID_GYRO_YAW.intergral = PID_GYRO_YAW.Imax;
     if (PID_GYRO_YAW.intergral < -PID_GYRO_YAW.Imax) PID_GYRO_YAW.intergral = -PID_GYRO_YAW.Imax;
@@ -186,7 +186,7 @@ void ControlPID(int16_t expThro)
     {
         roll_i = 0;
     }
-    //×¢ÒâÕâÀïÊÇsurRoll!²»ÊÇdiffRollËùÒÔÊÇ¼õºÅ-=.ÕâÑù±£Ö¤µ±rollÎªÕýÊ±(0-roll)Îª¸º,gyroÒ²ÎªÕý,ËùÒÔÒ²ÊÇ¼õºÅ¡£±£Ö¤pidoutÃ¿Ò»Ïî¶¼ÊÇ¸ºµÄ¡£
+    //æ³¨æ„è¿™é‡Œæ˜¯surRoll!ä¸æ˜¯diffRollæ‰€ä»¥æ˜¯å‡å·-=.è¿™æ ·ä¿è¯å½“rollä¸ºæ­£æ—¶(0-roll)ä¸ºè´Ÿ,gyroä¹Ÿä¸ºæ­£,æ‰€ä»¥ä¹Ÿæ˜¯å‡å·ã€‚ä¿è¯pidoutæ¯ä¸€é¡¹éƒ½æ˜¯è´Ÿçš„ã€‚
     roll_i -= PID_ROLL.KI * surRoll;
     PID_ROLL.Imax = diffRoll * 10;
     //why?

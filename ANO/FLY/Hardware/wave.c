@@ -27,6 +27,7 @@ extern u8 send_desirePIDAngle;
 extern float expRoll;
 extern float expPitch;
 extern float expYaw;
+extern floatEurlaAngle desireAngle;
 void NRF_Check()
 {
 		
@@ -115,7 +116,8 @@ void Data_Transfer()
 		//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
 		//send_wave(10);
 		//给第3帧 第1,2,3位 发送float数据
-		Uart1_send_custom_float(0xA3,expRoll,expPitch,(Rc_Data.aux3-2046)/1024.0);
+		//Uart1_send_custom_float(0xA3,expRoll,expPitch,(Rc_Data.aux3-2046)/1024.0);
+		Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
 		send_wave(16);
 	}
 }

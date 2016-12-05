@@ -27,7 +27,7 @@ int cnt = 0;
 float ypr[3];
 
 floatEurlaAngle outAngle = {0.0,0.0,0.0};
-floatEurlaAngle desireAngle = {0.0,0.0,0.0};
+floatEurlaAngle desireAngle = {0.0f,0.0f,0.0f};
 Int16xyz ACC_AVG = {0,0,0};
 float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
@@ -85,19 +85,21 @@ int main(void)
 				outterPid_cnt++;
 				//LED2_ON;
 				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
-				surRoll =outAngle.roll;
-				surPitch = outAngle.pitch;
-				surYaw = outAngle.yaw;
-				expRoll = (Rc_Data.aux1-2046)/1024.0;
-				expPitch= (Rc_Data.aux2-2046)/1024.0;
-				//gyroControl(Rc_Data.throttle);
+				//surRoll =outAngle.roll;
+				//surPitch = outAngle.pitch;
+				//surYaw = outAngle.yaw;
+				//expRoll = (Rc_Data.aux1-2046)/1024.0;
+				//expPitch= (Rc_Data.aux2-2046)/1024.0;
+				desireAngle.roll = (Rc_Data.aux1-2046)/1024.0;
+				desireAngle.pitch = (Rc_Data.aux2-2046)/1024.0;
+				gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
-//				if(outterPid_cnt==2)//4ms
-//				{
-//					outterPid_cnt = 0;
-//					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
-//				}
-				ControlPID(Rc_Data.throttle);
+				if(outterPid_cnt==2)//4ms
+				{
+					outterPid_cnt = 0;
+					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
+				}
+				//ControlPID(Rc_Data.throttle);
 				calculateAngle = 0;
 				//LED2_OFF;
 			}
