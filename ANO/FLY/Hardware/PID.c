@@ -57,8 +57,6 @@ void PID_Init(void)
     PID_YAW.intergral = 0;
     PID_YAW.output = 0;
 
-
-
     PID_GYRO_ROLL.KP = 1.4;
     PID_GYRO_ROLL.KI = 0.0;
     PID_GYRO_ROLL.KD = 2.0;
@@ -152,11 +150,18 @@ void gyroControl(int16_t expThro)
         motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
         motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
         motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
+			
+//				motor0 = (int16_t)(expThro);
+//        motor1 = (int16_t)(expThro);
+//        motor2 = (int16_t)(expThro);
+//        motor3 = (int16_t)(expThro);
+			
+			
         if (motor0 > PWM_Max)    motor0 = PWM_Max;
         if (motor1 > PWM_Max)    motor1 = PWM_Max;
         if (motor2 > PWM_Max)    motor2 = PWM_Max;
         if (motor3 > PWM_Max)    motor3 = PWM_Max;
-
+				//仿真中这个限制幅度是多么的重要！
         if (motor0 < 0)  motor0 = 0;
         if (motor1 < 0)  motor1 = 0;
         if (motor2 < 0)  motor2 = 0;

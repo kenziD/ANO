@@ -19,6 +19,8 @@
 //NRF24L01寄存器操作命令
 #define READ_REG_NRF        0x00  //读配置寄存器,低5位为寄存器地址
 #define WRITE_REG_NRF       0x20  //写配置寄存器,低5位为寄存器地址
+//why 0x60 ?strange
+#define R_RX_PL_WID   	0x60
 #define RD_RX_PLOAD     0x61  //读RX有效数据,1~32字节
 #define WR_TX_PLOAD     0xA0  //写TX有效数据,1~32字节
 #define FLUSH_TX        0xE1  //清除TX FIFO寄存器.发射模式下用

@@ -30,7 +30,6 @@ extern float expYaw;
 extern floatEurlaAngle desireAngle;
 void NRF_Check()
 {
-		
 	static u8 led_on = 0;
 	u8 sta = 0;
 	if (NRF24L01_RxPacket(rc_tmp) == 0)
@@ -92,15 +91,24 @@ void Data_Transfer()
 	if(send_Senser)
 	{
 		send_Senser = 0;
+		//send acc data after average filter
 		//sendSenser(ACC_AVG.x, ACC_AVG.y,ACC_AVG.z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(ypr[2] * 100), (int16_t)(ypr[1] * 100),(int16_t)(ypr[0] * 10));
-		sendSenser(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(outAngle.roll* 100), (int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 10));
-		send_wave(32);
+		
+		//sendSenser(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X,  fGYRO_Y,fGYRO_Z, (int16_t)(outAngle.roll* 100), (int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 10));
+		//send_wave(32);
+
+		//Version2
+		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		send_wave(23);
 	}
 	else if(send_Status)
 	{
 		send_Status = 0;
-		sendPwmVoltage(&Rc_Data,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100));//0.00003974s
-		send_wave(32);
+		//sendPwmVoltage(&Rc_Data,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100));//0.00003974s
+		//send_wave(32);
+		
+		send_statusV2((int16_t)(outAngle.roll* 100),(int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 100),0x00,0x00,1);
+		send_wave(18);
 	}
 	else if(send_AngleWave)
 	{
@@ -117,8 +125,9 @@ void Data_Transfer()
 		//send_wave(10);
 		//给第3帧 第1,2,3位 发送float数据
 		//Uart1_send_custom_float(0xA3,expRoll,expPitch,(Rc_Data.aux3-2046)/1024.0);
-		Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
-		send_wave(16);
+
+		//Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
+		//send_wave(16);
 	}
 }
 /**************************向物理串口发一个字节***************************************
@@ -136,13 +145,6 @@ unsigned char putChar(unsigned char DataToSend)
 	TxBuffer[count++] = DataToSend;  
 	return DataToSend;
 }
-
-unsigned char Uart1_Put_temp(unsigned char DataToSend)
-{
-	temp[count++] = DataToSend;  
-	return DataToSend;
-}
-
 
 unsigned char Uart1_Put_UInt16(uint16_t DataToSend)
 {
@@ -162,6 +164,20 @@ unsigned char Uart1_Put_Int16(int16_t DataToSend)
 	sum += BYTE0(DataToSend);
 	return sum;
 }
+//arg type defination is important 0.^
+unsigned char Uart1_Put_Int32(int32_t DataToSend)
+{
+	unsigned char sum = 0;
+	TxBuffer[count++] = BYTE3(DataToSend);
+	TxBuffer[count++] = BYTE2(DataToSend);
+	TxBuffer[count++] = BYTE1(DataToSend);
+	TxBuffer[count++] = BYTE0(DataToSend);
+	sum += BYTE1(DataToSend);
+	sum += BYTE0(DataToSend);
+	sum += BYTE2(DataToSend);
+	sum += BYTE3(DataToSend);
+	return sum;
+}
 unsigned char Uart1_Put_float(float DataToSend)
 {
 	unsigned char sum = 0;
@@ -178,18 +194,6 @@ unsigned char Uart1_Put_float(float DataToSend)
 	return sum;
 }
 
-
-void Uart1_send_temp(uint16_t aa)
-{
-	unsigned char sum = 0;
-	count=0;
-	sum +=Uart1_Put_temp(0x88);
-	sum +=Uart1_Put_temp(0xA1);
-	sum +=Uart1_Put_temp(0x02);//PID数据占32个字节 分32次发送每次发送一个字节。循环32次喽。
-  sum +=Uart1_Put_temp(BYTE1(aa));
-	sum +=Uart1_Put_temp(BYTE0(aa));
-	Uart1_Put_temp(sum);
-}
 /****************给第一帧 第一位 发送uint16_t数据*************/
 void Uart1_send_custom_uint16(uint16_t aa)
 {
@@ -324,19 +328,11 @@ void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,
 {
 	unsigned char sum = 0;
 	float voltage_temp = ADC_ConvertedValue*2*3.3/4096.0;//四轴电压
-		float roll_expire = 0;
-	float pitch_expire = 0;
-	u16 pitch_expire_1000 = 0;
-	u16 roll_expire_1000 = 0;
+
 	u16 v_100 = voltage_temp*100;
 	u16 pwm_vol = voltage_temp*100*rc_data->throttle/999.0;
 	count=0;
-	
 
-//	roll_expire = (rc_data->aux1-2008)/51.0/10.0;
-	//roll_expire_1000 = roll_expire*1000;
-	//pitch_expire = (rc_data->aux2-2028)/51.0/10.0;
-	//pitch_expire_1000 = pitch_expire*1000;
 	sum += putChar(0x88);
 	sum += putChar(0xAE);
 	sum += putChar(0x1C);
@@ -355,8 +351,7 @@ void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,
 	sum += putChar(BYTE0(rc_data->aux2));//aux2
 	sum += putChar(BYTE1(rc_data->aux3));
 	sum += putChar(BYTE0(rc_data->aux3));//aux3
-	//电池
-	sum += putChar(BYTE1(v_100));
+	sum += putChar(BYTE1(v_100));	//电池
 	sum += putChar(BYTE0(v_100));//aux 4
 	putChar(0);
 	putChar(0);//aux 5
@@ -371,8 +366,6 @@ void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,
 	sum += putChar(BYTE0(dd));
 	sum += putChar(BYTE1(pwm_vol));//VOLTAGE
 	sum += putChar(BYTE0(pwm_vol));
-
-
 	putChar(sum);
 }
 
@@ -400,7 +393,7 @@ void Uart1_Send_PID(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,
 	sum += putChar(BYTE1(pit_d));//
 	sum += putChar(BYTE0(pit_d));
 
-  	putChar(0);
+  putChar(0);
 	putChar(0);//yaw_p
 	putChar(0);
 	putChar(0);//yaw_i
@@ -423,7 +416,7 @@ void send_wave(int tx_num)//一共发送几个字节,如果是传送到NRF24L01�
 {	
 	char count_1=0;
 	#ifdef DATA_TRANSFER_USE_SPI_NRF
-		int send_result = NRF24L01_TxPacket(TxBuffer);
+		int send_result = NRF24L01_TxPacket(TxBuffer,tx_num);
 		if(send_result == RX_OK)
 		{
 			//LED2_ON;
@@ -439,66 +432,6 @@ void send_wave(int tx_num)//一共发送几个字节,如果是传送到NRF24L01�
 	      UART_Putc(TxBuffer[count_1++]);
 	#endif
 }
-
-void sendSenserPackage(void)
-{
-//		static u8 led_on = 0;
-//		if(led_on)
-//    {
-//       LED2_OFF;
-//       led_on = 0;
-//    }
-//    else
-//    {
-//       LED2_ON;
-//       led_on = 1;
-//    }
-	//sendSenser((int16_t)fACCEL_X, (int16_t)fACCEL_Y, (int16_t)fACCEL_Z, (int16_t)fGYRO_X, (int16_t) fGYRO_Y, (int16_t)fGYRO_Z, (int16_t)(ypr[2] * 100), (signed short int)(ypr[1] * 100));//0.00002419s
-	//send_wave(32);//0.00013279s
-}
-void send_temp(int tx_num)//一共发送几个字节
-{
-	char count_1=0;
-	while(count_1<tx_num)
-      UART_Putc(temp[count_1++]);
-}
-///////////////////////////////////////////////////////////////////////
-
-void printhh(void)
-  {
-	UART_Putc(0x0d);       			 //output'CR'
-	UART_Putc(0x0A);       			 //output'CR'
-  } 
-  
-void print5n(unsigned int x)
-  {	  
-	   UART_Putc((x/10000)+0x30);           //计算万位数字
-	   UART_Putc(((x%10000)/1000)+0x30);    //计算千位数字
-	   UART_Putc(((x%1000)/100)+0x30);      //计算百位数字
-	   UART_Putc(((x%100)/10)+0x30);        //计算十位数字
-	   UART_Putc((x%10)+0x30);              //计算个位数字
-  }
-  
-void print4n(unsigned int x)
-  {	  
-	  UART_Putc((x/1000)+0x30);    //计算千位数字
-	  UART_Putc(((x%1000)/100)+0x30);      //计算百位数字
-	  UART_Putc(((x%100)/10)+0x30);        //计算十位数字
-	  UART_Putc((x%10)+0x30);              //计算个位数字
-  }
-void print3n(unsigned int x)
-{
-	UART_Putc((x/100)+0x30);      //计算百位数字
-	UART_Putc(((x%100)/10)+0x30);        //计算十位数字
-	UART_Putc((x%10)+0x30);   
-}
-void print2n(unsigned int x)
-{
-  
-	UART_Putc((x/10)+0x30);        //计算十位数字
-	UART_Putc((x%10)+0x30);   
-}
-
 
 /*************************接收********************/
 
@@ -532,4 +465,113 @@ void receive_Data(void)
 
 /*************************sendData********************/
 
+/////////////////////////////////////////////////////////////version2////////////////////////////////////////////////
+void send_statusV2(int16_t rol, int16_t pitch, int16_t yaw, int16_t alt_cbs, int32_t alt_prs, u8 armed) {
+	unsigned char sum = 0;
+	count=0;
+	sum += putChar(0xAA);
+	sum += putChar(0xAA);
+	sum += putChar(0x01);
+	
+	sum += putChar(0x0D);
+	//13 BYTE not including 0xAA 0xAA 0X01 self and sum.
+	
+//	sum += putChar(BYTE1(rol));
+//	sum += putChar(BYTE0(rol));
+//	sum += putChar(BYTE1(pitch));
+//	sum += putChar(BYTE0(pitch));
+//	sum += putChar(BYTE1(yaw));
+//	sum += putChar(BYTE0(yaw));
+//	sum += putChar(BYTE1(alt_cbs));
+//	sum += putChar(BYTE0(alt_cbs));
+//	sum += putChar(BYTE3(alt_prs));
+//	sum += putChar(BYTE2(alt_prs));
+//	sum += putChar(BYTE1(alt_prs));
+//	sum += putChar(BYTE0(alt_prs));
+	
+	sum += Uart1_Put_Int16(rol);
+	sum += Uart1_Put_Int16(pitch);
+	sum += Uart1_Put_Int16(yaw);
+	sum += Uart1_Put_Int16(alt_cbs);
+	sum += Uart1_Put_Int32(alt_prs);
 
+	if (armed) {
+		sum += putChar(0xA0);
+	}
+	else {
+		sum += putChar(0xA1);
+	}
+	putChar(sum);
+}
+void send_senserV2(int16_t acc_x, int16_t acc_y, int16_t acc_z, int16_t gyro_x, int16_t gyro_y, int16_t gyro_z, int16_t mag_x, int16_t mag_y, int16_t mag_z) {
+	unsigned char sum = 0;
+	count=0;
+	sum += putChar(0xAA);
+	sum += putChar(0xAA);
+	sum += putChar(0x02);
+	//18 BYTE
+	sum += putChar(0x12);
+//	sum += putChar(BYTE1(acc_x));//PWM 1
+//	sum += putChar(BYTE0(acc_x));
+//	sum += putChar(BYTE1(acc_y));//PWM 1
+//	sum += putChar(BYTE0(acc_y));
+//	sum += putChar(BYTE1(acc_z));//PWM 1
+//	sum += putChar(BYTE0(acc_z));
+//	sum += putChar(BYTE1(gyro_x));
+//	sum += putChar(BYTE0(gyro_x));//PWM 1
+//	sum += putChar(BYTE1(gyro_y));
+//	sum += putChar(BYTE0(gyro_y));//PWM 1
+//	sum += putChar(BYTE1(gyro_z));
+//	sum += putChar(BYTE0(gyro_z));//PWM 1
+//	sum += putChar(BYTE1(mag_x));
+//	sum += putChar(BYTE0(mag_x));//PWM 1
+//	sum += putChar(BYTE1(mag_y));
+//	sum += putChar(BYTE0(mag_y));//PWM 1
+//	sum += putChar(BYTE1(mag_z));
+//	sum += putChar(BYTE0(mag_z));
+	sum += Uart1_Put_Int16(acc_x);
+	sum += Uart1_Put_Int16(acc_y);
+	sum += Uart1_Put_Int16(acc_z);
+	sum += Uart1_Put_Int16(gyro_x);
+	sum += Uart1_Put_Int16(gyro_y);
+	sum += Uart1_Put_Int16(gyro_z);
+	sum += Uart1_Put_Int16(mag_x);
+	sum += Uart1_Put_Int16(mag_y);
+	sum += Uart1_Put_Int16(mag_z);
+
+	putChar(sum);
+}
+void send_rcdataV2(int16_t pitch,Define_Rc_Data *rc_data) {
+	unsigned char sum = 0;
+
+	float voltage_temp = ADC_ConvertedValue*2*3.3/4096.0;//????
+	u16 v_100 = voltage_temp*100;
+	u16 pwm_vol = voltage_temp*100*rc_data->throttle/999.0;
+		count=0;
+	sum += putChar(0xAA);
+	sum += putChar(0xAA);
+	sum += putChar(0x03);
+	//14 BYTE
+	sum += putChar(0x14);
+
+	sum += Uart1_Put_Int16(rc_data->throttle);
+
+	sum += Uart1_Put_Int16(rc_data->yaw);
+
+	sum += Uart1_Put_Int16(rc_data->roll);
+
+	sum += Uart1_Put_Int16(rc_data->pitch);
+
+	sum += Uart1_Put_Int16(rc_data->aux1);
+
+	sum += Uart1_Put_Int16(rc_data->aux2);
+
+	sum += Uart1_Put_Int16(rc_data->aux3);
+
+	sum += Uart1_Put_Int16(v_100);//aux4
+
+	sum += Uart1_Put_Int16(0);//aux5
+
+	sum += Uart1_Put_Int16(0);//aux6
+	putChar(sum);
+}

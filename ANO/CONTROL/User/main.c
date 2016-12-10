@@ -10,6 +10,7 @@ extern u8 g_LoadRcReadyFlag;
 int main(void)
 {
 	int dianya_fly = 0;
+	u8 rx_len = 0;
 	SysTick_Init();
 	Tim3_Init(500);
 	Nvic_Init();
@@ -27,6 +28,7 @@ int main(void)
 	
 	//RX mode
 	NRF24L01_Mode_Config(3);
+	autoMiddle();
 	while (1)
 	{
 		key = KEY_scan();
@@ -44,7 +46,8 @@ int main(void)
 				}
 			}
 			//全部发送串口
-			send_wave(32,tmp_buf);
+			rx_len = NRF24L01_Read_Reg(R_RX_PL_WID);//2401寄存器，值为0x60
+			send_wave(rx_len,tmp_buf);
 		}
 		else
 		{

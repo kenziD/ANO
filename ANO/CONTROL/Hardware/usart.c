@@ -59,6 +59,7 @@ __inline unsigned char UART_Putc(unsigned char data)			//
 
 void send_wave(int tx_num,u8 *TxBuffer)//一共发送几个字节
 {	
+	
 	char count_1=0;
 		while(count_1<tx_num)
 	      UART_Putc(TxBuffer[count_1++]);

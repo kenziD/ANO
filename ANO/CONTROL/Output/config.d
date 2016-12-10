@@ -42,3 +42,4 @@
 ..\output\config.o: ..\Hardware\Key.h
 ..\output\config.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\config.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\config.o: ..\Hardware\Rc.h

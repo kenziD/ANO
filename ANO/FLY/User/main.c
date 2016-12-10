@@ -84,6 +84,7 @@ int main(void)
 				outterPid_cnt++;
 				//LED2_ON;
 				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
 				//surRoll =outAngle.roll;
 				//surPitch = outAngle.pitch;
 				//surYaw = outAngle.yaw;
@@ -93,11 +94,11 @@ int main(void)
 				desireAngle.pitch = (Rc_Data.aux2-2046)/341.0f;
 				gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
-				if(outterPid_cnt==2)//4ms
-				{
+			if(outterPid_cnt==2)//4ms
+			{
 					outterPid_cnt = 0;
 					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
-				}
+			}
 				//ControlPID(Rc_Data.throttle);
 				calculateAngle = 0;
 				//LED2_OFF;

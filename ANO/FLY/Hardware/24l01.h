@@ -77,7 +77,7 @@ u8 NRF24L01_Read_Buf(u8 reg, u8 *pBuf, u8 u8s);//读数据区
 u8 NRF24L01_Read_Reg(u8 reg);			//读寄存器
 u8 NRF24L01_Write_Reg(u8 reg, u8 value);//写寄存器
 u8 NRF24L01_Check(void);//检查24L01是否存在
-u8 NRF24L01_TxPacket(u8 *txbuf);//发送一个包的数据
+u8 NRF24L01_TxPacket(u8 *txbuf,u8 len);//发送一个包的数据
 u8 NRF24L01_RxPacket(u8 *rxbuf);//接收一个包的数据
 void NRF24L01_Mode_Config(u8 mode);//配置模式
 #endif

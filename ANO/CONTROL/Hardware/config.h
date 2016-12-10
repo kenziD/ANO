@@ -13,6 +13,7 @@
 #include "Key.h"
 #include <math.h>
 #include <string.h>
+#include "Rc.h"
 #endif /* __CONFIG_H_ */
 
 

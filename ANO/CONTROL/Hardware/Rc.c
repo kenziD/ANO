@@ -13,6 +13,11 @@ extern u8 key;
 	
 u8 g_LoadRcReadyFlag = 0;
 
+u16 throttleMiddle = 0;
+void autoMiddle(void)
+{
+	throttleMiddle = voltage1();
+}
 void loadRcData()
 {
 	static u16 throttle_vol =0;
@@ -24,13 +29,13 @@ void loadRcData()
 	static u16 aux1 = 0;
 	static u16 aux2 = 0;
 	static u16 aux3 = 0;
+	static u8 middle = 1;
 	throttle_vol = voltage1();
 		if(throttle_vol>2000)//左-上
 		{
 			gap = (uint16_t)(((float)(throttle_vol-1966)/upRange)*20.0);
 			throttle = throttle + (uint16_t)(((float)(throttle_vol-2010)/upRange)*20.0);
 			if(throttle>999) throttle=999;
-
 		}
 		else if (throttle_vol<1900) //左-下
 		{
@@ -41,7 +46,42 @@ void loadRcData()
 				throttle = throttle - gap;
 			}
 		}
+//		if(throttle_vol>3000 )//左-上
+//		{
+//			if(middle==1)
+//			{
+//				middle=0;
+//				if(throttle>999) throttle=999;
+//			else if(throttle<(999-50) )
+//			{
+//					throttle = throttle + 50;
+//				
+//			}
+//			}
+//			
+//		
+//		}
+//		else if (throttle_vol<1800) //左-下
+//		{
+//			if(middle==1)
+//			{
+//							middle = 0;
+//	
+//				if(throttle<=0)
+//				{
+//					throttle = 0;
+//				}
+//				else if(throttle>50 )
+//				{
+//					throttle = throttle - 50;
+//					
+//				}
+//			}
 
+//				
+//				
+//		}else
+//		{middle =1;}
 			Yaw = voltage2();
 			Roll = voltage3();
 			Pitch = voltage4();
