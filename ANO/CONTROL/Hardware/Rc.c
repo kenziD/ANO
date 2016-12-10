@@ -110,3 +110,4 @@ void loadRcData()
 			rc_buf[14] = BYTE1(aux3);
 			g_LoadRcReadyFlag = 1;
 }
+

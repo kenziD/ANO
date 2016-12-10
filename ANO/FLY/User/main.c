@@ -20,7 +20,7 @@ extern u8 sendData;
 u8 send_Senser = 0;
 u8 send_Status = 0;
 u8 send_PwmWave = 0;
-u8 send_AngleWave = 0;
+u8 send_RcData = 0;
 u8 send_desirePIDAngle = 0;
 int cnt = 0;
 
@@ -36,6 +36,7 @@ int main(void)
 	static u8 led_on = 0;
 	static u8 send_Senser_cnt = 0;
 	static u8 send_Status_cnt = 0;
+	static u8 send_RcData_cnt = 0;
 	static u8 send_desirePIDAngle_cnt = 0;
 	static u8 att_cnt = 0;
 	static u8 outterPid_cnt = 0;
@@ -110,6 +111,7 @@ int main(void)
 				send_Senser_cnt++;
 				send_Status_cnt++;
 				send_desirePIDAngle_cnt++;
+				send_RcData_cnt++;
 				if(send_Senser_cnt==5)//5ms
 				{
 					send_Senser = 1;
@@ -119,6 +121,11 @@ int main(void)
 				{
 					send_Status = 1;
 					send_Status_cnt = 0;
+				}
+				if(send_RcData_cnt==5)
+				{
+					send_RcData = 1;
+					send_RcData_cnt = 0;
 				}
 				if(send_desirePIDAngle_cnt==10)//5ms
 				{
