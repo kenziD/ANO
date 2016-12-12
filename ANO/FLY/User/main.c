@@ -91,8 +91,11 @@ int main(void)
 				//surYaw = outAngle.yaw;
 				//expRoll = (Rc_Data.aux1-2046)/1024.0;
 				//expPitch= (Rc_Data.aux2-2046)/1024.0;
-				desireAngle.roll = (Rc_Data.aux1-2046)/341.0f;
-				desireAngle.pitch = (Rc_Data.aux2-2046)/341.0f;
+				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
+				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
+				
+				//desireAngle.roll = 0;
+				//desireAngle.pitch = 0;
 				gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
 			if(outterPid_cnt==2)//4ms

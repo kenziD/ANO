@@ -28,7 +28,7 @@ int main(void)
 	
 	//RX mode
 	NRF24L01_Mode_Config(3);
-	autoMiddle();
+	//autoMiddle();
 	while (1)
 	{
 		key = KEY_scan();

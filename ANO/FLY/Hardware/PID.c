@@ -80,6 +80,9 @@ void PID_Init(void)
 }
 extern Define_Rc_Data Rc_Data;
 
+
+float tmp_roll_error = 0;
+float tmp_pitch_error = 0;
 /*
 outter loop.control angle.
 */
@@ -146,11 +149,18 @@ void gyroControl(int16_t expThro)
 
     if (Rc_Data.start == 1)
     { 
-        motor0 = (int16_t)(expThro -  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
-        motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
-        motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
-        motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
+//        motor0 = (int16_t)(expThro -  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
+//        motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
+//        motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
+//        motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
 			
+			        motor0 = (int16_t)(expThro -  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output );
+        motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output);
+        motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output);
+        motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output);
+			
+			
+//			
 //				motor0 = (int16_t)(expThro);
 //        motor1 = (int16_t)(expThro);
 //        motor2 = (int16_t)(expThro);

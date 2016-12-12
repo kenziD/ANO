@@ -19,28 +19,17 @@ void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 	//if(!(sum==*(rcDataBuf+num-1)))		return;		//ÅÐ¶Ïsum
 	//if(!(*(rcDataBuf)==0xAA && *(rcDataBuf+1)==0xAF))		return;		//ÅÐ¶ÏÖ¡Í·
 //	static u8 led_on = 0;
-		 
-//	if(led_on)
-//       {
-//        LED2_OFF;
-//        led_on = 0;
-//       }
-//       else
-//       {
-//        LED2_ON;
-//       led_on = 1;
-//       }
-	//rc_data->throttle = (int)((rcDataBuf[1] << 8 | rcDataBuf[0])/1000.0*999);//0~999
+	
 	rc_data->throttle = (int)(rcDataBuf[1] << 8 | rcDataBuf[0]);//0~999
-	//rc_data->roll = ((rcDataBuf[3] << 8 | rcDataBuf[2]) - 1970) / 70.0;
-	//rc_data->pitch = ((rcDataBuf[5] << 8 | rcDataBuf[4]) - 2022) / 70.0;
 	rc_data->roll = rcDataBuf[3] << 8 | rcDataBuf[2];
 	rc_data->pitch = rcDataBuf[5] << 8 | rcDataBuf[4];
 	rc_data->yaw = rcDataBuf[7] << 8 | rcDataBuf[6];
 	rc_data->aux1 = rcDataBuf[10]<<8|rcDataBuf[9];
 	rc_data->aux2 = rcDataBuf[12]<<8|rcDataBuf[11];
 	rc_data->aux3 = rcDataBuf[14]<<8|rcDataBuf[13];
-	if(rc_data->throttle<200 && rc_data->yaw<500){
+	/*for motor test*/
+	//if(rc_data->throttle<200 && rc_data->yaw<500){
+	if(rc_data->start == 0&&rc_data->throttle<5){
 		
 		if(startCNT==100)
 		{
@@ -59,7 +48,9 @@ void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 	{
 		startCNT = 0;
 	}
-	if(rc_data->throttle<200 && rc_data->yaw>3000)
+	/*for motor test*/
+	//if(rc_data->throttle<200 && rc_data->yaw>3000)
+	if(rc_data->start == 1&&rc_data->throttle<5)
 	{
 		if(endCNT==100)
 		{
