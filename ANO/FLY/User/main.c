@@ -115,22 +115,22 @@ int main(void)
 				send_Status_cnt++;
 				send_desirePIDAngle_cnt++;
 				send_RcData_cnt++;
-				if(send_Senser_cnt==5)//5ms
+				if(send_Senser_cnt==10)//5ms
 				{
 					send_Senser = 1;
 					send_Senser_cnt = 0;
 				}
-				if(send_Status_cnt==5)
+				if(send_Status_cnt==15)
 				{
 					send_Status = 1;
 					send_Status_cnt = 0;
 				}
-				if(send_RcData_cnt==5)
+				if(send_RcData_cnt==20)
 				{
 					send_RcData = 1;
 					send_RcData_cnt = 0;
 				}
-				if(send_desirePIDAngle_cnt==10)//5ms
+				if(send_desirePIDAngle_cnt==25)//5ms
 				{
 					send_desirePIDAngle = 1;
 					send_desirePIDAngle_cnt = 0;

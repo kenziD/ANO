@@ -7,7 +7,7 @@ extern float pitch_offset;
 extern float roll_offset;
 extern float yawOffsetCache,pitchOffsetCache,rollOffsetCache;
 extern float gCalibrate;
-
+u8 DebugMode = 0;
 void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 {
 	u8 num  =32;
@@ -69,12 +69,14 @@ void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 	}
 	if (rcDataBuf[8] == 'a')
 	{
-		gCalibrate = 1;
+		//gCalibrate = 1;
+		DebugMode = 0;
 	}
 	if (rcDataBuf[8] == 'b')
 	{
-		pitch_offset = 0;
-		roll_offset = 0;
+		//pitch_offset = 0;
+		//roll_offset = 0;
+		DebugMode = 1;
 	}
 }
 

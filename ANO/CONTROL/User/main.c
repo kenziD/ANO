@@ -42,7 +42,7 @@ int main(void)
 				dianya_fly = tmp_buf[17]<<8|tmp_buf[18];
 				if(dianya_fly<36 && dianya_fly>20)
 				{
-					LED2_ON;
+					//LED2_ON;
 				}
 			}
 			//全部发送串口

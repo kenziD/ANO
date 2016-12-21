@@ -32,3 +32,4 @@
 ..\output\rc.o: ..\FWlib\inc\misc.h
 ..\output\rc.o: ..\Hardware\Key.h
 ..\output\rc.o: ..\Hardware\Rc.h
+..\output\rc.o: ..\Hardware\led.h

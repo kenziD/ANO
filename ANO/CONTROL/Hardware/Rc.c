@@ -1,6 +1,7 @@
 #include "adc.h"
 #include "Key.h"
 #include "Rc.h"
+#include "led.h"
 extern u8 rc_buf[32];
 extern u8 key;
 #define upRange 2086 //2010-4096
@@ -181,10 +182,18 @@ void loadRcData()
 		
 		rc_buf[8] = 'c';
 		if (key == MODE_KEY_DOWN)
+		{
 			rc_buf[8] = 'a';
+			LED2_OFF;
+		}
+			
 
 		if (key == FUN_KEY_DOWN)
+		{
 			rc_buf[8] = 'b';
+			LED2_ON;
+		}
+			
 		//aux1:start 1000 to 2000 middle is 1500.
 		if (aux1 == aux1Middle)
 		{

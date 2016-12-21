@@ -130,6 +130,8 @@ void Data_Transfer()
 
 		//Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
 		//send_wave(16);
+		Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
+		send_wave(17);
 	}
 }
 /**************************向物理串口发一个字节***************************************
@@ -273,7 +275,23 @@ void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc)
 
 	putChar(sum);
 }
+void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc)
+{
+	unsigned char sum = 0;
+	count=0;
 
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x0c);//3个float占12个字节
+	
+	sum +=Uart1_Put_float(aa);//发送16位数据 
+	sum +=Uart1_Put_float(bb);
+	sum +=Uart1_Put_float(cc);
+
+	putChar(sum);
+}
 void Uart1_send_custom_PID(uint8_t aa)
 {
 	unsigned char sum = 0;
