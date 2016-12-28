@@ -1,5 +1,6 @@
 #include "Rc.h"
 #include "led.h"
+#include "pid.h"
 ////////////////////////////////
 //Control Receiver Analyzer
 ////////////////////////////////
@@ -7,6 +8,10 @@ extern float pitch_offset;
 extern float roll_offset;
 extern float yawOffsetCache,pitchOffsetCache,rollOffsetCache;
 extern float gCalibrate;
+u8 adjustGyroPid = 1;
+u8 pidArmed = 0;
+u8 GyroPidArmed = 0;
+u8 AnglePidArmed = 0;
 u8 DebugMode = 0;
 void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 {
@@ -70,13 +75,39 @@ void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 	if (rcDataBuf[8] == 'a')
 	{
 		//gCalibrate = 1;
-		DebugMode = 0;
+		//DebugMode = 0;
+		adjustGyroPid  =1;
 	}
 	if (rcDataBuf[8] == 'b')
 	{
-		//pitch_offset = 0;
-		//roll_offset = 0;
-		DebugMode = 1;
+		adjustGyroPid = 0;
 	}
+//	if(rcDataBuf[8] == 'c')
+//	{
+//		pidArmed = 1;
+//		if(!GyroPidArmed&&adjustGyroPid)
+//		{
+//			GyroPidArmed=1;
+//		}
+//		if(!AnglePidArmed&&!adjustGyroPid)
+//		{
+//			AnglePidArmed=1;
+//		}
+//		
+//	}
+//	if(rcDataBuf[8] == 'd')
+//	{
+//		pidArmed = 0;
+//		if(GyroPidArmed&&adjustGyroPid)
+//		{
+//			GyroPidArmed = 0;
+//		}
+//		if(AnglePidArmed&&!adjustGyroPid)
+//		{
+//			AnglePidArmed = 0;
+//		}
+//	}
+	
+	PID_Analyze();
 }
 

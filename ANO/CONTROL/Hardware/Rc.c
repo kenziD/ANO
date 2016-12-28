@@ -44,6 +44,8 @@ u16 sum_aux3Middle = 0;
 
 void loadRcData()
 {
+	static u8 doubleMode = 0;
+	static u8 doubleFun = 0;
 	static u8 cnt = 0;
 	static u8 autoMiddleFlag = 0;
 	static u16 throttle_vol = 0;
@@ -180,18 +182,51 @@ void loadRcData()
 		rc_buf[6] = BYTE0(Yaw);
 		rc_buf[7] = BYTE1(Yaw);
 		
-		rc_buf[8] = 'c';
+		rc_buf[8] = 'e';
+//		if (key == MODE_KEY_DOWN)
+//		{
+//			
+//			doubleMode++;
+//			if(doubleMode==1)
+//			{
+//				LED1_ON;
+//				rc_buf[8] = 'a';
+//			}
+//			if(doubleMode==2)
+//			{
+//				doubleMode=0;
+//				LED1_OFF;
+//				rc_buf[8] = 'b';
+//			}
+//			
+//		}
+
+//		if (key == FUN_KEY_DOWN)
+//		{
+//			doubleFun++;
+//			if(doubleFun==1)
+//			{
+//				LED2_ON;
+//				rc_buf[8] = 'c';
+//			}
+//			if(doubleFun==2)
+//			{
+//				doubleFun=0;
+//				LED2_OFF;
+//				rc_buf[8] = 'd';
+//			}
+//		}
+		
 		if (key == MODE_KEY_DOWN)
-		{
-			rc_buf[8] = 'a';
-			LED2_OFF;
+		{		
+				rc_buf[8] = 'a';		
+				LED2_ON;		
 		}
-			
 
 		if (key == FUN_KEY_DOWN)
 		{
-			rc_buf[8] = 'b';
-			LED2_ON;
+			rc_buf[8] = 'b';		
+				LED2_OFF;
 		}
 			
 		//aux1:start 1000 to 2000 middle is 1500.

@@ -31,3 +31,6 @@
 ..\output\rc.o: ..\FWlib\inc\misc.h
 ..\output\rc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\output\rc.o: ..\Hardware\led.h
+..\output\rc.o: ..\Hardware\pid.h
+..\output\rc.o: ..\Hardware\sys.h
+..\output\rc.o: ..\Hardware\IMU.h

@@ -67,7 +67,7 @@ int main(void)
 	Mpu6050init();
 	//SPI1_Init();    		
 
-	PID_Init();
+	//PID_Init();
 	ADC1_Init();
 	LED3_Flash(2,100);
 	while (1)
@@ -84,18 +84,13 @@ int main(void)
 				att_cnt = 0;
 				outterPid_cnt++;
 				//LED2_ON;
-				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
-				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
-				//surRoll =outAngle.roll;
-				//surPitch = outAngle.pitch;
-				//surYaw = outAngle.yaw;
-				//expRoll = (Rc_Data.aux1-2046)/1024.0;
-				//expPitch= (Rc_Data.aux2-2046)/1024.0;
-				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
-				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
+				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
+//				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
+//				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
 				
-				//desireAngle.roll = 0;
-				//desireAngle.pitch = 0;
+				desireAngle.roll = 0;
+				desireAngle.pitch = 0;
 				gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
 			if(outterPid_cnt==2)//4ms

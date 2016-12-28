@@ -78,10 +78,14 @@ u8 getTX_FIFO_status()
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
 	return NRF24L01_Read_Reg(NRF_FIFO_STATUS);
 }
+extern u8 adjustGyroPid;
+extern PID_ PID_ROLL, PID_PITCH, PID_YAW, PID_GYRO_ROLL, PID_GYRO_PITCH, PID_GYRO_YAW;
 void Data_Transfer()
 {
 	u8 FIFOstatus = 0x10;
+	static float aux1=0.0,aux2=0.0,aux3=0.0;
 	NRF_Check();
+	
 	//FIFOstatus = getTX_FIFO_status();
 	//if TX_FIFO is not empty,the last time transfer didn't receive an acknowlege.return.
 	//if((FIFOstatus & (1<<4))==0)
@@ -130,7 +134,20 @@ void Data_Transfer()
 
 		//Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
 		//send_wave(16);
-		Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
+		if(adjustGyroPid)
+		{
+			aux1 = PID_GYRO_ROLL.KP;
+			aux2 = PID_GYRO_ROLL.KI;
+			aux3 = PID_GYRO_ROLL.KD;
+		}
+		else
+		{
+			aux1 = PID_ROLL.KP;
+			aux2 = PID_ROLL.KI;
+			aux3 = PID_ROLL.KD;
+		}
+		//Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
+			Uart1_send_custom_float_V2(0xf1,aux1,aux2,aux3);
 		send_wave(17);
 	}
 }

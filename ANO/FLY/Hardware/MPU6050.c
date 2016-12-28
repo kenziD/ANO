@@ -315,7 +315,7 @@ void Mpu6050init(void)
 	Delay_ms_mpu(50);
 	MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_4);	//加速度度最大量程 +-4G
 	Delay_ms_mpu(50);
-	MPU6050_setSampleRate(0x00);
+	MPU6050_setSampleRate(0x00);//Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV)
 	Delay_ms_mpu(50);
 	MPU6050_setDLPF(MPU6050_DLPF_BW_42);
 	Delay_ms_mpu(50);

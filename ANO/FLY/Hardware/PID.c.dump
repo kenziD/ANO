@@ -80,51 +80,18 @@ void PID_Init(void)
 }
 extern u8 adjustGyroPid;
 extern Define_Rc_Data Rc_Data;
-extern u8 GyroPidArmed;
-extern u8 AnglePidArmed;
-//void PID_Analyze(void)
-//{
-//	if(adjustGyroPid&&!GyroPidArmed)
-//	{
-//		//1000~2000
-//		PID_GYRO_ROLL.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
-//    PID_GYRO_ROLL.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
-//    PID_GYRO_ROLL.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-//		 
-//    PID_GYRO_PITCH.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
-//    PID_GYRO_PITCH.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
-//    PID_GYRO_PITCH.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-//	}
-//	else if((!adjustGyroPid)&&!AnglePidArmed)
-//	{
-//		PID_ROLL.KP = (Rc_Data.aux1-1000)/200.0f;//0-5
-//    PID_ROLL.KI = (Rc_Data.aux2-1000)/2000.0f;//0-0.5
-//    PID_ROLL.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-//		
-//		PID_PITCH.KP = (Rc_Data.aux1-1000)/200.0f;//0-5
-//    PID_PITCH.KI = (Rc_Data.aux2-1000)/2000.0f;//0-0.5
-//    PID_PITCH.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-//	}
-//}
 void PID_Analyze(void)
 {
 	if(adjustGyroPid)
 	{
 		//1000~2000
-//		PID_GYRO_ROLL.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
-//    PID_GYRO_ROLL.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
-//    PID_GYRO_ROLL.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-//		 
-//    PID_GYRO_PITCH.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
-//    PID_GYRO_PITCH.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
-//    PID_GYRO_PITCH.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-		PID_GYRO_ROLL.KP = 4.1;//0-10
-    PID_GYRO_ROLL.KI = 0.04;//0-1
-    PID_GYRO_ROLL.KD =15;//0-15
+		PID_GYRO_ROLL.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
+    PID_GYRO_ROLL.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
+    PID_GYRO_ROLL.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
 		 
-    PID_GYRO_PITCH.KP = 4.1;//0-10
-    PID_GYRO_PITCH.KI = 0.04;//0-1
-    PID_GYRO_PITCH.KD = 15;//0-15
+    PID_GYRO_PITCH.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
+    PID_GYRO_PITCH.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
+    PID_GYRO_PITCH.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
 	}
 	else
 	{
@@ -225,14 +192,14 @@ void gyroControl(int16_t expThro)
     { 
 			if(DebugMode==0)
 			{
-//				motor0 = (int16_t)(expThro -  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
-//        motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
-//        motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
-//        motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
-				motor0 = (int16_t)(expThro + PID_GYRO_PITCH.output );
-        motor1 = (int16_t)(expThro  + PID_GYRO_PITCH.output );
-        motor2 = (int16_t)(expThro  - PID_GYRO_PITCH.output );
-        motor3 = (int16_t)(expThro  - PID_GYRO_PITCH.output);
+				motor0 = (int16_t)(expThro -  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
+        motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
+        motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
+        motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
+//				motor0 = (int16_t)(expThro + PID_GYRO_PITCH.output );
+//        motor1 = (int16_t)(expThro  + PID_GYRO_PITCH.output );
+//        motor2 = (int16_t)(expThro  - PID_GYRO_PITCH.output );
+//        motor3 = (int16_t)(expThro  - PID_GYRO_PITCH.output);
 			}
 			
 			else if(DebugMode==1)
@@ -250,7 +217,7 @@ void gyroControl(int16_t expThro)
         if (motor1 > PWM_Max)    motor1 = PWM_Max;
         if (motor2 > PWM_Max)    motor2 = PWM_Max;
         if (motor3 > PWM_Max)    motor3 = PWM_Max;
-				//������������Ʒ����Ƕ�ô����Ҫ��
+				//仿真中这个限制幅度是多么的重要！
         if (motor0 < 0)  motor0 = 0;
         if (motor1 < 0)  motor1 = 0;
         if (motor2 < 0)  motor2 = 0;
@@ -280,7 +247,7 @@ void ControlPID(int16_t expThro)
     {
         roll_i = 0;
     }
-    //ע��������surRoll!����diffRoll�����Ǽ���-=.������֤��rollΪ��ʱ(0-roll)Ϊ��,gyroҲΪ��,����Ҳ�Ǽ��š���֤pidoutÿһ��Ǹ��ġ�
+    //注意这里是surRoll!不是diffRoll所以是减号-=.这样保证当roll为正时(0-roll)为负,gyro也为正,所以也是减号。保证pidout每一项都是负的。
     roll_i -= PID_ROLL.KI * surRoll;
     PID_ROLL.Imax = diffRoll * 10;
     //why?

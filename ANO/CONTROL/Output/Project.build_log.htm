@@ -58,17 +58,21 @@ compiling tim.c...
 compiling nvic.c...
 compiling Key.c...
 compiling Rc.c...
-..\Hardware\Rc.c(51): warning:  #177-D: variable "rc_throttle" was declared but never referenced
+..\Hardware\Rc.c(47): warning:  #177-D: variable "doubleMode" was declared but never referenced
+        static u8 doubleMode = 0;
+..\Hardware\Rc.c(48): warning:  #177-D: variable "doubleFun" was declared but never referenced
+        static u8 doubleFun = 0;
+..\Hardware\Rc.c(53): warning:  #177-D: variable "rc_throttle" was declared but never referenced
         static u16 rc_throttle = 0;
-..\Hardware\Rc.c(52): warning:  #177-D: variable "gap" was declared but never referenced
+..\Hardware\Rc.c(54): warning:  #177-D: variable "gap" was declared but never referenced
         static u16 gap;
-..\Hardware\Rc.c(64): warning:  #177-D: variable "middle" was declared but never referenced
+..\Hardware\Rc.c(66): warning:  #177-D: variable "middle" was declared but never referenced
         static u8 middle = 1;
-..\Hardware\Rc.c: 3 warnings, 0 errors
+..\Hardware\Rc.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=16008 RO-data=280 RW-data=120 ZI-data=1248  
+Program Size: Code=16008 RO-data=280 RW-data=124 ZI-data=1252  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 5 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 

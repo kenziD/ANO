@@ -19,5 +19,5 @@ void gyroControl(int16_t expThro);
 void angleControl(floatEurlaAngle *outAngle, floatEurlaAngle *desireAngle, int16_t expThro);
 void ControlPID(int16_t expThro);
 void PID_Init(void);
-
+void PID_Analyze(void);
 #endif
