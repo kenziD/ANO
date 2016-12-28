@@ -297,6 +297,10 @@ void MPU6050_setDLPF(uint8_t mode)
 {
 	IICwriteBits(devAddr, MPU6050_RA_CONFIG, MPU6050_CFG_DLPF_CFG_BIT, MPU6050_CFG_DLPF_CFG_LENGTH, mode);
 }
+void MPU6050_setSampleRate(uint8_t mode)
+{
+	IICwriteBits(devAddr, MPU6050_RA_SMPLRT_DIV, 7, 8, mode);
+}
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_initialize(void)
 *功　　能:	    初始化 	MPU6050 以进入可用状态。
@@ -310,6 +314,8 @@ void Mpu6050init(void)
 	MPU6050_setFullScaleGyroRange(MPU6050_GYRO_FS_2000);//陀螺仪最大量程 +-2000度每秒
 	Delay_ms_mpu(50);
 	MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_4);	//加速度度最大量程 +-4G
+	Delay_ms_mpu(50);
+	MPU6050_setSampleRate(0x00);
 	Delay_ms_mpu(50);
 	MPU6050_setDLPF(MPU6050_DLPF_BW_42);
 	Delay_ms_mpu(50);

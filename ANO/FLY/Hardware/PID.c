@@ -170,6 +170,10 @@ void gyroControl(int16_t expThro)
         motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output + PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
         motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output +PID_GYRO_YAW.output);
         motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output - PID_GYRO_PITCH.output -PID_GYRO_YAW.output);
+//				motor0 = (int16_t)(expThro + PID_GYRO_PITCH.output );
+//        motor1 = (int16_t)(expThro  + PID_GYRO_PITCH.output );
+//        motor2 = (int16_t)(expThro  - PID_GYRO_PITCH.output );
+//        motor3 = (int16_t)(expThro  - PID_GYRO_PITCH.output);
 			}
 			
 			else if(DebugMode==1)
