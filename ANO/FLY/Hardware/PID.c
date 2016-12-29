@@ -78,6 +78,74 @@ void PID_Init(void)
     PID_GYRO_YAW.intergral = 0;
     PID_GYRO_YAW.output = 0;
 }
+
+//void PID_Init(void)
+//{
+////    PID_ROLL.KP = 5;
+////    PID_ROLL.KI = 0.05;
+////    PID_ROLL.KD = 0.1;
+////    PID_ROLL.Imax = 300;
+////    PID_ROLL.intergral = 0;
+////    PID_ROLL.output = 0;
+
+////    PID_PITCH.KP = 5;
+////    PID_PITCH.KI = 0.05;
+////    PID_PITCH.KD = 0.1;
+////    PID_PITCH.Imax = 309;
+////    PID_PITCH.intergral = 0;
+////    PID_PITCH.output = 0;
+
+////    PID_YAW.KP = 3.5;
+////    PID_YAW.KI = 0;
+////    PID_YAW.KD = 0.5;
+////    PID_YAW.Imax = 300;
+////    PID_YAW.intergral = 0;
+////    PID_YAW.output = 0;
+
+//    PID_ROLL.KP = 0;
+//    PID_ROLL.KI = 0;
+//    PID_ROLL.KD = 0;
+//    PID_ROLL.Imax = 1000;
+//    PID_ROLL.intergral = 0;
+//    PID_ROLL.output = 0;
+
+//    PID_PITCH.KP = 0;
+//    PID_PITCH.KI = 0;
+//    PID_PITCH.KD = 0;
+//    PID_PITCH.Imax = 1000;
+//    PID_PITCH.intergral = 0;
+//    PID_PITCH.output = 0;
+
+//    PID_YAW.KP = 3.5;
+//    PID_YAW.KI = 0;
+//    PID_YAW.KD = 0.5;
+//    PID_YAW.Imax = 300;
+//    PID_YAW.intergral = 0;
+//    PID_YAW.output = 0;
+
+//    PID_GYRO_ROLL.KP = 5;
+//    PID_GYRO_ROLL.KI = 0.08;
+//    PID_GYRO_ROLL.KD = 15;
+//    PID_GYRO_ROLL.Imax = 5000;
+//    PID_GYRO_ROLL.intergral = 0;
+//    PID_GYRO_ROLL.output = 0;
+
+//    PID_GYRO_PITCH.KP = 5;
+//    PID_GYRO_PITCH.KI = 0.08;
+//    PID_GYRO_PITCH.KD = 15;
+//    PID_GYRO_PITCH.Imax = 5000;
+//    PID_GYRO_PITCH.intergral = 0;
+//    PID_GYRO_PITCH.output = 0;
+
+//    PID_GYRO_YAW.KP = 8.0;
+//    PID_GYRO_YAW.KI = 0.1;
+//    PID_GYRO_YAW.KD = 0.1;
+//    PID_GYRO_YAW.Imax = 5000;
+//    PID_GYRO_YAW.intergral = 0;
+//    PID_GYRO_YAW.output = 0;
+//}
+
+
 extern Define_Rc_Data Rc_Data;
 
 
