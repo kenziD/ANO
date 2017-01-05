@@ -111,20 +111,20 @@ void PID_Analyze(void)
 	if(adjustGyroPid)
 	{
 		//1000~2000
-//		PID_GYRO_ROLL.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
-//    PID_GYRO_ROLL.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
-//    PID_GYRO_ROLL.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-//		 
-//    PID_GYRO_PITCH.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
-//    PID_GYRO_PITCH.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
-//    PID_GYRO_PITCH.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
-		PID_GYRO_ROLL.KP = 4.1;//0-10
-    PID_GYRO_ROLL.KI = 0.04;//0-1
-    PID_GYRO_ROLL.KD =15;//0-15
+		PID_GYRO_ROLL.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
+    PID_GYRO_ROLL.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
+    PID_GYRO_ROLL.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
 		 
-    PID_GYRO_PITCH.KP = 4.1;//0-10
-    PID_GYRO_PITCH.KI = 0.04;//0-1
-    PID_GYRO_PITCH.KD = 15;//0-15
+    PID_GYRO_PITCH.KP = (Rc_Data.aux1-1000)/100.0f;//0-10
+    PID_GYRO_PITCH.KI = (Rc_Data.aux2-1000)/1000.0f;//0-1
+    PID_GYRO_PITCH.KD = (Rc_Data.aux3-1000)/66.6f;//0-15
+//		PID_GYRO_ROLL.KP = 4.1;//0-10
+//    PID_GYRO_ROLL.KI = 0.04;//0-1
+//    PID_GYRO_ROLL.KD =15;//0-15
+//		 
+//    PID_GYRO_PITCH.KP = 4.1;//0-10
+//    PID_GYRO_PITCH.KI = 0.04;//0-1
+//    PID_GYRO_PITCH.KD = 15;//0-15
 	}
 	else
 	{
@@ -233,6 +233,12 @@ void gyroControl(int16_t expThro)
         motor1 = (int16_t)(expThro  + PID_GYRO_PITCH.output );
         motor2 = (int16_t)(expThro  - PID_GYRO_PITCH.output );
         motor3 = (int16_t)(expThro  - PID_GYRO_PITCH.output);
+				
+//				motor0 = (int16_t)(expThro -  PID_GYRO_ROLL.output );
+//        motor1 = (int16_t)(expThro +  PID_GYRO_ROLL.output );
+//        motor2 = (int16_t)(expThro +  PID_GYRO_ROLL.output );
+//        motor3 = (int16_t)(expThro -  PID_GYRO_ROLL.output );
+				
 			}
 			
 			else if(DebugMode==1)
