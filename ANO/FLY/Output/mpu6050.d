@@ -29,6 +29,7 @@
 ..\output\mpu6050.o: ..\FWlib\inc\stm32f10x_usart.h
 ..\output\mpu6050.o: ..\FWlib\inc\stm32f10x_wwdg.h
 ..\output\mpu6050.o: ..\FWlib\inc\misc.h
+..\output\mpu6050.o: ..\Hardware\APP\myStruct.h
 ..\output\mpu6050.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\mpu6050.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\mpu6050.o: ..\Hardware\delay.h

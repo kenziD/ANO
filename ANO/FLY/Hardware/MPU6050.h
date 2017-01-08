@@ -3,7 +3,7 @@
 #define __MPU6050_H_
 
 #include "stm32f10x.h"
-
+#include "myStruct.h"
 #include "ANO_TC_STM32F1_I2C.h"
 
 #define devAddr  0xD0 //0xD2 ¸Ä0xD0
@@ -373,12 +373,7 @@
 #define FILTER_NUM 20
 extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z;    //量化的陀螺仪数据 g(9.8m/s^2)
 extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据 °/s
-typedef struct 
-{
-	int16_t x;
-	int16_t y;
-	int16_t z;
-} Int16xyz ;
+
 void Mpu6050init(void);
 // void Mpu6050_Init_offset(void);
 void Read_Mpu6050(void);

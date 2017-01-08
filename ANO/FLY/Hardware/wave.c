@@ -73,6 +73,8 @@ void NRF_Check()
 }
 extern int16_t motor0, motor1, motor2, motor3;
 extern Int16xyz ACC_AVG;
+extern Int16xyz AccFilterOut;
+extern float _a0,_a1,_a2,_b0,_b1,_b2;
 u8 getTX_FIFO_status()
 {
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
@@ -98,8 +100,12 @@ void Data_Transfer()
 		//send_wave(32);
 
 		//Version2
-		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		//send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		//send_wave(23);
+		
+		send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X,fACCEL_Y,fACCEL_Z);
 		send_wave(23);
+		
 	}
 	else if(send_Status)
 	{
@@ -130,8 +136,14 @@ void Data_Transfer()
 
 		//Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
 		//send_wave(16);
-		Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
-		send_wave(17);
+		
+		//send three float
+		//Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
+		//send_wave(17);
+		
+		//send six float check filter param
+		//send_custom_float_V2_6(0xf2,_a0,_a1,_a2,_b0,_b1,_b2);
+		//send_wave(29);
 	}
 }
 /**************************向物理串口发一个字节***************************************
@@ -275,6 +287,7 @@ void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc)
 
 	putChar(sum);
 }
+
 void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc)
 {
 	unsigned char sum = 0;
@@ -289,6 +302,26 @@ void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc)
 	sum +=Uart1_Put_float(aa);//发送16位数据 
 	sum +=Uart1_Put_float(bb);
 	sum +=Uart1_Put_float(cc);
+
+	putChar(sum);
+}
+void send_custom_float_V2_6(unsigned char fun,float aa,float bb,float cc,float dd,float ee,float ff)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x18);//6个float占24个字节
+	
+	sum +=Uart1_Put_float(aa);//发送16位数据 
+	sum +=Uart1_Put_float(bb);
+	sum +=Uart1_Put_float(cc);
+	sum +=Uart1_Put_float(dd);
+	sum +=Uart1_Put_float(ee);
+	sum +=Uart1_Put_float(ff);
 
 	putChar(sum);
 }

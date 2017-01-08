@@ -37,6 +37,7 @@
 ..\output\motor.o: ..\Hardware\LED.h
 ..\output\motor.o: ..\Hardware\IIC.h
 ..\output\motor.o: ..\Hardware\MPU6050.h
+..\output\motor.o: ..\Hardware\APP\myStruct.h
 ..\output\motor.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\motor.o: ..\Hardware\IMU.h
 ..\output\motor.o: ..\Hardware\HSEconf.h
@@ -50,3 +51,4 @@
 ..\output\motor.o: ..\Hardware\timer.h
 ..\output\motor.o: ..\Hardware\adc.h
 ..\output\motor.o: ..\Hardware\Rc.h
+..\output\motor.o: ..\Hardware\APP\filter.h

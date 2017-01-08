@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CMSIS;..\FWlib\inc;..\FWlib\src;..\User;..\Hardware;..\Hardware\sys</IncludePath>
+              <IncludePath>..\CMSIS;..\FWlib\inc;..\FWlib\src;..\User;..\Hardware;..\Hardware\sys;..\Hardware\APP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -591,6 +591,16 @@
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\APP\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>myStruct.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\APP\myStruct.c</FilePath>
             </File>
           </Files>
         </Group>

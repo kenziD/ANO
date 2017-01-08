@@ -39,6 +39,7 @@
 ..\output\wave.o: ..\Hardware\LED.h
 ..\output\wave.o: ..\Hardware\IIC.h
 ..\output\wave.o: ..\Hardware\MPU6050.h
+..\output\wave.o: ..\Hardware\APP\myStruct.h
 ..\output\wave.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\wave.o: ..\Hardware\IMU.h
 ..\output\wave.o: ..\Hardware\HSEconf.h
@@ -50,3 +51,4 @@
 ..\output\wave.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\wave.o: ..\Hardware\timer.h
 ..\output\wave.o: ..\Hardware\adc.h
+..\output\wave.o: ..\Hardware\APP\filter.h

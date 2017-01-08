@@ -63,6 +63,7 @@ void Delay_ms_mpu(u16 nms)
 // }
 #define 	MPU6050_MAX		32767
 #define		MPU6050_MIN		-32768
+extern Int16xyz MPU_ACC_READ;
 void Mpu6050_Analyze(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
@@ -92,6 +93,10 @@ void Mpu6050_Analyze(void)
 	fGYRO_Y = fGYRO_Y<MPU6050_MIN ? MPU6050_MIN:fGYRO_Y;
 	fGYRO_Z = fGYRO_Z>MPU6050_MAX ? MPU6050_MAX:fGYRO_Z;
 	fGYRO_Z = fGYRO_Z<MPU6050_MIN ? MPU6050_MIN:fGYRO_Z;
+	
+	MPU_ACC_READ.x = fACCEL_X;
+	MPU_ACC_READ.y = fACCEL_Y;
+	MPU_ACC_READ.z = fACCEL_Z;
 	if (!GYRO_OFFSET_OK)
 	{
 		static int32_t	tempgx = 0, tempgy = 0, tempgz = 0;
@@ -315,9 +320,9 @@ void Mpu6050init(void)
 	Delay_ms_mpu(50);
 	MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_4);	//加速度度最大量程 +-4G
 	Delay_ms_mpu(50);
-	MPU6050_setSampleRate(0x00);
+	MPU6050_setSampleRate(0x07);
 	Delay_ms_mpu(50);
-	MPU6050_setDLPF(MPU6050_DLPF_BW_42);
+	MPU6050_setDLPF(MPU6050_DLPF_BW_256);
 	Delay_ms_mpu(50);
 	MPU6050_setI2CMasterModeEnabled(0);	 //不让MPU6050 控制AUXI2C
 	Delay_ms_mpu(50);

@@ -70,13 +70,13 @@ void Rc_Data_Analyze(u8 *rcDataBuf,Define_Rc_Data *rc_data)
 	if (rcDataBuf[8] == 'a')
 	{
 		//gCalibrate = 1;
-		DebugMode = 0;
+		DebugMode = 1;
 	}
 	if (rcDataBuf[8] == 'b')
 	{
 		//pitch_offset = 0;
 		//roll_offset = 0;
-		DebugMode = 1;
+		DebugMode = 0;
 	}
 }
 

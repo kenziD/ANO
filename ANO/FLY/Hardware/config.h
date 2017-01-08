@@ -20,6 +20,7 @@
 #include "timer.h"
 #include "adc.h"
 #include "Rc.h"
+#include "filter.h"
 #endif /* __CONFIG_H_ */
 
 

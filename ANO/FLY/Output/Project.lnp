@@ -31,6 +31,8 @@
 "..\output\timer.o"
 "..\output\rc.o"
 "..\output\adc.o"
+"..\output\filter.o"
+"..\output\mystruct.o"
 --strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

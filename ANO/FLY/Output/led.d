@@ -36,6 +36,7 @@
 ..\output\led.o: ..\Hardware\LED.h
 ..\output\led.o: ..\Hardware\IIC.h
 ..\output\led.o: ..\Hardware\MPU6050.h
+..\output\led.o: ..\Hardware\APP\myStruct.h
 ..\output\led.o: ..\Hardware\ANO_TC_STM32F1_I2C.h
 ..\output\led.o: ..\Hardware\IMU.h
 ..\output\led.o: ..\Hardware\HSEconf.h
@@ -49,3 +50,4 @@
 ..\output\led.o: ..\Hardware\timer.h
 ..\output\led.o: ..\Hardware\adc.h
 ..\output\led.o: ..\Hardware\Rc.h
+..\output\led.o: ..\Hardware\APP\filter.h

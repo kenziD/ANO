@@ -23,6 +23,7 @@ void Uart1_send_custom_three_int16(int16_t aa,int16_t bb,int16_t cc);
 void zhen2_send_custom_four_int16(int16_t aa,int16_t bb,int16_t cc,int16_t dd);
 void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc);
 void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc);
+void send_custom_float_V2_6(unsigned char fun,float aa,float bb,float cc,float dd,float ee,float ff);
 void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd);
 void Uart1_Send_PID(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,uint16_t pit_i,uint16_t pit_d);
 void Uart1_send_custom_PID(uint8_t aa);

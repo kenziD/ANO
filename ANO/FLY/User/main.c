@@ -29,6 +29,8 @@ float ypr[3];
 floatEurlaAngle outAngle = {0.0,0.0,0.0};
 floatEurlaAngle desireAngle = {0.0f,0.0f,0.0f};
 Int16xyz ACC_AVG = {0,0,0};
+Int16xyz AccFilterOut = {0,0,0};
+Int16xyz MPU_ACC_READ={0,0,0};
 float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
 int main(void)
@@ -45,31 +47,24 @@ int main(void)
 	NVIC_Configuration();
 	USART1_Config(115200);
 	LED_Init();
-	
 	ANO_TC_I2C2_INIT(0xA6, 400000, 1, 1, 3, 3);
 	//硬实时
 	Tim3_Init(500);//0.005s
-	
-
 	NRF24L01_Init();
 	while(NRF24L01_Check())
 	{
 		LED2_ON;
 	}
-	
-	
 	//TX mode
 	NRF24L01_Mode_Config(4);
 	TIM2_Init(999, 2);
 	MOT_GPIO_init();
 	MOT_PWM_init();
-	
-	Mpu6050init();
-	//SPI1_Init();    		
-
+	Mpu6050init(); 		
 	PID_Init();
 	ADC1_Init();
 	LED3_Flash(2,100);
+	setCutOffFrequency(500,40);//T=0.02ms fs=1/T=500,Fcut=28Hz;
 	while (1)
 	{
 		if (getMpu6050Data == 1)//1ms period
@@ -77,32 +72,30 @@ int main(void)
 			att_cnt++;
 			Read_Mpu6050(); 
 			Mpu6050_Analyze();
-			moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
+			//moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
+		
 			getMpu6050Data = 0;
 			if(att_cnt==2)
 			{
 				att_cnt = 0;
 				outterPid_cnt++;
+				ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
 				//LED2_ON;
 				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
-				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
-				//surRoll =outAngle.roll;
-				//surPitch = outAngle.pitch;
-				//surYaw = outAngle.yaw;
-				//expRoll = (Rc_Data.aux1-2046)/1024.0;
-				//expPitch= (Rc_Data.aux2-2046)/1024.0;
+				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
+				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)MPU_ACC_READ.x, (float)MPU_ACC_READ.y, (float)MPU_ACC_READ.z,&outAngle);
 				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
 				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
 				
 				//desireAngle.roll = 0;
 				//desireAngle.pitch = 0;
 				gyroControl(Rc_Data.throttle);
-				//4ms运行一次内环控制。我也不知道为什么。烈火是这样写的。
-			if(outterPid_cnt==2)//4ms
-			{
+				//4ms运行一次内环控制。
+				if(outterPid_cnt==2)//4ms
+				{
 					outterPid_cnt = 0;
 					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
-			}
+				}
 				//ControlPID(Rc_Data.throttle);
 				calculateAngle = 0;
 				//LED2_OFF;
@@ -135,12 +128,6 @@ int main(void)
 					send_desirePIDAngle = 1;
 					send_desirePIDAngle_cnt = 0;
 				}
-
-			//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
-			//send_wave(10);
-		
-			//zhen2_send_custom_four_int16(motor0,motor1,motor2,motor3);
-			//send_wave(12);
 			sendData = 0;
 		}
 		////Uart1_Send_PID(320,PID_ROLL.KI,PID_ROLL.KD,1,0,0);
