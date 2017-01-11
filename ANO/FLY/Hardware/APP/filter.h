@@ -5,4 +5,5 @@
 #include "myStruct.h"
 void setCutOffFrequency(float fs,float cutOffFreq);
 void ButterWorthLPF_2order(Int16xyz *acc_in,Int16xyz *acc_out);
+
 #endif

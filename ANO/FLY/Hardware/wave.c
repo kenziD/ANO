@@ -75,6 +75,7 @@ extern int16_t motor0, motor1, motor2, motor3;
 extern Int16xyz ACC_AVG;
 extern Int16xyz AccFilterOut;
 extern float _a0,_a1,_a2,_b0,_b1,_b2;
+extern float g_Fc;
 u8 getTX_FIFO_status()
 {
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
@@ -138,8 +139,8 @@ void Data_Transfer()
 		//send_wave(16);
 		
 		//send three float
-		//Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
-		//send_wave(17);
+		Uart1_send_custom_float_V2(0xf1,g_Fc,atan(AccFilterOut.x*1.0/AccFilterOut.z)*57.3,0);
+		send_wave(17);
 		
 		//send six float check filter param
 		//send_custom_float_V2_6(0xf2,_a0,_a1,_a2,_b0,_b1,_b2);
