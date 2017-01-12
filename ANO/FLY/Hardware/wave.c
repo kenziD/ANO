@@ -138,8 +138,8 @@ void Data_Transfer()
 		//send_wave(16);
 		
 		//send three float
-		//Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
-		//send_wave(17);
+		Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
+		send_wave(17);
 		
 		//send six float check filter param
 		//send_custom_float_V2_6(0xf2,_a0,_a1,_a2,_b0,_b1,_b2);
