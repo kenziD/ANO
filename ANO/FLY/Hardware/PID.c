@@ -12,7 +12,6 @@ float surYaw, surRoll, surPitch;
 float diffYaw, diffRoll, diffPitch;
 int16_t motor0, motor1, motor2, motor3;
 
-
 void PID_Init(void)
 {
 //    PID_ROLL.KP = 5;
@@ -57,16 +56,16 @@ void PID_Init(void)
     PID_YAW.intergral = 0;
     PID_YAW.output = 0;
 
-    PID_GYRO_ROLL.KP = 1.4;
-    PID_GYRO_ROLL.KI = 0.0;
-    PID_GYRO_ROLL.KD = 2.0;
+    PID_GYRO_ROLL.KP = 2.5;
+    PID_GYRO_ROLL.KI = 0.02;
+    PID_GYRO_ROLL.KD = 13.5;
     PID_GYRO_ROLL.Imax = 5000;
     PID_GYRO_ROLL.intergral = 0;
     PID_GYRO_ROLL.output = 0;
 
-    PID_GYRO_PITCH.KP = 1.4;
-    PID_GYRO_PITCH.KI = 0.0;
-    PID_GYRO_PITCH.KD = 2.0;
+    PID_GYRO_PITCH.KP = 3.2;
+    PID_GYRO_PITCH.KI = 0.02;
+    PID_GYRO_PITCH.KD = 15;
     PID_GYRO_PITCH.Imax = 5000;
     PID_GYRO_PITCH.intergral = 0;
     PID_GYRO_PITCH.output = 0;
@@ -78,7 +77,6 @@ void PID_Init(void)
     PID_GYRO_YAW.intergral = 0;
     PID_GYRO_YAW.output = 0;
 }
-
 //void PID_Init(void)
 //{
 ////    PID_ROLL.KP = 5;
@@ -102,16 +100,16 @@ void PID_Init(void)
 ////    PID_YAW.intergral = 0;
 ////    PID_YAW.output = 0;
 
-//    PID_ROLL.KP = 0;
-//    PID_ROLL.KI = 0;
-//    PID_ROLL.KD = 0;
+//    PID_ROLL.KP = 5;
+//    PID_ROLL.KI = 0.02;
+//    PID_ROLL.KD = 8.0;
 //    PID_ROLL.Imax = 1000;
 //    PID_ROLL.intergral = 0;
 //    PID_ROLL.output = 0;
 
-//    PID_PITCH.KP = 0;
-//    PID_PITCH.KI = 0;
-//    PID_PITCH.KD = 0;
+//    PID_PITCH.KP = 5;
+//    PID_PITCH.KI = 0.02;
+//    PID_PITCH.KD = 8.0;
 //    PID_PITCH.Imax = 1000;
 //    PID_PITCH.intergral = 0;
 //    PID_PITCH.output = 0;
@@ -123,16 +121,16 @@ void PID_Init(void)
 //    PID_YAW.intergral = 0;
 //    PID_YAW.output = 0;
 
-//    PID_GYRO_ROLL.KP = 5;
-//    PID_GYRO_ROLL.KI = 0.08;
-//    PID_GYRO_ROLL.KD = 15;
+//    PID_GYRO_ROLL.KP = 1.4;
+//    PID_GYRO_ROLL.KI = 0.0;
+//    PID_GYRO_ROLL.KD = 2.0;
 //    PID_GYRO_ROLL.Imax = 5000;
 //    PID_GYRO_ROLL.intergral = 0;
 //    PID_GYRO_ROLL.output = 0;
 
-//    PID_GYRO_PITCH.KP = 5;
-//    PID_GYRO_PITCH.KI = 0.08;
-//    PID_GYRO_PITCH.KD = 15;
+//    PID_GYRO_PITCH.KP = 1.4;
+//    PID_GYRO_PITCH.KI = 0.0;
+//    PID_GYRO_PITCH.KD = 2.0;
 //    PID_GYRO_PITCH.Imax = 5000;
 //    PID_GYRO_PITCH.intergral = 0;
 //    PID_GYRO_PITCH.output = 0;
@@ -144,6 +142,8 @@ void PID_Init(void)
 //    PID_GYRO_YAW.intergral = 0;
 //    PID_GYRO_YAW.output = 0;
 //}
+
+
 
 
 extern Define_Rc_Data Rc_Data;
