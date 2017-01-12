@@ -74,6 +74,7 @@ void NRF_Check()
 extern int16_t motor0, motor1, motor2, motor3;
 extern Int16xyz ACC_AVG;
 extern Int16xyz AccFilterOut;
+extern Int16xyz AccKFOut;
 extern float _a0,_a1,_a2,_b0,_b1,_b2;
 extern float g_Fc;
 u8 getTX_FIFO_status()
@@ -104,7 +105,7 @@ void Data_Transfer()
 		//send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
 		//send_wave(23);
 		
-		send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X,fACCEL_Y,fACCEL_Z);
+		send_senserV2(AccKFOut.x, AccFilterOut.y,AccFilterOut.z, AccKFOut.x, AccKFOut.y,AccKFOut.z, fACCEL_X,fACCEL_Y,fACCEL_Z);
 		send_wave(23);
 		
 	}
@@ -139,7 +140,7 @@ void Data_Transfer()
 		//send_wave(16);
 		
 		//send three float
-		Uart1_send_custom_float_V2(0xf1,g_Fc,atan(AccFilterOut.x*1.0/AccFilterOut.z)*57.3,0);
+		Uart1_send_custom_float_V2(0xf1,g_Fc,atan(AccFilterOut.x*1.0/AccFilterOut.z)*57.3, AccKFOut.x);
 		send_wave(17);
 		
 		//send six float check filter param

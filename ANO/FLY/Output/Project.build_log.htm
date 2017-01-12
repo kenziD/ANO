@@ -29,7 +29,7 @@ Project File Date:  01/08/2017
 Rebuild target 'STM32_Project'
 assembling startup_stm32f10x_md.s...
 compiling main.c...
-main.c(39): warning:  #177-D: variable "led_on" was declared but never referenced
+main.c(40): warning:  #177-D: variable "led_on" was declared but never referenced
         static u8 led_on = 0;
 main.c: 1 warning, 0 errors
 compiling stm32f10x_it.c...
@@ -61,9 +61,9 @@ compiling wave.c...
         static u8 led_on = 0;
 ..\Hardware\wave.c(34): warning:  #177-D: variable "sta" was declared but never referenced
         u8 sta = 0;
-..\Hardware\wave.c(86): warning:  #177-D: variable "FIFOstatus" was declared but never referenced
+..\Hardware\wave.c(87): warning:  #177-D: variable "FIFOstatus" was declared but never referenced
         u8 FIFOstatus = 0x10;
-..\Hardware\wave.c(471): warning:  #177-D: variable "count_1" was declared but never referenced
+..\Hardware\wave.c(472): warning:  #177-D: variable "count_1" was declared but never referenced
         char count_1=0;
 ..\Hardware\wave.c: 4 warnings, 0 errors
 compiling PID.c...
@@ -76,11 +76,16 @@ compiling Rc.c...
 ..\Hardware\Rc.c: 2 warnings, 0 errors
 compiling adc.c...
 compiling filter.c...
+..\Hardware\APP\filter.c(38): warning:  #177-D: variable "F" was declared but never referenced
+        int F=1;
+..\Hardware\APP\filter.c(39): warning:  #177-D: variable "H" was declared but never referenced
+        int H=1;
+..\Hardware\APP\filter.c: 2 warnings, 0 errors
 compiling myStruct.c...
 linking...
-Program Size: Code=35554 RO-data=518 RW-data=412 ZI-data=2260  
+Program Size: Code=36898 RO-data=518 RW-data=512 ZI-data=2304  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 7 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 9 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   D:\future\Sceince\recover\ANO\FLY\User\RTE

@@ -30,6 +30,7 @@ floatEurlaAngle outAngle = {0.0,0.0,0.0};
 floatEurlaAngle desireAngle = {0.0f,0.0f,0.0f};
 Int16xyz ACC_AVG = {0,0,0};
 Int16xyz AccFilterOut = {0,0,0};
+Int16xyz AccKFOut = {0,0,0};
 Int16xyz MPU_ACC_READ={0,0,0};
 float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
@@ -80,9 +81,11 @@ int main(void)
 			{
 				att_cnt = 0;
 				outterPid_cnt++;
-				g_Fc = (Rc_Data.aux1-1000)/20.0f;//0--50
-				setCutOffFrequency(500,g_Fc);//T=0.02ms fs=1/T=500
-				ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
+				//g_Fc = (Rc_Data.aux1-1000)/20.0f;//0--50
+				//setCutOffFrequency(500,g_Fc);//T=0.02ms fs=1/T=500
+				//ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
+				kalManFilter(&MPU_ACC_READ,&AccKFOut);
+				//kalManFilterAx(fACCEL_X,&AccKFOut.x);
 				//LED2_ON;
 				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
 				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
