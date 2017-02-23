@@ -75,6 +75,7 @@ extern int16_t motor0, motor1, motor2, motor3;
 extern Int16xyz ACC_AVG;
 extern Int16xyz AccFilterOut;
 extern float _a0,_a1,_a2,_b0,_b1,_b2;
+extern int16_t fACCEL_X_6Cali,fACCEL_Y_6Cali , fACCEL_Z_6Cali; //量化的加速度计数据  °/s
 u8 getTX_FIFO_status()
 {
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
@@ -100,7 +101,7 @@ void Data_Transfer()
 		//send_wave(32);
 
 		//Version2
-		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X_6Cali,fACCEL_Y_6Cali,fACCEL_Z_6Cali);
 		send_wave(23);
 		
 		//send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X,fACCEL_Y,fACCEL_Z);

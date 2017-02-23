@@ -9,8 +9,9 @@ unsigned char BUF[12];
 
 int16_t fGYRO_X = 0, fGYRO_Y = 0, fGYRO_Z = 0;		 //量化的陀螺仪数据     g(9.8m/s^2)
 int16_t fACCEL_X = 0, fACCEL_Y = 0, fACCEL_Z = 0; //量化的加速度计数据  °/s
-
-
+int16_t fACCEL_X_6Cali = 0, fACCEL_Y_6Cali = 0, fACCEL_Z_6Cali = 0; //量化的加速度计数据  °/s
+int16_t Ax_bias = 42, Ay_bias = 27, Az_bias = -166;
+float Sx = 1.005,Sy = 0.9956,Sz = 0.9955;
 int16_t Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
 int16_t Ax_offset = 0, Ay_offset = 0, Az_offset = 0;
 
@@ -73,13 +74,35 @@ void Mpu6050_Analyze(void)
 	fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) - Gy_offset;
 
 	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
-	//要转换成弧度 要不然到四元数哪里也要/180*pi 但为啥拿去四元数运算的要转成弧度
+//	//要转换成弧度 要不然到四元数哪里也要/180*pi 但为啥拿去四元数运算的要转成弧度
 
 	fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  -Ax_offset;
 
 	fACCEL_Y  =	((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) -Ay_offset;
 
 	fACCEL_Z  =	((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]);
+	
+	//fGYRO_X  =	((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]) ;
+
+	//fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]);
+
+	//fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]);
+	//要转换成弧度 要不然到四元数哪里也要/180*pi 但为啥拿去四元数运算的要转成弧度
+
+	//fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  ;
+
+	//fACCEL_Y  =	((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) ;
+
+	//fACCEL_Z  =	((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]);
+	
+	fACCEL_X_6Cali  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1]) - Ax_bias;
+	fACCEL_X_6Cali  = (signed short int)(fACCEL_X_6Cali*Sx);
+	
+	fACCEL_Y_6Cali  =	((((int16_t)mpu6050_buffer[2]) << 8) | mpu6050_buffer[3]) - Ay_bias;
+	fACCEL_Y_6Cali  = (signed short int)(fACCEL_Y_6Cali*Sy);
+	
+	fACCEL_Z_6Cali  =	((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]) - Az_bias;
+	fACCEL_Z_6Cali  = (signed short int)(fACCEL_Z_6Cali*Sz);
 	
 	fACCEL_X = fACCEL_X>MPU6050_MAX ? MPU6050_MAX:fACCEL_X;
 	fACCEL_X = fACCEL_X<MPU6050_MIN ? MPU6050_MIN:fACCEL_X;

@@ -97,6 +97,8 @@ float sum_pitch = 0;
 float originAngles[3] = {0};
 float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
 extern float gCalibrate;
+
+float accAngle_roll = 0,accAngle_pitch = 0;
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,floatEurlaAngle *angles){
 //static u16 initCnt = 0;
 //	static float yawSum = 0,pitchSum = 0,rollSum = 0;
@@ -202,7 +204,6 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	angles->pitch = originAngles[1]-pitchOffsetCache;
 	
 	angles->roll = originAngles[2]-rollOffsetCache;
-
 	if(gCalibrate)
 	{
 		yawOffsetCache = originAngles[0];
