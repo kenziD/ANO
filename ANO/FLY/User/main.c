@@ -64,7 +64,7 @@ int main(void)
 	PID_Init();
 	ADC1_Init();
 	LED3_Flash(2,100);
-	//setCutOffFrequency(500,10);//T=0.02ms fs=1/T=500,Fcut=28Hz;
+	setCutOffFrequency(500,10);//T=0.02ms fs=1/T=500,Fcut=28Hz;
 	while (1)
 	{
 		if (getMpu6050Data == 1)//1ms period
@@ -72,18 +72,18 @@ int main(void)
 			att_cnt++;
 			Read_Mpu6050(); 
 			Mpu6050_Analyze();
-			moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
+			//moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
 		
 			getMpu6050Data = 0;
 			if(att_cnt==2)
 			{
 				att_cnt = 0;
 				outterPid_cnt++;
-				//ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
+				ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
 				//LED2_ON;
-				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
 				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
-				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)AccFilterOut.x, (float)AccFilterOut.y, (float)AccFilterOut.z,&outAngle);
+				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)AccFilterOut.x, (float)AccFilterOut.y, (float)AccFilterOut.z,&outAngle);
 				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
 				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
 				

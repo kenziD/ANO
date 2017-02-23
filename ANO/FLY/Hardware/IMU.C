@@ -115,6 +115,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	float q2q3 = q2*q3;
 	float q3q3 = q3*q3;
 	float realGz=0;
+	float realGx=0;
+	float realGy=0;
 	
 //	now = micros();  //露脕脠隆脢卤录盲
 //	if (now < lastUpdate) { //露篓脢卤脝梅脪莽鲁枚鹿媒脕脣隆拢
@@ -127,6 +129,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	if(ax*ay*az==0)
 	return;
 	realGz=gz;
+	realGy=gy;
+	realGx=gx;
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;
@@ -194,6 +198,8 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 		realGz = 0;
 	}
 	originAngles[0] += realGz*Gyro_G*0.002;
+	//originAngles[1] += realGy*Gyro_G*0.002;
+	//originAngles[2] += realGx*Gyro_G*0.002;
 	originAngles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
 	originAngles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
 	
