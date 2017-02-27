@@ -3,6 +3,10 @@
 extern int16_t Gx_offset, Gy_offset, Gz_offset;
 extern int16_t fGYRO_X, fGYRO_Y, fGYRO_Z, T_T;		 //X,Y,ZÖá
 extern int16_t fACCEL_X, fACCEL_Y, fACCEL_Z; //量化的加速度计数据  °/s
+extern int16_t fACCEL_X_6Cali, fACCEL_Y_6Cali , fACCEL_Z_6Cali; //量化的加速度计数据  °/s
+extern int16_t fACCEL_X_noOffset , fACCEL_Y_noOffset , fACCEL_Z_noOffset;
+extern int16_t fACCEL_X_zhihu , fACCEL_Y_zhihu , fACCEL_Z_zhihu;
+extern int16_t fACCEL_X_zhihu_pix , fACCEL_Y_zhihu_pix , fACCEL_Z_zhihu_pix ;
 volatile uint32_t lastUpdate, now;
 
 float q0 = 1, q1 = 0, q2 = 0, q3 = 0;        // quaternion elements representing the estimated orientation
@@ -98,7 +102,11 @@ float originAngles[3] = {0};
 float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
 extern float gCalibrate;
 
-float accAngle_roll = 0,accAngle_pitch = 0;
+floatEurlaAngle accOutAngle_bias = {0.0,0.0,0.0};
+floatEurlaAngle accOutAngle_offset = {0.0,0.0,0.0};
+floatEurlaAngle accOutAngle_NOoffset = {0.0,0.0,0.0};
+floatEurlaAngle accOutAngle_zhihu = {0.0,0.0,0.0};
+floatEurlaAngle accOutAngle_pix = {0.0,0.0,0.0};
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,floatEurlaAngle *angles){
 //static u16 initCnt = 0;
 //	static float yawSum = 0,pitchSum = 0,rollSum = 0;
@@ -198,6 +206,21 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	originAngles[0] += realGz*Gyro_G*0.002;
 	originAngles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
 	originAngles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
+	
+	accOutAngle_bias.roll = atan2(fACCEL_Y_6Cali*1.0,fACCEL_Z_6Cali)*57.3;
+	accOutAngle_bias.pitch = -atan2(fACCEL_X_6Cali*1.0,fACCEL_Z_6Cali)*57.3;
+	
+	accOutAngle_offset.roll = atan2(ay,az)*57.3;
+	accOutAngle_offset.pitch = -atan2(ax,az)*57.3;
+	
+	accOutAngle_NOoffset.roll = atan2(fACCEL_Y_noOffset*1.0,fACCEL_Z_noOffset)*57.3;
+	accOutAngle_NOoffset.pitch = -atan2(fACCEL_X_noOffset*1.0,fACCEL_Z_noOffset)*57.3;
+	
+	accOutAngle_zhihu.roll = atan2(fACCEL_Y_zhihu*1.0,fACCEL_Z_zhihu)*57.3;
+	accOutAngle_zhihu.pitch = -atan2(fACCEL_X_zhihu*1.0,fACCEL_Z_zhihu)*57.3;
+	
+	accOutAngle_pix.roll = atan2(fACCEL_Y_zhihu_pix*1.0,fACCEL_Z_zhihu_pix)*57.3;
+	accOutAngle_pix.pitch = -atan2(fACCEL_X_zhihu_pix*1.0,fACCEL_Z_zhihu_pix)*57.3;
 	
 	angles->yaw = originAngles[0]-yawOffsetCache;
 	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw

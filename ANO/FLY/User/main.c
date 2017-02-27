@@ -27,12 +27,19 @@ int cnt = 0;
 float ypr[3];
 
 floatEurlaAngle outAngle = {0.0,0.0,0.0};
+
 floatEurlaAngle desireAngle = {0.0f,0.0f,0.0f};
 Int16xyz ACC_AVG = {0,0,0};
 Int16xyz AccFilterOut = {0,0,0};
 Int16xyz MPU_ACC_READ={0,0,0};
 float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
+
+extern int16_t fACCEL_X_6Cali,fACCEL_Y_6Cali , fACCEL_Z_6Cali; //量化的加速度计数据  °/s
+extern int16_t fACCEL_X_noOffset , fACCEL_Y_noOffset , fACCEL_Z_noOffset ;
+extern int16_t fACCEL_X_zhihu , fACCEL_Y_zhihu , fACCEL_Z_zhihu;
+extern int16_t fACCEL_X_zhihu_pix , fACCEL_Y_zhihu_pix , fACCEL_Z_zhihu_pix ;
+
 int main(void)
 {
 	static u8 led_on = 0;
@@ -81,21 +88,21 @@ int main(void)
 				outterPid_cnt++;
 				//ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
 				//LED2_ON;
-				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
-				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
+				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
 				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)AccFilterOut.x, (float)AccFilterOut.y, (float)AccFilterOut.z,&outAngle);
-				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
-				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
+				//desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
+				//desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
 				
 				//desireAngle.roll = 0;
 				//desireAngle.pitch = 0;
-				gyroControl(Rc_Data.throttle);
+				//gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。
-				if(outterPid_cnt==2)//4ms
-				{
-					outterPid_cnt = 0;
-					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
-				}
+				//if(outterPid_cnt==2)//4ms
+				//{
+				//	outterPid_cnt = 0;
+				//	angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
+				//}
 				//ControlPID(Rc_Data.throttle);
 				calculateAngle = 0;
 				//LED2_OFF;

@@ -52,30 +52,20 @@ void NRF_Check()
 	{
 		//LED2_OFF;
 	}
-//	SPI1_SetSpeed(SPI_BaudRatePrescaler_8); //spiËÙ¶ÈÎª9Mhz£¨24L01µÄ×î´óSPIÊ±ÖÓÎª10Mhz£©
-//	sta = NRF24L01_Read_Reg(STATUS); 
-//	if (sta & RX_OK) 
-//	{
-//		//LED2_ON;
-//		NRF24L01_Read_Buf(RD_RX_PLOAD, rc_tmp, RX_PLOAD_WIDTH); 
-//		Rc_Data_Analyze(rc_tmp,&Rc_Data);
-//		NRF24L01_Write_Reg(FLUSH_RX, 0xff); 
-//	}
-//	else
-//	{
-//		//LED2_OFF;
-//	}
-//	if(sta & MAX_TX)
-//	{
-//		NRF24L01_Write_Reg(FLUSH_TX, 0xff); 
-//	}
-//	NRF24L01_Write_Reg(WRITE_REG_NRF + STATUS, sta); 
 }
 extern int16_t motor0, motor1, motor2, motor3;
 extern Int16xyz ACC_AVG;
 extern Int16xyz AccFilterOut;
 extern float _a0,_a1,_a2,_b0,_b1,_b2;
-extern int16_t fACCEL_X_6Cali,fACCEL_Y_6Cali , fACCEL_Z_6Cali; //量化的加速度计数据  °/s
+extern int16_t fACCEL_X_6Cali,fACCEL_Y_6Cali , fACCEL_Z_6Cali; //use 6 position static.use bias,Sx,Sy,Sz.
+extern int16_t fACCEL_X_noOffset , fACCEL_Y_noOffset , fACCEL_Z_noOffset ;//raw Mpu6050 register data
+extern int16_t fACCEL_X_zhihu , fACCEL_Y_zhihu , fACCEL_Z_zhihu;//use matlab  lsqcurvefit
+extern int16_t fACCEL_X_zhihu_pix , fACCEL_Y_zhihu_pix , fACCEL_Z_zhihu_pix ; //seem as six position bias and lsqcurvefit combination.but not the same.they consider the orthangal
+extern floatEurlaAngle accOutAngle_bias ;
+extern floatEurlaAngle accOutAngle_offset;
+extern floatEurlaAngle accOutAngle_NOoffset;
+extern floatEurlaAngle accOutAngle_zhihu;
+extern floatEurlaAngle accOutAngle_pix;
 u8 getTX_FIFO_status()
 {
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
@@ -101,7 +91,7 @@ void Data_Transfer()
 		//send_wave(32);
 
 		//Version2
-		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X_6Cali,fACCEL_Y_6Cali,fACCEL_Z_6Cali);
+		send_senserV2(fACCEL_X_6Cali,fACCEL_Y_6Cali,fACCEL_Z_6Cali,fACCEL_X_zhihu, fACCEL_Y_zhihu,fACCEL_Z_zhihu,fACCEL_X_zhihu_pix, fACCEL_Y_zhihu_pix,fACCEL_Z_zhihu_pix);
 		send_wave(23);
 		
 		//send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X,fACCEL_Y,fACCEL_Z);
@@ -114,37 +104,41 @@ void Data_Transfer()
 		//sendPwmVoltage(&Rc_Data,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100));//0.00003974s
 		//send_wave(32);
 		
-		send_statusV2((int16_t)(outAngle.roll* 100),(int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 100),0x00,0x00,1);
+		//send_statusV2((int16_t)(outAngle.roll* 100),(int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 100),0x00,0x00,1);
+		//send_wave(18);
+		send_statusV2((int16_t)(accOutAngle_offset.roll* 100),(int16_t)(accOutAngle_offset.pitch* 100),0x00,0x00,0x00,1);
 		send_wave(18);
+		
 	}
 	else if(send_RcData)
 	{
 		send_RcData = 0;
-		send_rcdataV2(&Rc_Data);
-		send_wave(25);
+		Uart1_send_custom_int16_V2(0xf6,fACCEL_X_noOffset,fACCEL_Y_noOffset,fACCEL_Z_noOffset);
+		send_wave(11);
+		Uart1_send_custom_int16_V2(0xf7,fACCEL_X,fACCEL_Y,fACCEL_Z);
+		send_wave(11);
+
 	}
 	else if(send_PwmWave)
 	{
 		//Data_Send_PwmWave();
+		
+		
 	}
 	if(send_desirePIDAngle)
 	{
 		send_desirePIDAngle = 0;
-		//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
-		//send_wave(10);
-		//给第3帧 第1,2,3位 发送float数据
-		//Uart1_send_custom_float(0xA3,expRoll,expPitch,(Rc_Data.aux3-2046)/1024.0);
-
-		//Uart1_send_custom_float(0xA3,desireAngle.roll,desireAngle.pitch,(Rc_Data.aux3-2046)/1024.0);
-		//send_wave(16);
+//		Uart1_send_custom_float_V2_2(0xf1,accOutAngle_NOoffset.roll,accOutAngle_NOoffset.pitch);
+//		send_wave(13);
+		//Uart1_send_custom_float_V2_2(0xf2,accOutAngle_offset.roll,accOutAngle_offset.pitch);
+		//send_wave(13);
+		Uart1_send_custom_float_V2_2(0xf3,accOutAngle_bias.roll,accOutAngle_bias.pitch);
+		send_wave(13);
+		Uart1_send_custom_float_V2_2(0xf4,accOutAngle_zhihu.roll,accOutAngle_zhihu.pitch);
+		send_wave(13);
+		Uart1_send_custom_float_V2_2(0xf5,accOutAngle_pix.roll,accOutAngle_pix.pitch);
+		send_wave(13);
 		
-		//send three float
-		Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
-		send_wave(17);
-		
-		//send six float check filter param
-		//send_custom_float_V2_6(0xf2,_a0,_a1,_a2,_b0,_b1,_b2);
-		//send_wave(29);
 	}
 }
 /**************************向物理串口发一个字节***************************************
@@ -289,7 +283,7 @@ void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc)
 	putChar(sum);
 }
 
-void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc)
+void Uart1_send_custom_int16_V2(unsigned char fun,int16_t aa,int16_t bb,int16_t cc)
 {
 	unsigned char sum = 0;
 	count=0;
@@ -298,14 +292,66 @@ void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc)
 	sum +=putChar(0xAA);
 	sum +=putChar(fun);
 	
-	sum +=putChar(0x0c);//3个float占12个字节
+	sum +=putChar(0x06);//发送的数据的长度 记得改
+	sum +=Uart1_Put_Int16(aa);//发送16位数据
+	sum +=Uart1_Put_Int16(bb);//发送16位数据  
+	sum +=Uart1_Put_Int16(cc);//发送16位数据  
+	putChar(sum);
+}
+void Uart1_send_custom_int16_V2_6(unsigned char fun,int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x12);//发送的数据的长度 记得改
+	sum +=Uart1_Put_Int16(aa);//发送16位数据
+	sum +=Uart1_Put_Int16(bb);//发送16位数据  
+	sum +=Uart1_Put_Int16(cc);//发送16位数据  
+	sum +=Uart1_Put_Int16(dd);//发送16位数据
+	sum +=Uart1_Put_Int16(ee);//发送16位数据  
+	sum +=Uart1_Put_Int16(ff);//发送16位数据  
+	putChar(sum);
+}
+void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc,float dd,float ee,float ff)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x18);//6个float占24个字节
 	
 	sum +=Uart1_Put_float(aa);//发送16位数据 
 	sum +=Uart1_Put_float(bb);
 	sum +=Uart1_Put_float(cc);
-
+	sum +=Uart1_Put_float(dd);
+	sum +=Uart1_Put_float(ee);
+	sum +=Uart1_Put_float(ff);
 	putChar(sum);
 }
+void Uart1_send_custom_float_V2_2(unsigned char fun,float aa,float bb)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x08);//2个float占8个字节
+	
+	sum +=Uart1_Put_float(aa);//发送16位数据 
+	sum +=Uart1_Put_float(bb);
+	
+	putChar(sum);
+}
+
 void send_custom_float_V2_6(unsigned char fun,float aa,float bb,float cc,float dd,float ee,float ff)
 {
 	unsigned char sum = 0;

@@ -22,14 +22,14 @@ Dialog DLL:      TARMSTM.DLL V1.64.0.0
  
 <h2>Project:</h2>
 D:\future\Sceince\recover\ANO\FLY\User\Project.uvprojx
-Project File Date:  01/12/2017
+Project File Date:  02/23/2017
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Rebuild target 'STM32_Project'
 assembling startup_stm32f10x_md.s...
 compiling main.c...
-main.c(38): warning:  #177-D: variable "led_on" was declared but never referenced
+main.c(45): warning:  #177-D: variable "led_on" was declared but never referenced
         static u8 led_on = 0;
 main.c: 1 warning, 0 errors
 compiling stm32f10x_it.c...
@@ -61,9 +61,9 @@ compiling wave.c...
         static u8 led_on = 0;
 ..\Hardware\wave.c(34): warning:  #177-D: variable "sta" was declared but never referenced
         u8 sta = 0;
-..\Hardware\wave.c(85): warning:  #177-D: variable "FIFOstatus" was declared but never referenced
+..\Hardware\wave.c(76): warning:  #177-D: variable "FIFOstatus" was declared but never referenced
         u8 FIFOstatus = 0x10;
-..\Hardware\wave.c(470): warning:  #177-D: variable "count_1" was declared but never referenced
+..\Hardware\wave.c(517): warning:  #177-D: variable "count_1" was declared but never referenced
         char count_1=0;
 ..\Hardware\wave.c: 4 warnings, 0 errors
 compiling PID.c...
@@ -78,7 +78,7 @@ compiling adc.c...
 compiling filter.c...
 compiling myStruct.c...
 linking...
-Program Size: Code=34494 RO-data=522 RW-data=360 ZI-data=2256  
+Program Size: Code=36518 RO-data=522 RW-data=476 ZI-data=2316  
 FromELF: creating hex file...
 "..\Output\Project.axf" - 0 Error(s), 7 Warning(s).
 
