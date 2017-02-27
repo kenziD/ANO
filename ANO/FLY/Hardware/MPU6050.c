@@ -104,7 +104,7 @@ void Mpu6050_Analyze(void)
 	fACCEL_Y_zhihu_pix  = (signed short int)(fACCEL_X_bias_temp*t2+fACCEL_Y_bias_temp*t5+fACCEL_Z_bias_temp*t8);
 	
 	fACCEL_Z_zhihu_pix  = (signed short int)(fACCEL_X_bias_temp*t3+fACCEL_Y_bias_temp*t6+fACCEL_Z_bias_temp*t9);
-	
+//	
 	fACCEL_X = fACCEL_X>MPU6050_MAX ? MPU6050_MAX:fACCEL_X;
 	fACCEL_X = fACCEL_X<MPU6050_MIN ? MPU6050_MIN:fACCEL_X;
 	fACCEL_Y = fACCEL_Y>MPU6050_MAX ? MPU6050_MAX:fACCEL_Y;
