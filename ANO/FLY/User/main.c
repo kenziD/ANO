@@ -16,7 +16,7 @@ int16_t AngleOut[3];
 extern u8 getMpu6050Data;
 extern u8 calculateAngle;
 extern u8 sendData;
-
+extern int16_t fACCEL_X_zhihu_pix , fACCEL_Y_zhihu_pix , fACCEL_Z_zhihu_pix ;
 u8 send_Senser = 0;
 u8 send_Status = 0;
 u8 send_PwmWave = 0;
@@ -72,7 +72,8 @@ int main(void)
 			att_cnt++;
 			Read_Mpu6050(); 
 			Mpu6050_Analyze();
-			moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
+			//moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
+			moveFilterAccData(fACCEL_X_zhihu_pix,fACCEL_Y_zhihu_pix,fACCEL_Z_zhihu_pix,&ACC_AVG );
 		
 			getMpu6050Data = 0;
 			if(att_cnt==2)
