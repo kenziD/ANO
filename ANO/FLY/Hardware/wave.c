@@ -117,7 +117,6 @@ void Data_Transfer()
 		send_wave(11);
 		Uart1_send_custom_int16_V2(0xf7,fACCEL_X,fACCEL_Y,fACCEL_Z);
 		send_wave(11);
-
 	}
 	else if(send_PwmWave)
 	{

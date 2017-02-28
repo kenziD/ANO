@@ -79,7 +79,7 @@ int main(void)
 			att_cnt++;
 			Read_Mpu6050(); 
 			Mpu6050_Analyze();
-			moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
+			moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG);
 		
 			getMpu6050Data = 0;
 			if(att_cnt==2)
