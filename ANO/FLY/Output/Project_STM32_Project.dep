@@ -1,6 +1,6 @@
 Dependencies for Project 'Project', Target 'STM32_Project': (DO NOT MODIFY !)
 F (..\CMSIS\Startup\startup_stm32f10x_md.s)(0x57318AA2)(--cpu Cortex-M3 -g --apcs=interwork -I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 515" --pd "STM32F10X_MD SETA 1"--list ..\listing\startup_stm32f10x_md.lst --xref -o ..\output\startup_stm32f10x_md.o --depend ..\output\startup_stm32f10x_md.d)
-F (.\main.c)(0x58B3FD2D)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\main.o --omf_browse ..\output\main.crf --depend ..\output\main.d)
+F (.\main.c)(0x58B7A6B6)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\main.o --omf_browse ..\output\main.crf --depend ..\output\main.d)
 I (..\Hardware\config.h)(0x58AED35B)
 I (..\CMSIS\stm32f10x.h)(0x57318AA2)
 I (..\CMSIS\core_cm3.h)(0x57318AA2)
@@ -51,7 +51,7 @@ I (..\Hardware\timer.h)(0x5800452E)
 I (..\Hardware\adc.h)(0x58AED29E)
 I (..\Hardware\Rc.h)(0x58AED35B)
 I (..\Hardware\APP\filter.h)(0x58AED35B)
-I (..\Hardware\wave.h)(0x58B3F707)
+I (..\Hardware\wave.h)(0x58B7A302)
 F (.\stm32f10x_it.c)(0x58AED35C)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\stm32f10x_it.o --omf_browse ..\output\stm32f10x_it.crf --depend ..\output\stm32f10x_it.d)
 I (stm32f10x_it.h)(0x57318AA3)
 I (..\CMSIS\stm32f10x.h)(0x57318AA2)
@@ -86,7 +86,7 @@ I (..\Hardware\ANO_TC_STM32F1_I2C.h)(0x57F78BC7)
 I (..\Hardware\LED.h)(0x58AED29E)
 I (..\Hardware\usart.h)(0x57454F60)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x54C245B8)
-I (..\Hardware\wave.h)(0x58B3F707)
+I (..\Hardware\wave.h)(0x58B7A302)
 I (..\Hardware\Rc.h)(0x58AED35B)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5810B304)
 I (..\Hardware\delay.h)(0x57318AA2)
@@ -679,7 +679,7 @@ I (..\Hardware\timer.h)(0x5800452E)
 I (..\Hardware\adc.h)(0x58AED29E)
 I (..\Hardware\Rc.h)(0x58AED35B)
 I (..\Hardware\APP\filter.h)(0x58AED35B)
-F (..\Hardware\IMU.C)(0x58B3F707)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\imu.o --omf_browse ..\output\imu.crf --depend ..\output\imu.d)
+F (..\Hardware\IMU.C)(0x58B58336)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\imu.o --omf_browse ..\output\imu.crf --depend ..\output\imu.d)
 I (..\Hardware\config.h)(0x58AED35B)
 I (..\CMSIS\stm32f10x.h)(0x57318AA2)
 I (..\CMSIS\core_cm3.h)(0x57318AA2)
@@ -730,7 +730,7 @@ I (..\Hardware\timer.h)(0x5800452E)
 I (..\Hardware\adc.h)(0x58AED29E)
 I (..\Hardware\Rc.h)(0x58AED35B)
 I (..\Hardware\APP\filter.h)(0x58AED35B)
-F (..\Hardware\MPU6050.c)(0x58B3FD2E)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\mpu6050.o --omf_browse ..\output\mpu6050.crf --depend ..\output\mpu6050.d)
+F (..\Hardware\MPU6050.c)(0x58B58336)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\mpu6050.o --omf_browse ..\output\mpu6050.crf --depend ..\output\mpu6050.d)
 I (..\Hardware\MPU6050.h)(0x58AED35B)
 I (..\CMSIS\stm32f10x.h)(0x57318AA2)
 I (..\CMSIS\core_cm3.h)(0x57318AA2)
@@ -879,8 +879,8 @@ I (..\FWlib\inc\stm32f10x_tim.h)(0x57318AA2)
 I (..\FWlib\inc\stm32f10x_usart.h)(0x57318AA2)
 I (..\FWlib\inc\stm32f10x_wwdg.h)(0x57318AA2)
 I (..\FWlib\inc\misc.h)(0x57318AA2)
-F (..\Hardware\wave.c)(0x58B3F707)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\wave.o --omf_browse ..\output\wave.crf --depend ..\output\wave.d)
-I (..\Hardware\wave.h)(0x58B3F707)
+F (..\Hardware\wave.c)(0x58B58336)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP-I D:\future\Sceince\recover\ANO\FLY\User\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="515" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_MD-o ..\output\wave.o --omf_browse ..\output\wave.crf --depend ..\output\wave.d)
+I (..\Hardware\wave.h)(0x58B7A302)
 I (..\Hardware\usart.h)(0x57454F60)
 I (..\CMSIS\stm32f10x.h)(0x57318AA2)
 I (..\CMSIS\core_cm3.h)(0x57318AA2)

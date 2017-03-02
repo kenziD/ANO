@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\Output\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\Output\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050169: Last Updated: Mon Feb 27 18:19:41 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050169: Last Updated: Thu Mar 02 12:59:50 2017
 <BR><P>
 <H3>Maximum Stack Usage =        288 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -341,7 +341,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_setup_stackheap
 </UL>
 
-<P><STRONG><a name="[43]"></a>main</STRONG> (Thumb, 584 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[43]"></a>main</STRONG> (Thumb, 468 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = main &rArr; IMU_Quateration_Update &rArr; atan2 &rArr; atan &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveFilterAccData
@@ -683,8 +683,9 @@ Global Symbols
 
 <P><STRONG><a name="[1a1]"></a>USART_LINCmd</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text), UNUSED)
 
-<P><STRONG><a name="[9c]"></a>USART_SendData</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text), UNUSED)
+<P><STRONG><a name="[9c]"></a>USART_SendData</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fputc
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_wave
 </UL>
 
 <P><STRONG><a name="[9f]"></a>USART_ReceiveData</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text))
@@ -712,9 +713,10 @@ Global Symbols
 
 <P><STRONG><a name="[1ab]"></a>USART_IrDACmd</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text), UNUSED)
 
-<P><STRONG><a name="[9d]"></a>USART_GetFlagStatus</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text), UNUSED)
+<P><STRONG><a name="[9d]"></a>USART_GetFlagStatus</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fgetc
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fputc
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_wave
 </UL>
 
 <P><STRONG><a name="[1ac]"></a>USART_ClearFlag</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, stm32f10x_usart.o(.text), UNUSED)
@@ -1751,15 +1753,11 @@ Global Symbols
 <LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_TxPacket
 </UL>
 
-<P><STRONG><a name="[e6]"></a>NRF24L01_TxPacket</STRONG> (Thumb, 84 bytes, Stack size 16 bytes, 24l01.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = NRF24L01_TxPacket &rArr; NRF24L01_Write_Buf &rArr; SPI1_ReadWriteByte
-</UL>
-<BR>[Calls]<UL><LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_SetSpeed
+<P><STRONG><a name="[e6]"></a>NRF24L01_TxPacket</STRONG> (Thumb, 84 bytes, Stack size 16 bytes, 24l01.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_SetSpeed
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_Read_Reg
 <LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_Write_Reg
 <LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_Write_Buf
-</UL>
-<BR>[Called By]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_wave
 </UL>
 
 <P><STRONG><a name="[e7]"></a>NRF24L01_RxPacket</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, 24l01.o(.text))
@@ -1846,10 +1844,11 @@ Global Symbols
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_Read_Reg
 </UL>
 
-<P><STRONG><a name="[f0]"></a>send_wave</STRONG> (Thumb, 18 bytes, Stack size 16 bytes, wave.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = send_wave &rArr; NRF24L01_TxPacket &rArr; NRF24L01_Write_Buf &rArr; SPI1_ReadWriteByte
+<P><STRONG><a name="[f0]"></a>send_wave</STRONG> (Thumb, 50 bytes, Stack size 16 bytes, wave.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = send_wave
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_TxPacket
+<BR>[Calls]<UL><LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_GetFlagStatus
+<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_SendData
 </UL>
 <BR>[Called By]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Data_Transfer
 </UL>
@@ -1930,7 +1929,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Data_Transfer
 </UL>
 
-<P><STRONG><a name="[fa]"></a>send_senserV2</STRONG> (Thumb, 204 bytes, Stack size 36 bytes, wave.o(.text))
+<P><STRONG><a name="[fa]"></a>send_senserV2</STRONG> (Thumb, 206 bytes, Stack size 36 bytes, wave.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = send_senserV2 &rArr; Uart1_Put_Int16
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Uart1_Put_Int16
@@ -2015,7 +2014,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receive_Data
 </UL>
 
-<P><STRONG><a name="[108]"></a>receive_Data</STRONG> (Thumb, 512 bytes, Stack size 48 bytes, wave.o(.text), UNUSED)
+<P><STRONG><a name="[108]"></a>receive_Data</STRONG> (Thumb, 516 bytes, Stack size 48 bytes, wave.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 <LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
