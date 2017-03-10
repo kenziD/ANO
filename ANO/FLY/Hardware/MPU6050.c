@@ -346,7 +346,7 @@ void Mpu6050init(void)
 	Delay_ms_mpu(50);
 	//MPU6050_setSampleRate(0x07);
 	//Delay_ms_mpu(50);
-	MPU6050_setDLPF(MPU6050_DLPF_BW_5);
+	MPU6050_setDLPF(MPU6050_DLPF_BW_42);
 	Delay_ms_mpu(50);
 	MPU6050_setI2CMasterModeEnabled(0);	 //不让MPU6050 控制AUXI2C
 	Delay_ms_mpu(50);

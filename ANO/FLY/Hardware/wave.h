@@ -9,7 +9,7 @@
 
 #include "usart.h"
 #include "Rc.h"
-#define DATA_TRANSFER_USE_USART
+//#define DATA_TRANSFER_USE_USART
 #define DATA_TRANSFER_USE_SPI_NRF
 
 #define ACK_OK 0

@@ -45,12 +45,12 @@ void NRF_Check()
 //       led_on = 1;
 //    }
 		//10us
-		//LED2_ON;
+		LED2_ON;
 		Rc_Data_Analyze(rc_tmp,&Rc_Data);
 	}
 	else
 	{
-		//LED2_OFF;
+		LED2_OFF;
 	}
 //	SPI1_SetSpeed(SPI_BaudRatePrescaler_8); //spiËÙ¶ÈÎª9Mhz£¨24L01µÄ×î´óSPIÊ±ÖÓÎª10Mhz£©
 //	sta = NRF24L01_Read_Reg(STATUS); 
@@ -100,10 +100,13 @@ void Data_Transfer()
 		//send_wave(32);
 
 		//Version2
-		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		//send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		//send_wave(23);
+		
+		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, ACC_AVG.x, ACC_AVG.y, ACC_AVG.z);
 		send_wave(23);
 		
-		//send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X,fACCEL_Y,fACCEL_Z);
+		//send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
 		//send_wave(23);
 		
 	}
