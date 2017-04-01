@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CMSIS;..\FWlib\inc;..\FWlib\src;..\User;..\Hardware;..\Hardware\sys;..\Hardware\APP</IncludePath>
+              <IncludePath>..\CMSIS;..\FWlib\inc;..\FWlib\src;..\User;..\Hardware;..\Hardware\sys;..\Hardware\APP;..\Hardware\ekf</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

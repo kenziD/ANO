@@ -1,4 +1,4 @@
--c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP
+-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\CMSIS -I..\FWlib\inc -I..\FWlib\src -I..\User -I..\Hardware -I..\Hardware\sys -I..\Hardware\APP -I..\Hardware\ekf
 -I D:\future\Sceince\recover\ANO\FLY\User\RTE
 -I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include
 -I C:\Keil_v5\ARM\CMSIS\Include
