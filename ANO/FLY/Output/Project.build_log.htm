@@ -22,7 +22,7 @@ Dialog DLL:      TARMSTM.DLL V1.64.0.0
  
 <h2>Project:</h2>
 D:\future\Sceince\recover\ANO\FLY\User\Project.uvprojx
-Project File Date:  02/23/2017
+Project File Date:  04/01/2017
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
@@ -31,15 +31,7 @@ assembling startup_stm32f10x_md.s...
 compiling main.c...
 main.c(38): warning:  #177-D: variable "led_on" was declared but never referenced
         static u8 led_on = 0;
-main.c(39): warning:  #177-D: variable "send_Senser_cnt" was declared but never referenced
-        static u8 send_Senser_cnt = 0;
-main.c(40): warning:  #177-D: variable "send_Status_cnt" was declared but never referenced
-        static u8 send_Status_cnt = 0;
-main.c(41): warning:  #177-D: variable "send_RcData_cnt" was declared but never referenced
-        static u8 send_RcData_cnt = 0;
-main.c(42): warning:  #177-D: variable "send_desirePIDAngle_cnt" was declared but never referenced
-        static u8 send_desirePIDAngle_cnt = 0;
-main.c: 5 warnings, 0 errors
+main.c: 1 warning, 0 errors
 compiling stm32f10x_it.c...
 compiling misc.c...
 compiling stm32f10x_gpio.c...
@@ -71,7 +63,9 @@ compiling wave.c...
         u8 sta = 0;
 ..\Hardware\wave.c(85): warning:  #177-D: variable "FIFOstatus" was declared but never referenced
         u8 FIFOstatus = 0x10;
-..\Hardware\wave.c: 3 warnings, 0 errors
+..\Hardware\wave.c(470): warning:  #177-D: variable "count_1" was declared but never referenced
+        char count_1=0;
+..\Hardware\wave.c: 4 warnings, 0 errors
 compiling PID.c...
 compiling timer.c...
 compiling Rc.c...
@@ -84,9 +78,9 @@ compiling adc.c...
 compiling filter.c...
 compiling myStruct.c...
 linking...
-Program Size: Code=34914 RO-data=518 RW-data=424 ZI-data=2256  
+Program Size: Code=35018 RO-data=518 RW-data=424 ZI-data=2256  
 FromELF: creating hex file...
-"..\Output\Project.axf" - 0 Error(s), 10 Warning(s).
+"..\Output\Project.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   D:\future\Sceince\recover\ANO\FLY\User\RTE
