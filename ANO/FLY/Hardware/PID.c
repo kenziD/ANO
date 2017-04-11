@@ -167,7 +167,7 @@ void angleControl(floatEurlaAngle *outAngle, floatEurlaAngle *desireAngle, int16
     if (PID_ROLL.intergral > PID_ROLL.Imax) PID_ROLL.intergral = PID_ROLL.Imax;
     if (PID_ROLL.intergral < -PID_ROLL.Imax) PID_ROLL.intergral = -PID_ROLL.Imax;
 
-    // I guess it is afraid intergraling when quadcoptor not take off will cause large error.
+    // I guess it is afraid intergraling when quadcoptor not take off will cause large error.Intergra Devide Method
     if (expThro < 200)
     {
         PID_ROLL.intergral  = 0;
