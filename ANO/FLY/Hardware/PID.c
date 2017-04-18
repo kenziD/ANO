@@ -56,15 +56,15 @@ void PID_Init(void)
     PID_YAW.intergral = 0;
     PID_YAW.output = 0;
 
-    PID_GYRO_ROLL.KP = 2.5;
-    PID_GYRO_ROLL.KI = 0.02;
-    PID_GYRO_ROLL.KD = 13.5;
+    PID_GYRO_ROLL.KP = 2.8;
+    PID_GYRO_ROLL.KI = 0.00;
+    PID_GYRO_ROLL.KD = 12.1;
     PID_GYRO_ROLL.Imax = 5000;
     PID_GYRO_ROLL.intergral = 0;
     PID_GYRO_ROLL.output = 0;
 
-    PID_GYRO_PITCH.KP = 3.2;
-    PID_GYRO_PITCH.KI = 0.02;
+    PID_GYRO_PITCH.KP = 1.76;
+    PID_GYRO_PITCH.KI = 0.00;
     PID_GYRO_PITCH.KD = 15;
     PID_GYRO_PITCH.Imax = 5000;
     PID_GYRO_PITCH.intergral = 0;
