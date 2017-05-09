@@ -47,13 +47,14 @@ int main(void)
 			}
 			//全部发送串口
 			rx_len = NRF24L01_Read_Reg(R_RX_PL_WID);//2401寄存器，值为0x60
-			send_wave(rx_len,tmp_buf);
+			
 		}
 		else
 		{
 			LED1_OFF;
 			//LED1_Flash(2,500000);
 		}
+		send_wave(rx_len,tmp_buf);
 		if(g_LoadRcReadyFlag==1)
 		{
 			g_LoadRcReadyFlag = 0;

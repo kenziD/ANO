@@ -73,11 +73,16 @@ void Mpu6050_Analyze(void)
 {
 //	ID = Single_Read_Mpu6050(Mpu6050_Address, WHO_AM_I);
 
-	fGYRO_X  =	((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]) - Gx_offset;
+//	fGYRO_X  =	((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]) - Gx_offset;
 
-	fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) - Gy_offset;
+//	fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) - Gy_offset;
 
-	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
+//	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
+	fGYRO_X  =	((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]) ;
+
+	fGYRO_Y  =	((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11]) ;
+
+	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) ;
 //	//要转换成弧度 要不然到四元数哪里也要/180*pi 但为啥拿去四元数运算的要转成弧度
 
 //	fACCEL_X  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1])  -Ax_offset;
@@ -91,11 +96,18 @@ void Mpu6050_Analyze(void)
 
 	fACCEL_Z_noOffset  =	((((int16_t)mpu6050_buffer[4]) << 8) | mpu6050_buffer[5]);
 	
-	fACCEL_X  =	fACCEL_X_noOffset - Ax_offset;
+//	fACCEL_X  =	fACCEL_X_noOffset - Ax_offset;
 
-	fACCEL_Y  =	fACCEL_Y_noOffset - Ay_offset;
+//	fACCEL_Y  =	fACCEL_Y_noOffset - Ay_offset;
 
-	fACCEL_Z  =	fACCEL_Z_noOffset -Az_offset;
+//	fACCEL_Z  =	fACCEL_Z_noOffset -Az_offset;
+
+	fACCEL_X  =	fACCEL_X_noOffset ;
+
+	fACCEL_Y  =	fACCEL_Y_noOffset ;
+
+	fACCEL_Z  =	fACCEL_Z_noOffset ;
+
 	fACCEL_X_bias_temp  =	fACCEL_X_noOffset - Ax_bias;
 	fACCEL_Y_bias_temp  =	fACCEL_Y_noOffset - Ay_bias;
 	fACCEL_Z_bias_temp  =	fACCEL_Z_noOffset - Az_bias;
@@ -346,7 +358,7 @@ void Mpu6050init(void)
 	Delay_ms_mpu(50);
 	//MPU6050_setSampleRate(0x07);
 	//Delay_ms_mpu(50);
-	MPU6050_setDLPF(MPU6050_DLPF_BW_42);
+	MPU6050_setDLPF(MPU6050_DLPF_BW_256);
 	Delay_ms_mpu(50);
 	MPU6050_setI2CMasterModeEnabled(0);	 //不让MPU6050 控制AUXI2C
 	Delay_ms_mpu(50);
