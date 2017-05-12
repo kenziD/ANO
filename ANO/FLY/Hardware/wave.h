@@ -36,4 +36,6 @@ void sendSenserPackage(void);
 void send_statusV2(int16_t rol, int16_t pitch, int16_t yaw, int16_t alt_cbs, int32_t alt_prs, u8 armed);
 void send_senserV2(int16_t acc_x, int16_t acc_y, int16_t acc_z, int16_t gyro_x, int16_t gyro_y, int16_t gyro_z, int16_t mag_x, int16_t mag_y, int16_t mag_z);
 void send_rcdataV2(Define_Rc_Data *rc_data);
+void Uart1_send_custom_int16_V2(unsigned char fun,int16_t aa);
+void Uart1_send_custom_float_V2_2(unsigned char fun,float aa,float bb);
 #endif /* WAVE_H_ */

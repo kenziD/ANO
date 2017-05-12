@@ -33,6 +33,7 @@
 "..\output\adc.o"
 "..\output\filter.o"
 "..\output\mystruct.o"
+"..\output\hy_srf05.o"
 --strict --scatter "..\Output\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

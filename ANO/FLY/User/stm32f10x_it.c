@@ -155,6 +155,8 @@ u8 calculateAngle = 0;
 u8 sendData = 0;
 u8 ms1_cnt = 0;
 u8 ms2_cnt = 0;
+u8 led_on=0;
+int usound_ms1_cnt = 0;
 void TIM3_IRQHandler(void)    //0.5ms中断一次
 {
 //	static u8 led_on = 0;
@@ -165,12 +167,14 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
     TIM3->SR = ~TIM_FLAG_Update;//TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志
     ms1_cnt++;
 		ms2_cnt++;
+		
 		if (ms1_cnt == 2) //1ms
     {
       getMpu6050Data=1;
 			sendData=1;
 			ms1_cnt = 0;
     }
+		
 //		if(ms2_cnt == 4)
 //		{
 //			calculateAngle=1;
@@ -184,6 +188,49 @@ void TIM3_IRQHandler(void)    //0.5ms中断一次
 		//}
   }
 }
+
+u8  TIM4CH4_CAPTURE_STA=0;	//输入捕获状态		    				
+u16	TIM4CH4_CAPTURE_VAL;	//输入捕获值
+//定时器5中断服务程序
+void TIM4_IRQHandler(void)
+{
+
+    if ((TIM4CH4_CAPTURE_STA & 0X80) == 0) //还未成功捕获（成功捕获标志位为0）
+    {
+        if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
+        {
+            if (TIM4CH4_CAPTURE_STA & 0X40) //已经捕获过高电平了 等待下降沿的到来的过程中：可能脉冲太长，超出范围->强制认为捕获完成。
+                                                                                            //如果没有太长，则高电平溢出计数器累加
+            {
+                if ((TIM4CH4_CAPTURE_STA & 0X3F) == 0X3F) //强制标记捕获完成
+                {
+                    TIM4CH4_CAPTURE_STA |= 0X80; //标记成功捕获了一次
+                    TIM4CH4_CAPTURE_VAL = 0XFFFF;
+                } else TIM4CH4_CAPTURE_STA++;
+            }
+        }
+        if (TIM_GetITStatus(TIM4, TIM_IT_CC4) != RESET)//捕获1发生捕获事件：捕获下降（捕获过上升了，还没捕获到下降）；捕获上升（还没成功捕获到上升）
+        {
+            if (TIM4CH4_CAPTURE_STA & 0X40)     //捕获过上升了(标志位至1)，还没捕获到下降，这次捕获到一个下降沿
+            {
+                TIM4CH4_CAPTURE_STA |= 0X80;    //标记成功捕获到一次上升沿（其他位保持不动，完成捕获标志位至1）
+                TIM4CH4_CAPTURE_VAL = TIM_GetCapture4(TIM4);
+                TIM_OC4PolarityConfig(TIM4, TIM_ICPolarity_Rising); //CC1P=0 设置为上升沿捕获
+            } else                               //还没成功捕获到上升：这次捕获的是任务中的第一次上升。
+            {
+                TIM4CH4_CAPTURE_STA = 0;        //清空
+                TIM4CH4_CAPTURE_VAL = 0;
+                TIM_SetCounter(TIM4, 0);
+                TIM4CH4_CAPTURE_STA |= 0X40;    //标记捕获到了上升沿
+                TIM_OC4PolarityConfig(TIM4, TIM_ICPolarity_Falling);    //CC1P=1 设置为下降沿捕获
+            }
+        }
+    }
+
+    TIM_ClearITPendingBit(TIM4, TIM_IT_CC4 | TIM_IT_Update); //清除中断标志位
+
+}
+
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

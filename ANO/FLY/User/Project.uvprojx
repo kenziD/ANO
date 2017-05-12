@@ -602,6 +602,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\APP\myStruct.c</FilePath>
             </File>
+            <File>
+              <FileName>HY_SRF05.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\HY_SRF05.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

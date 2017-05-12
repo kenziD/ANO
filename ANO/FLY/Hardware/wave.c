@@ -80,6 +80,7 @@ u8 getTX_FIFO_status()
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
 	return NRF24L01_Read_Reg(NRF_FIFO_STATUS);
 }
+extern float usound_height;
 void Data_Transfer()
 {
 	u8 FIFOstatus = 0x10;
@@ -100,7 +101,7 @@ void Data_Transfer()
 		//send_wave(32);
 
 		//Version2
-		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z, fGYRO_X, fGYRO_Y,fGYRO_Z,0x00 ,0x00,0x00);
 		send_wave(23);
 		
 		//send_senserV2(AccFilterOut.x, AccFilterOut.y,AccFilterOut.z, fGYRO_X, fGYRO_Y,fGYRO_Z, fACCEL_X,fACCEL_Y,fACCEL_Z);
@@ -114,7 +115,9 @@ void Data_Transfer()
 		//send_wave(32);
 		
 		send_statusV2((int16_t)(outAngle.roll* 100),(int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 100),0x00,0x00,1);
-		send_wave(18);
+		send_wave(20);
+
+		
 	}
 	else if(send_RcData)
 	{
@@ -129,6 +132,8 @@ void Data_Transfer()
 	if(send_desirePIDAngle)
 	{
 		send_desirePIDAngle = 0;
+		Uart1_send_custom_float_V2_2(0xf1,usound_height,0.2);
+		send_wave(13);
 		//Uart1_send_custom_three_int16((int16_t)(ypr[2]),(int16_t)(ypr[1]),(int16_t)(ypr[0]));
 		//send_wave(10);
 		//给第3帧 第1,2,3位 发送float数据
@@ -138,8 +143,8 @@ void Data_Transfer()
 		//send_wave(16);
 		
 		//send three float
-		Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
-		send_wave(17);
+		//Uart1_send_custom_float_V2(0xf1,desireAngle.roll,desireAngle.pitch,0);
+		//send_wave(17);
 		
 		//send six float check filter param
 		//send_custom_float_V2_6(0xf2,_a0,_a1,_a2,_b0,_b1,_b2);
@@ -210,83 +215,7 @@ unsigned char Uart1_Put_float(float DataToSend)
 	return sum;
 }
 
-/****************给第一帧 第一位 发送uint16_t数据*************/
-void Uart1_send_custom_uint16(uint16_t aa)
-{
-	
-	unsigned char sum = 0;
-	count=0;
 
-	sum +=putChar(0x88);
-	sum +=putChar(0xA1);
-	
-	sum +=putChar(0x02);//发送的数据的长度 记得改
-	sum +=Uart1_Put_UInt16(aa);//发送16位数据 
- 
-	putChar(sum);
-}
-/****************给第一帧 第一位 发送int16_t数据*************/
-void Uart1_send_custom_int16(int16_t aa)
-{
-	unsigned char sum = 0;
-	count=0;
-
-	sum +=putChar(0x88);
-	sum +=putChar(0xA1);
-	
-	sum +=putChar(0x02);//发送的数据的长度 记得改
-	sum +=Uart1_Put_Int16(aa);//发送16位数据  
-	putChar(sum);
-}
-/****************给第一帧 第1,2,3位 发送int16_t数据*************/
-void Uart1_send_custom_three_int16(int16_t aa,int16_t bb,int16_t cc)
-{
-	unsigned char sum = 0;
-	count=0;
-
-	sum +=putChar(0x88);
-	sum +=putChar(0xA1);
-	
-	sum +=putChar(0x06);//发送的数据的长度 记得改
-	sum +=Uart1_Put_Int16(aa);//发送16位数据
-	sum +=Uart1_Put_Int16(bb);//发送16位数据  
-	sum +=Uart1_Put_Int16(cc);//发送16位数据    
-	putChar(sum);
-}
-/****************给第2帧 第1,2,3,4位 发送int16_t数据*************/
-void zhen2_send_custom_four_int16(int16_t aa,int16_t bb,int16_t cc,int16_t dd)
-{
-	unsigned char sum = 0;
-	count=0;
-
-	sum +=putChar(0x88);
-	sum +=putChar(0xA2);
-	
-	sum +=putChar(0x08);//发送的数据的长度 记得改
-	sum +=Uart1_Put_Int16(aa);//发送16位数据
-	sum +=Uart1_Put_Int16(bb);//发送16位数据  
-	sum +=Uart1_Put_Int16(cc);//发送16位数据  
-	sum +=Uart1_Put_Int16(dd);//发送16位数据      
-	putChar(sum);
-}
-/****************给第X帧 第X位 发送float数据*************/
-
-void Uart1_send_custom_float(unsigned char fun,float aa,float bb,float cc)
-{
-	unsigned char sum = 0;
-	count=0;
-
-	sum +=putChar(0x88);
-	sum +=putChar(fun);
-	
-	sum +=putChar(0x0c);//3个float占12个字节
-	
-	sum +=Uart1_Put_float(aa);//发送16位数据 
-	sum +=Uart1_Put_float(bb);
-	sum +=Uart1_Put_float(cc);
-
-	putChar(sum);
-}
 
 void Uart1_send_custom_float_V2(unsigned char fun,float aa,float bb,float cc)
 {
@@ -325,146 +254,9 @@ void send_custom_float_V2_6(unsigned char fun,float aa,float bb,float cc,float d
 
 	putChar(sum);
 }
-void Uart1_send_custom_PID(uint8_t aa)
-{
-	unsigned char sum = 0;
-	count=0;
-
-	sum +=putChar(0x88);
-	sum +=putChar(0xA1);
-	
-	sum +=putChar(0x01);//PID数据占32个字节 分32次发送每次发送一个字节。循环32次喽。
-	
-	sum +=putChar(aa);
-
-	putChar(sum);
-}
-void sendSenser(int16_t aa,int16_t bb,int16_t cc,int16_t dd,int16_t ee,int16_t ff,int16_t roll,int16_t pitch,int16_t yaw)
-{
-	unsigned char sum = 0;
-	count=0;
-	sum += putChar(0x88);
-	sum += putChar(0xAF);
-	sum += putChar(0x1C);
-	sum += putChar(BYTE1(aa));//1
-	sum += putChar(BYTE0(aa));
-	sum += putChar(BYTE1(bb));//2
-	sum += putChar(BYTE0(bb));
-	sum += putChar(BYTE1(cc));//3 ACC DATA
-	sum += putChar(BYTE0(cc));
-	sum += putChar(BYTE1(dd));//4
-	sum += putChar(BYTE0(dd));
-	sum += putChar(BYTE1(ee));//5
-	sum += putChar(BYTE0(ee));
-	sum += putChar(BYTE1(ff));//6 GYRO DATA
-	sum += putChar(BYTE0(ff));
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);//磁力计
-	sum += putChar(BYTE1(roll));//7 ANGLE DATA ROLL
-	sum += putChar(BYTE0(roll));
-	sum += putChar(BYTE1(pitch));//8 PITCH
-	sum += putChar(BYTE0(pitch));
-	sum += putChar(BYTE1(yaw));//9 YAW
-	sum += putChar(BYTE0(yaw));
-	
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(sum);
-}
-void sendPwmVoltage(Define_Rc_Data *rc_data,uint16_t aa,uint16_t bb,uint16_t cc,uint16_t dd)
-{
-	unsigned char sum = 0;
-	float voltage_temp = ADC_ConvertedValue*2*3.3/4096.0;//四轴电压
-
-	u16 v_100 = voltage_temp*100;
-	u16 pwm_vol = voltage_temp*100*rc_data->throttle/999.0;
-	count=0;
-
-	sum += putChar(0x88);
-	sum += putChar(0xAE);
-	sum += putChar(0x1C);
-	
-	sum += putChar(BYTE1(rc_data->throttle));
-	sum += putChar(BYTE0(rc_data->throttle));//throttle
-	sum += putChar(BYTE1(rc_data->yaw));
-	sum += putChar(BYTE0(rc_data->yaw));//yaw
-	sum += putChar(BYTE1(rc_data->roll));
-	sum += putChar(BYTE0(rc_data->roll));//roll
-	sum += putChar(BYTE1(rc_data->pitch));
-	sum += putChar(BYTE0(rc_data->pitch));//pitch
-	sum += putChar(BYTE1(rc_data->aux1));
-	sum += putChar(BYTE0(rc_data->aux1));//aux1
-	sum += putChar(BYTE1(rc_data->aux2));
-	sum += putChar(BYTE0(rc_data->aux2));//aux2
-	sum += putChar(BYTE1(rc_data->aux3));
-	sum += putChar(BYTE0(rc_data->aux3));//aux3
-	sum += putChar(BYTE1(v_100));	//电池
-	sum += putChar(BYTE0(v_100));//aux 4
-	putChar(0);
-	putChar(0);//aux 5
-	
-	sum += putChar(BYTE1(aa));//PWM 1
-	sum += putChar(BYTE0(aa));
-	sum += putChar(BYTE1(bb));//PWM 2
-	sum += putChar(BYTE0(bb));
-	sum += putChar(BYTE1(cc));//PWM 3
-	sum += putChar(BYTE0(cc));
-	sum += putChar(BYTE1(dd));//PWM 4
-	sum += putChar(BYTE0(dd));
-	sum += putChar(BYTE1(pwm_vol));//VOLTAGE
-	sum += putChar(BYTE0(pwm_vol));
-	putChar(sum);
-}
 
 
-void Uart1_Send_PID(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,uint16_t pit_i,uint16_t pit_d)
-{
-	unsigned char sum = 0;
-	count=0;
-	sum += putChar(0x88);
-	sum += putChar(0xAC);
-	sum += putChar(0x1C);
-	sum += putChar(0xAD);
-	
-	sum += putChar(BYTE1(rol_p));//
-	sum += putChar(BYTE0(rol_p));
-	sum += putChar(BYTE1(rol_i));//
-	sum += putChar(BYTE0(rol_i));
-	sum += putChar(BYTE1(rol_d));//
-	sum += putChar(BYTE0(rol_d));
 
-	sum += putChar(BYTE1(pit_p));//
-	sum += putChar(BYTE0(pit_p));
-	sum += putChar(BYTE1(pit_i));//
-	sum += putChar(BYTE0(pit_i));
-	sum += putChar(BYTE1(pit_d));//
-	sum += putChar(BYTE0(pit_d));
-
-  putChar(0);
-	putChar(0);//yaw_p
-	putChar(0);
-	putChar(0);//yaw_i
-	putChar(0);
-	putChar(0);//yaw_d
-	
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	putChar(0);
-	
-	putChar(sum);
-}
 void send_wave(int tx_num)//一共发送几个字节,如果是传送到NRF24L01会有应答ack。将应答结果写入rxbuf。这里是利用了应答形成了双向通讯。主函数里会对应答数据进行分析。主要是遥控数据。
 {	
 	char count_1=0;
@@ -486,35 +278,6 @@ void send_wave(int tx_num)//一共发送几个字节,如果是传送到NRF24L01�
 	#endif
 }
 
-/*************************接收********************/
-
-void receive_Data(void)
-{
-	u8 sum = 0;
-	u8 i=0;
-	for(i=0;i<31;i++)
-		sum += Res[i];
-	if(!(sum==Res[31]))		return;		//ÅÐ¶Ïsum
-	if(!(Res[0]==0x8A))		return;		//ÅÐ¶ÏÖ¡Í·
-	if(Res[1]==0X8B&&Res[2]==0x1C)								//判断功能字,=0x8B,为控制数据
-	{
-		if(Res[3]==0XAD)//发送PID
-		{
-			Uart1_Send_PID((uint16_t)(PID_ROLL.KP*100),(uint16_t)(PID_ROLL.KI*100),(uint16_t)(PID_ROLL.KD*100),(uint16_t)(PID_PITCH.KP*100),(uint16_t)(PID_PITCH.KI*100),(uint16_t)(PID_PITCH.KD*100));
-			//send_wave(32);
-		}
-		if(Res[3]==0XAE)//接收PID
-		{
-			PID_ROLL.KP=(float)(Res[4]<<8|Res[5])/100.0;
-			PID_ROLL.KI=(float)(Res[6]<<8|Res[7])/100.0;
-			PID_ROLL.KD=(float)(Res[8]<<8|Res[9])/100.0;
-				
-			PID_PITCH.KP=(float)(Res[10]<<8|Res[11])/100.0;
-			PID_PITCH.KI=(float)(Res[12]<<8|Res[13])/100.0;
-			PID_PITCH.KD=(float)(Res[14]<<8|Res[15])/100.0;
-		}
-	}
-}
 
 /*************************sendData********************/
 
@@ -526,7 +289,7 @@ void send_statusV2(int16_t rol, int16_t pitch, int16_t yaw, int16_t alt_cbs, int
 	sum += putChar(0xAA);
 	sum += putChar(0x01);
 	
-	sum += putChar(0x0D);
+	sum += putChar(0x0F);
 	//13 BYTE not including 0xAA 0xAA 0X01 self and sum.
 	
 //	sum += putChar(BYTE1(rol));
@@ -625,6 +388,35 @@ void send_rcdataV2(Define_Rc_Data *rc_data)
 	//sum += Uart1_Put_Int16(1500);
 	sum += Uart1_Put_Int16(0);//aux5
 	sum += Uart1_Put_Int16(0);//aux6
+	
+	putChar(sum);
+}
+void Uart1_send_custom_int16_V2(unsigned char fun,int16_t aa)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x02);//发送的数据的长度 记得改
+	sum +=Uart1_Put_Int16(aa);//发送16位数据
+	putChar(sum);
+}
+void Uart1_send_custom_float_V2_2(unsigned char fun,float aa,float bb)
+{
+	unsigned char sum = 0;
+	count=0;
+
+	sum +=putChar(0xAA);
+	sum +=putChar(0xAA);
+	sum +=putChar(fun);
+	
+	sum +=putChar(0x08);//2个float占8个字节
+	
+	sum +=Uart1_Put_float(aa);//发送16位数据 
+	sum +=Uart1_Put_float(bb);
 	
 	putChar(sum);
 }

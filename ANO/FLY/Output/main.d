@@ -52,3 +52,4 @@
 ..\output\main.o: ..\Hardware\Rc.h
 ..\output\main.o: ..\Hardware\APP\filter.h
 ..\output\main.o: ..\Hardware\wave.h
+..\output\main.o: ..\Hardware\HY_SRF05.h

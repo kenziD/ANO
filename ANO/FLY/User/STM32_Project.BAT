@@ -36,5 +36,6 @@ SET CPU_CLOCK=0x00F42400
 "C:\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via "..\output\adc.__i"
 "C:\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via "..\output\filter.__i"
 "C:\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via "..\output\mystruct.__i"
+"C:\Keil_v5\ARM\ARMCC\Bin\ArmCC" --Via "..\output\hy_srf05.__i"
 "C:\Keil_v5\ARM\ARMCC\Bin\ArmLink" --Via "..\Output\Project.lnp"
 "C:\Keil_v5\ARM\ARMCC\Bin\fromelf.exe" "..\Output\Project.axf" --i32combined --output "..\Output\Project.hex"
