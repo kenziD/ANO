@@ -15,8 +15,8 @@ int16_t fACCEL_X_noOffset = 0, fACCEL_Y_noOffset = 0, fACCEL_Z_noOffset = 0; //�
 int16_t fACCEL_X_bias_temp = 0, fACCEL_Y_bias_temp = 0, fACCEL_Z_bias_temp = 0; //量化的加速度计数据  °/s
 int16_t fACCEL_X_6Cali = 0, fACCEL_Y_6Cali = 0, fACCEL_Z_6Cali = 0; //量化的加速度计数据  °/s
 //int16_t Ax_bias = 50, Ay_bias = 27, Az_bias = -266;
-int16_t Ax_bias = 36, Ay_bias = 21, Az_bias = -126;
-float Sx = 1.005,Sy = 0.9956,Sz = 0.9955;
+int16_t Ax_bias = 61, Ay_bias = 40, Az_bias = -142;
+float Sx = 1.0050,Sy = 0.9959,Sz = 0.9937;
 
 int16_t fACCEL_X_zhihu = 0, fACCEL_Y_zhihu = 0, fACCEL_Z_zhihu = 0;
 //float a1=1.0032,a2 = -0.0057,a3 = 0.9971,a4=-0.0040,a5=0.9941,a6=0.0306;
@@ -29,7 +29,7 @@ a6=0.0160;
 int16_t unit=8192;
 
 //float t1 =  1.0049f,t2 = 0.0070f,t3 = 0.0048f,t4 = -0.0119f,t5=0.9954f,t6=0.0065f,t7=-0.0042f,t8=-0.0105f,t9=0.9954f;
-float t1 =1.0045,t2 =0.0125,t3 =0.0093,t4 =-0.0182,t5 =0.9953,t6 =-0.0102,t7 =-0.0022,t8 =-0.0088,t9 =0.9951;
+float t1 =1.0045,t2 =0.0083,t3 =0.0313,t4 =-0.0188,t5 =0.9955,t6 =0.0361,t7 =-0.0058,t8 =-0.0087,t9 =0.9932;
 int16_t fACCEL_X_zhihu_pix = 0, fACCEL_Y_zhihu_pix = 0, fACCEL_Z_zhihu_pix = 0;
 
 int16_t Gx_offset = 0, Gy_offset = 0, Gz_offset = 0;
@@ -96,8 +96,6 @@ void Mpu6050_Analyze(void)
 
 	fGYRO_Z  =	((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13]) - Gz_offset;
 //	//要转换成弧度 要不然到四元数哪里也要/180*pi 但为啥拿去四元数运算的要转成弧度
-
-
 	
 	fACCEL_X_noOffset  =	((((int16_t)mpu6050_buffer[0]) << 8) | mpu6050_buffer[1]);
 
