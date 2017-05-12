@@ -61,11 +61,9 @@ extern int16_t fACCEL_X_6Cali,fACCEL_Y_6Cali , fACCEL_Z_6Cali; //use 6 position 
 extern int16_t fACCEL_X_noOffset , fACCEL_Y_noOffset , fACCEL_Z_noOffset ;//raw Mpu6050 register data
 extern int16_t fACCEL_X_zhihu , fACCEL_Y_zhihu , fACCEL_Z_zhihu;//use matlab  lsqcurvefit
 extern int16_t fACCEL_X_zhihu_pix , fACCEL_Y_zhihu_pix , fACCEL_Z_zhihu_pix ; //seem as six position bias and lsqcurvefit combination.but not the same.they consider the orthangal
-extern floatEurlaAngle accOutAngle_bias ;
+
 extern floatEurlaAngle accOutAngle_offset;
-extern floatEurlaAngle accOutAngle_NOoffset;
-extern floatEurlaAngle accOutAngle_zhihu;
-extern floatEurlaAngle accOutAngle_pix;
+extern floatEurlaAngle gyroOutAngle;
 u8 getTX_FIFO_status()
 {
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_8);
@@ -91,11 +89,11 @@ void Data_Transfer()
 		//send_wave(32);
 
 		//Version2
-		send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z,fACCEL_X_6Cali,fACCEL_Y_6Cali,fACCEL_Z_6Cali,fACCEL_X_zhihu_pix, fACCEL_Y_zhihu_pix,fACCEL_Z_zhihu_pix);
-		send_wave(23);
-		
-		//send_senserV2(fACCEL_X_noOffset,fACCEL_Y_noOffset,fACCEL_Z_noOffset,fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		//send_senserV2(fACCEL_X, fACCEL_Y,fACCEL_Z,fACCEL_X_6Cali,fACCEL_Y_6Cali,fACCEL_Z_6Cali,fACCEL_X_zhihu_pix, fACCEL_Y_zhihu_pix,fACCEL_Z_zhihu_pix);
 		//send_wave(23);
+		
+		send_senserV2(fACCEL_X,fACCEL_Y,fACCEL_Z,fGYRO_X, fGYRO_Y,fGYRO_Z, 0x00,0x00,0x00);
+		send_wave(23);
 		
 	}
 	else if(send_Status)
@@ -103,8 +101,8 @@ void Data_Transfer()
 		send_Status = 0;
 		//sendPwmVoltage(&Rc_Data,(uint16_t)(motor0 / 1000.0 * 100), (uint16_t)(motor1 / 1000.0 * 100), (uint16_t)(motor2 / 1000.0 * 100), (uint16_t)(motor3 / 1000.0 * 100));//0.00003974s
 		//send_wave(32);
-		//send_statusV2((int16_t)(outAngle.roll* 100),(int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 100),0x00,0x00,1);
-		//send_wave(18);
+		send_statusV2((int16_t)(outAngle.roll* 100),(int16_t)(outAngle.pitch* 100),(int16_t)(outAngle.yaw* 100),0x00,0x00,1);
+		send_wave(18);
 		//send_statusV2((int16_t)(accOutAngle_offset.roll* 100),(int16_t)(accOutAngle_offset.pitch* 100),0x00,0x00,0x00,1);
 		//send_wave(18);
 		
@@ -123,12 +121,12 @@ void Data_Transfer()
 		
 		
 	}
-	if(send_desirePIDAngle)
+	else if(send_desirePIDAngle)
 	{
 		send_desirePIDAngle = 0;
     //Uart1_send_custom_float_V2_2(0xf1,accOutAngle_NOoffset.roll,accOutAngle_NOoffset.pitch);
     //send_wave(13);
-		Uart1_send_custom_int16_V2_4(0xf1,(int16_t)(accOutAngle_NOoffset.roll*100),(int16_t)(accOutAngle_offset.roll*100),(int16_t)(accOutAngle_bias.roll*100),(int16_t)(accOutAngle_pix.roll*100));
+		Uart1_send_custom_int16_V2_4(0xf1,(int16_t)(accOutAngle_offset.roll*100),(int16_t)(gyroOutAngle.roll*100),(int16_t)(outAngle.roll* 100),0x00);
 		send_wave(13);
 		//Uart1_send_custom_float_V2_2(0xf2,accOutAngle_offset.roll,accOutAngle_offset.pitch);
 		//send_wave(13);
@@ -138,7 +136,6 @@ void Data_Transfer()
 		//send_wave(13);
 		//Uart1_send_custom_float_V2_2(0xf5,accOutAngle_pix.roll,accOutAngle_pix.pitch);
 		//send_wave(13);
-		
 	}
 }
 /**************************向物理串口发一个字节***************************************

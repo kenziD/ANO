@@ -88,23 +88,22 @@ int main(void)
 				outterPid_cnt++;
 				//ButterWorthLPF_2order(&MPU_ACC_READ,&AccFilterOut);
 				//LED2_ON;
-				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
-				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
+				IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)fACCEL_X, (float)fACCEL_Y, (float)fACCEL_Z,&outAngle);
 				//IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)AccFilterOut.x, (float)AccFilterOut.y, (float)AccFilterOut.z,&outAngle);
-				//desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
-				//desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
+				desireAngle.roll = (Rc_Data.aux1-1500)/100.0f+(Rc_Data.roll-1500)/13.0f;
+				desireAngle.pitch = (Rc_Data.aux2-1500)/100.0f+(Rc_Data.pitch-1500)/13.0f;
 				
 				//desireAngle.roll = 0;
 				//desireAngle.pitch = 0;
-				//gyroControl(Rc_Data.throttle);
+				gyroControl(Rc_Data.throttle);
 				//4ms运行一次内环控制。
-				//if(outterPid_cnt==2)//4ms
-				//{
-				//	outterPid_cnt = 0;
-				//	angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
-				//}
-				//ControlPID(Rc_Data.throttle);
-				calculateAngle = 0;
+				if(outterPid_cnt==2)//4ms
+				{
+					outterPid_cnt = 0;
+					angleControl(&outAngle,&desireAngle,Rc_Data.throttle);
+				}
+				//calculateAngle = 0;
 				//LED2_OFF;
 			}
 		}
@@ -137,13 +136,5 @@ int main(void)
 				}
 			sendData = 0;
 		}
-		////Uart1_Send_PID(320,PID_ROLL.KI,PID_ROLL.KD,1,0,0);
-		////send_wave(32);
-		// if (STA == 1)
-		// {
-		// 	receive_Data();
-		// 	STA = 0;
-		// 	p = 0;
-		// }
 	}
 }

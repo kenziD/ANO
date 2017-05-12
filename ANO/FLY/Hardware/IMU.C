@@ -102,18 +102,16 @@ float originAngles[3] = {0};
 float yawOffsetCache = 0,pitchOffsetCache = 0,rollOffsetCache = 0;
 extern float gCalibrate;
 
-floatEurlaAngle accOutAngle_bias = {0.0,0.0,0.0};
 floatEurlaAngle accOutAngle_offset = {0.0,0.0,0.0};
-floatEurlaAngle accOutAngle_NOoffset = {0.0,0.0,0.0};
-floatEurlaAngle accOutAngle_zhihu = {0.0,0.0,0.0};
-floatEurlaAngle accOutAngle_pix = {0.0,0.0,0.0};
+floatEurlaAngle gyroOutAngle = {0.0,0.0,0.0};
+
 void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, float az,floatEurlaAngle *angles){
 //static u16 initCnt = 0;
 //	static float yawSum = 0,pitchSum = 0,rollSum = 0;
 	float norm;
 	float vx, vy, vz;
 	float ex, ey, ez;
-	// 脧脠掳脩脮芒脨漏脫脙碌脙碌陆碌脛脰碌脣茫潞脙
+
 	float q0q0 = q0*q0;
 	float q0q1 = q0*q1;
 	float q0q2 = q0*q2;
@@ -124,19 +122,13 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 	float q2q2 = q2*q2;
 	float q2q3 = q2*q3;
 	float q3q3 = q3*q3;
-	float realGz=0;
-	
-//	now = micros();  //露脕脠隆脢卤录盲
-//	if (now < lastUpdate) { //露篓脢卤脝梅脪莽鲁枚鹿媒脕脣隆拢
-//		halfT =  ((float)(now + (0xffff - lastUpdate)) / 2000000.0f);
-//	}
-//	else	{
-//		halfT =  ((float)(now - lastUpdate) / 2000000.0f);
-//	}
-//lastUpdate = now;	//赂眉脨脗脢卤录盲
+	float realGz=0,realGx=0,realGy=0;
+
 	if(ax*ay*az==0)
 	return;
 	realGz=gz;
+	realGy=gy;
+	realGx=gx;
 	gx *= Gyro_Gr;
 	gy *= Gyro_Gr;
 	gz *= Gyro_Gr;
@@ -204,48 +196,17 @@ void IMU_Quateration_Update(float gx, float gy, float gz, float ax, float ay, fl
 		realGz = 0;
 	}
 	originAngles[0] += realGz*Gyro_G*0.002;
+	//originAngles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
 	originAngles[1] = asin(-2 * q1 * q3 + 2 * q0 * q2) *57.3 ; // pitch
 	originAngles[2] = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) *57.3 ; // roll
+	angles->yaw = originAngles[0];
+	angles->pitch = originAngles[1];
+	angles->roll = originAngles[2];
 	
-	accOutAngle_bias.roll = atan2(fACCEL_Y_6Cali*1.0,fACCEL_Z_6Cali)*57.3;
-	accOutAngle_bias.pitch = -atan2(fACCEL_X_6Cali*1.0,fACCEL_Z_6Cali)*57.3;
+	accOutAngle_offset.roll = atan2(fACCEL_Y,fACCEL_Z)*57.3;
+	accOutAngle_offset.pitch = -atan2(fACCEL_X,fACCEL_Z)*57.3;
 	
-	accOutAngle_offset.roll = atan2(ay,az)*57.3;
-	accOutAngle_offset.pitch = -atan2(ax,az)*57.3;
-	
-	accOutAngle_NOoffset.roll = atan2(fACCEL_Y_noOffset*1.0,fACCEL_Z_noOffset)*57.3;
-	accOutAngle_NOoffset.pitch = -atan2(fACCEL_X_noOffset*1.0,fACCEL_Z_noOffset)*57.3;
-	
-	accOutAngle_zhihu.roll = atan2(fACCEL_Y_zhihu*1.0,fACCEL_Z_zhihu)*57.3;
-	accOutAngle_zhihu.pitch = -atan2(fACCEL_X_zhihu*1.0,fACCEL_Z_zhihu)*57.3;
-	
-	accOutAngle_pix.roll = atan2(fACCEL_Y_zhihu_pix*1.0,fACCEL_Z_zhihu_pix)*57.3;
-	accOutAngle_pix.pitch = -atan2(fACCEL_X_zhihu_pix*1.0,fACCEL_Z_zhihu_pix)*57.3;
-	
-	angles->yaw = originAngles[0]-yawOffsetCache;
-	//angles[0] = atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2 * q2 - 2 * q3 * q3 + 1)*57.3; // yaw
-	angles->pitch = originAngles[1]-pitchOffsetCache;
-	
-	angles->roll = originAngles[2]-rollOffsetCache;
-	if(gCalibrate)
-	{
-		yawOffsetCache = originAngles[0];
-		pitchOffsetCache = originAngles[1];
-		rollOffsetCache = originAngles[2];
-		gCalibrate = 0;
-	}
-//	if(initCnt<=3000)
-//	{
-//		yawSum += angles[0];
-//		pitchSum += angles[1];
-//		rollSum += angles[2];
-//		if(initCnt==3000)
-//		{
-//			yawOffsetCache = yawSum/3000.0;
-//			pitchOffsetCache = pitchSum/3000.0;
-//			rollOffsetCache = rollSum/3000.0;
-//		}
-//		initCnt++;
-//	}
-	}
+	gyroOutAngle.roll += realGx*Gyro_G*0.002;
+	gyroOutAngle.pitch += realGy*Gyro_G*0.002;
+}
 extern float AngleOut[3];
