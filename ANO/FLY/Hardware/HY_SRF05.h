@@ -7,5 +7,6 @@
 void Tim4_Init(void);
 void HYSRF05_Init(void);
 void Ultrasound_Start(void);
+float getHeight(float *measureHeight);
 #endif
 

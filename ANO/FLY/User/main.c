@@ -36,11 +36,9 @@ Int16xyz AccFilterOut = {0,0,0};
 Int16xyz MPU_ACC_READ={0,0,0};
 float gCalibrate = 0;
 extern Define_Rc_Data Rc_Data;
-//超声波
-float usound_height=0;
-extern u8  TIM4CH4_CAPTURE_STA;		    				
-extern u16	TIM4CH4_CAPTURE_VAL;	
-int echo_start=0;
+//超声波 
+float g_rawHeight=0;
+float g_filterHeight=0;
 int main(void)
 {
 	static u8 led_on = 0;
@@ -50,7 +48,7 @@ int main(void)
 	static u8 send_desirePIDAngle_cnt = 0;
 	static u8 att_cnt = 0;
 	static u8 outterPid_cnt = 0;
-	u32 temp=0;
+
 	RCC_HSE_Configuration();
 	SysTick_Init();
 	NVIC_Configuration();
@@ -75,6 +73,7 @@ int main(void)
 	LED3_Flash(2,100);
 	//setCutOffFrequency(500,10);//T=0.02ms fs=1/T=500,Fcut=28Hz;
 	//Ultrasound_Init
+	setCutOffFrequency_HYSRF05(500,50);
 	HYSRF05_Init();
 	Tim4_Init();//1Mhz caculate once(计数一次一个数就是1us)
 	GPIO_ResetBits(GPIOB,GPIO_Pin_8);
@@ -82,25 +81,8 @@ int main(void)
 	while (1)
 	{
 		//Ultrasound_Start();
-		if(TIM4CH4_CAPTURE_STA&0X80)//
-		{
-			temp=TIM4CH4_CAPTURE_STA&0X3F;
-			temp*=65536;//
-			temp+=TIM4CH4_CAPTURE_VAL;//
-			// from us change to (s).*340m/s change to m./2 double distance . /100 to cm.if here is cm,1000 是不是就不用乘了？in PID control end?
-			usound_height=temp/1000.0/1000.0*340/2*100;
-			TIM4CH4_CAPTURE_STA=0;//
-			Ultrasound_Start();
-		}
-//		TIM4->CNT=0;//计数器清0
-//		while(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==0);
-//		TIM_Cmd(TIM4, ENABLE);
-//		while(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==1&&(TIM4->CNT<TIM4->ARR-10));
-//		TIM_Cmd(TIM4, DISABLE);
-//		Uart1_send_custom_int16_V2(0xf2,TIM4->CNT);
-//		send_wave(7);
-//		usound_height=TIM4->CNT/58.8;
- 
+
+	
 		if (getMpu6050Data == 1)//1ms period
 		{
 			att_cnt++;
@@ -109,7 +91,11 @@ int main(void)
 			moveFilterAccData(fACCEL_X,fACCEL_Y,fACCEL_Z,&ACC_AVG );
 			//moveFilterAccData(fACCEL_X_zhihu_pix,fACCEL_Y_zhihu_pix,fACCEL_Z_zhihu_pix,&ACC_AVG );
 			IMU_Quateration_Update((float)fGYRO_X , (float)fGYRO_Y , (float)fGYRO_Z , (float)ACC_AVG.x, (float)ACC_AVG.y, (float)ACC_AVG.z,&outAngle);
+		  // use input capture to get height
+			getHeight(&g_rawHeight);
+			setCutOffFrequency_HYSRF05(*g_rawHeight,&g_filterHeight)
 			getMpu6050Data = 0;
+			
 			if(att_cnt==2)
 			{
 				att_cnt = 0;

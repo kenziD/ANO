@@ -59,4 +59,22 @@ void Ultrasound_Start(void)
 	delay_us(20);//delay 10us to start eject Ultrasound
 	Trig_OFF;
 }
-
+extern u8  TIM4CH4_CAPTURE_STA;		    				
+extern u16	TIM4CH4_CAPTURE_VAL;	
+float getHeight(float *measureHeight)
+{
+	u32 temp=0;
+	static float lastHeight=0;
+	if(TIM4CH4_CAPTURE_STA&0X80)//
+		{
+			temp=TIM4CH4_CAPTURE_STA&0X3F;
+			temp*=65536;//
+			temp+=TIM4CH4_CAPTURE_VAL;//
+			// from us change to (s).*340m/s change to m./2 double distance . /100 to cm.if here is cm,1000 ?????????in PID control end?
+			*measureHeight=temp/1000.0/1000.0*340/2*100;
+			TIM4CH4_CAPTURE_STA=0;//
+			Ultrasound_Start();
+			lastHeight=*measureHeight;
+		}
+	else return lastHeight;
+}
